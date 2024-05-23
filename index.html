@@ -37,6 +37,7 @@
             text-align: center;
             transition: background-color 0.3s ease, transform 0.3s ease;
             margin: 0 10px;
+            cursor: pointer;
         }
         nav a:hover {
             background-color: #FFDAB9;
@@ -49,11 +50,15 @@
             margin: 20px auto;
         }
         .section {
+            display: none;
             background-color: white;
             margin: 20px 0;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .section.active {
+            display: block;
         }
         .section h2 {
             margin-top: 0;
@@ -132,24 +137,24 @@
 <body>
 
 <header>
-    <h1>متجر Temu Yemen</h1>
+    <h1> Temu Yemen</h1>
 </header>
 
 <nav>
-    <a href="#about"><i class="fas fa-info-circle"></i> عن المتجر</a>
-    <a href="#services"><i class="fas fa-concierge-bell"></i> خدماتنا</a>
-    <a href="#products"><i class="fas fa-shopping-bag"></i> المنتجات</a>
-    <a href="#contact"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
+    <a onclick="showSection('about')"><i class="fas fa-info-circle"></i> عن المتجر</a>
+    <a onclick="showSection('services')"><i class="fas fa-concierge-bell"></i> خدماتنا</a>
+    <a onclick="showSection('products')"><i class="fas fa-shopping-bag"></i> المنتجات</a>
+    <a onclick="showSection('contact')"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
 </nav>
 
 <div class="container">
-    <section id="about" class="section about">
+    <section id="about" class="section active">
         <h2><i class="fas fa-store"></i> عن المتجر</h2>
         <p>متجر Temu Yemen هو المتجر الرائد في تقديم أفضل المنتجات في اليمن. نحن ملتزمون بتقديم خدمة عالية الجودة ومنتجات متميزة.</p>
         <img src="store.jpg" alt="متجر Temu Yemen">
     </section>
 
-    <section id="services" class="section services">
+    <section id="services" class="section">
         <h2><i class="fas fa-cogs"></i> خدماتنا</h2>
         <ul>
             <li>توفير منتجات متنوعة وعالية الجودة</li>
@@ -158,7 +163,7 @@
         </ul>
     </section>
 
-    <section id="products" class="section products">
+    <section id="products" class="section">
         <h2><i class="fas fa-box"></i> المنتجات</h2>
         <div class="product">
             <img src="product1.jpg" alt="منتج 1">
@@ -175,7 +180,7 @@
         <!-- يمكنك إضافة المزيد من المنتجات هنا -->
     </section>
 
-    <section id="contact" class="section contact">
+    <section id="contact" class="section">
         <h2><i class="fas fa-envelope"></i> اتصل بنا</h2>
         <p><i class="fas fa-envelope"></i> البريد الإلكتروني: info@temuyemen.com</p>
         <p><i class="fas fa-phone"></i> الهاتف: 771774634</p>
@@ -185,6 +190,16 @@
 <footer>
     <p>&copy; 2024 متجر Temu Yemen. جميع الحقوق محفوظة.</p>
 </footer>
+
+<script>
+    function showSection(sectionId) {
+        var sections = document.querySelectorAll('.section');
+        sections.forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+    }
+</script>
 
 </body>
 </html>
