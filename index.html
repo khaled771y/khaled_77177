@@ -36,6 +36,7 @@
             text-decoration: none;
             text-align: center;
             transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 0 10px;
         }
         nav a:hover {
             background-color: #FFDAB9;
@@ -81,6 +82,45 @@
         .contact p {
             margin: 5px 0;
         }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .product {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            width: 200px;
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .product h3 {
+            color: #FF5733;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #FF5733;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            background-color: #FF7043;
+            transform: scale(1.1);
+        }
         footer {
             text-align: center;
             padding: 20px 0;
@@ -98,6 +138,7 @@
 <nav>
     <a href="#about"><i class="fas fa-info-circle"></i> عن المتجر</a>
     <a href="#services"><i class="fas fa-concierge-bell"></i> خدماتنا</a>
+    <a href="#products"><i class="fas fa-shopping-bag"></i> المنتجات</a>
     <a href="#contact"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
 </nav>
 
@@ -115,6 +156,23 @@
             <li>خدمة توصيل سريعة</li>
             <li>دعم عملاء متميز</li>
         </ul>
+    </section>
+
+    <section id="products" class="section products">
+        <h2><i class="fas fa-box"></i> المنتجات</h2>
+        <div class="product">
+            <img src="product1.jpg" alt="منتج 1">
+            <h3>منتج 1</h3>
+            <p>وصف مختصر للمنتج.</p>
+            <a href="#" class="btn">اطلب الآن</a>
+        </div>
+        <div class="product">
+            <img src="product2.jpg" alt="منتج 2">
+            <h3>منتج 2</h3>
+            <p>وصف مختصر للمنتج.</p>
+            <a href="#" class="btn">اطلب الآن</a>
+        </div>
+        <!-- يمكنك إضافة المزيد من المنتجات هنا -->
     </section>
 
     <section id="contact" class="section contact">
