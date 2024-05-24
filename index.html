@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Temu Yemen</title>
+    <title>Temu Yemen</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -18,12 +18,25 @@
         header {
             background-color: #FF5733;
             color: white;
-            padding: 20px 0;
-            text-align: center;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         header h1 {
             margin: 0;
-            font-size: 2.5em;
+            font-size: 1.5em;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .search-bar input {
+            padding: 5px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px;
         }
         nav {
             display: flex;
@@ -169,15 +182,20 @@
 <body>
 
 <header>
-    <h1>متجر Temu Yemen</h1>
+    <h1>Temu Yemen</h1>
+    <div class="search-bar">
+        <input type="text" placeholder="بحث...">
+        <i class="fas fa-search"></i>
+    </div>
 </header>
 
 <nav>
-    <a onclick="showSection('welcome')"><i class="fas fa-home"></i> الصفحة الرئيسية</a>
-    <a onclick="showSection('services')"><i class="fas fa-th-large"></i> الفئات</a>
-    <a onclick="showSection('favorites')"><i class="fas fa-heart"></i> المفضلات</a>
-    <a onclick="showSection('cart')"><i class="fas fa-shopping-cart"></i> سلة المشتريات</a>
-    <a onclick="showSection('account')"><i class="fas fa-user"></i> الحساب</a>
+    <a onclick="showSection('men')"><i class="fas fa-male"></i> الرجال</a>
+    <a onclick="showSection('women')"><i class="fas fa-female"></i> النساء</a>
+    <a onclick="showSection('kids')"><i class="fas fa-child"></i> الأطفال</a>
+    <a onclick="showSection('home')"><i class="fas fa-home"></i> المنزل</a>
+    <a onclick="showSection('accessories')"><i class="fas fa-gem"></i> الإكسسوارات</a>
+    <a onclick="showSection('phones')"><i class="fas fa-mobile-alt"></i> الهواتف</a>
 </nav>
 
 <div class="container">
@@ -193,13 +211,34 @@
         </div>
     </section>
 
-    <section id="services" class="section">
-        <h2><i class="fas fa-cogs"></i> خدماتنا</h2>
-        <ul>
-            <li>توفير منتجات متنوعة وعالية الجودة</li>
-            <li>خدمة توصيل سريعة</li>
-            <li>دعم عملاء متميز</li>
-        </ul>
+    <section id="men" class="section">
+        <h2><i class="fas fa-male"></i> الرجال</h2>
+        <p>منتجات مخصصة للرجال.</p>
+    </section>
+
+    <section id="women" class="section">
+        <h2><i class="fas fa-female"></i> النساء</h2>
+        <p>منتجات مخصصة للنساء.</p>
+    </section>
+
+    <section id="kids" class="section">
+        <h2><i class="fas fa-child"></i> الأطفال</h2>
+        <p>منتجات مخصصة للأطفال.</p>
+    </section>
+
+    <section id="home" class="section">
+        <h2><i class="fas fa-home"></i> المنزل</h2>
+        <p>منتجات مخصصة للمنزل.</p>
+    </section>
+
+    <section id="accessories" class="section">
+        <h2><i class="fas fa-gem"></i> الإكسسوارات</h2>
+        <p>إكسسوارات متنوعة.</p>
+    </section>
+
+    <section id="phones" class="section">
+        <h2><i class="fas fa-mobile-alt"></i> الهواتف</h2>
+        <p>أحدث الهواتف.</p>
     </section>
 
     <section id="favorites" class="section">
@@ -214,7 +253,7 @@
 
     <section id="account" class="section">
         <h2><i class="fas fa-user"></i> الحساب</h2>
-        <p>معلومات حسابك الشخصي.</p>
+        <p>معلومات حسابك.</p>
     </section>
 </div>
 
@@ -222,10 +261,9 @@
     <p>&copy; 2024 متجر Temu Yemen. جميع الحقوق محفوظة.</p>
 </footer>
 
-<!-- شريط سفلي -->
 <div class="bottom-nav">
     <a onclick="showSection('welcome')"><i class="fas fa-home"></i> الصفحة الرئيسية</a>
-    <a onclick="showSection('services')"><i class="fas fa-th-large"></i> الفئات</a>
+    <a onclick="showSection('men')"><i class="fas fa-th"></i> الفئات</a>
     <a onclick="showSection('favorites')"><i class="fas fa-heart"></i> المفضلات</a>
     <a onclick="showSection('cart')"><i class="fas fa-shopping-cart"></i> سلة المشتريات</a>
     <a onclick="showSection('account')"><i class="fas fa-user"></i> الحساب</a>
@@ -240,16 +278,17 @@
         document.getElementById(sectionId).classList.add('active');
     }
 
-    // Slideshow
-    let slideIndex = 0;
+    // Slideshow functionality
+    var slideIndex = 0;
     function showSlides() {
-        let slides = document.querySelectorAll('.slideshow img');
-        slides.forEach((slide, index) => {
+        var slides = document.querySelectorAll('.slideshow img');
+        slides.forEach(function(slide, index) {
             slide.classList.remove('active');
+            if (index === slideIndex) {
+                slide.classList.add('active');
+            }
         });
-        slideIndex++;
-        if (slideIndex > slides.length) {slideIndex = 1}
-        slides[slideIndex-1].classList.add('active');
+        slideIndex = (slideIndex + 1) % slides.length;
         setTimeout(showSlides, 3000); // Change image every 3 seconds
     }
 
