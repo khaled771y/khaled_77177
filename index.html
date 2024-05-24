@@ -11,150 +11,38 @@
             font-family: 'Cairo', sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: url('https://source.unsplash.com/1600x900/?nature,water') no-repeat center center fixed;
-            background-size: cover;
-            position: relative;
-        }
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1;
-        }
-        .login-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-            width: 100%;
-            height: 100vh;
-        }
-        .login-box {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-        .login-box h2 {
-            margin: 0 0 20px;
-            color: #FF5733;
-        }
-        .login-box input {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: none;
-            font-size: 1em;
-        }
-        .login-box button {
-            padding: 15px 20px;
-            border: none;
-            background-color: #FF5733;
-            color: white;
-            font-size: 1em;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            margin-top: 10px;
-        }
-        .login-box button:hover {
-            background-color: #FF7043;
-            transform: scale(1.05);
-        }
-        .login-box .create-account {
-            background-color: #333333;
-        }
-        .login-box .create-account:hover {
-            background-color: #555555;
-        }
-        .error-message {
-            color: #FF5733;
-            margin-top: 10px;
-        }
-        .content-container {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100vh;
-        }
-        .sidebar {
-            background-color: #FF7043;
-            color: white;
-            width: 250px;
-            min-height: 100vh;
-            padding: 20px;
-            position: fixed;
-            left: -270px;
-            transition: left 0.3s ease;
-        }
-        .sidebar.active {
-            left: 0;
-        }
-        .sidebar h2 {
-            text-align: center;
-            color: white;
-        }
-        .sidebar a {
-            display: block;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            margin: 10px 0;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            text-align: center;
-        }
-        .sidebar a:hover {
-            background-color: #FFDAB9;
-            color: black;
-            transform: scale(1.1);
-        }
-        .content {
-            margin-left: 20px;
-            padding: 20px;
-            flex-grow: 1;
-        }
-        .toggle-btn {
-            background-color: #FF5733;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 20px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            border-radius: 5px;
-            transition: transform 0.3s ease;
-        }
-        .toggle-btn:hover {
-            transform: scale(1.1);
+            background-color: #ffffff;
+            color: #333333;
         }
         header {
             background-color: #FF5733;
             color: white;
             padding: 20px 0;
             text-align: center;
-            width: 100%;
         }
         header h1 {
             margin: 0;
             font-size: 2.5em;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #FF7043;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        nav a:hover {
+            background-color: #FFDAB9;
+            color: black;
+            transform: scale(1.1);
         }
         .container {
             width: 90%;
@@ -243,121 +131,73 @@
             padding: 20px 0;
             background-color: #FF5733;
             color: white;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
         }
     </style>
 </head>
 <body>
 
-<div class="overlay"></div>
+<header>
+    <h1>متجر Temu Yemen</h1>
+</header>
 
-<div class="login-container">
-    <div class="login-box">
-        <h2>تسجيل الدخول</h2>
-        <input type="text" id="username" placeholder="اسم المستخدم">
-        <input type="password" id="password" placeholder="كلمة المرور">
-        <button onclick="login()">تسجيل الدخول</button>
-        <button class="create-account" onclick="createAccount()">إنشاء حساب</button>
-        <p id="error-message" class="error-message"></p>
-    </div>
-</div>
+<nav>
+    <a onclick="showSection('about')"><i class="fas fa-info-circle"></i> عن المتجر</a>
+    <a onclick="showSection('services')"><i class="fas fa-concierge-bell"></i> خدماتنا</a>
+    <a onclick="showSection('products')"><i class="fas fa-shopping-bag"></i> المنتجات</a>
+    <a onclick="showSection('contact')"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
+</nav>
 
-<div class="content-container">
-    <div class="sidebar" id="sidebar">
-        <h2>Temu Yemen</h2>
-        <a onclick="showSection('about')"><i class="fas fa-info-circle"></i> عن المتجر</a>
-        <a onclick="showSection('services')"><i class="fas fa-concierge-bell"></i> خدماتنا</a>
-        <a onclick="showSection('products')"><i class="fas fa-shopping-bag"></i> المنتجات</a>
-        <a onclick="showSection('contact')"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
-    </div>
+<div class="container">
+    <section id="about" class="section active">
+        <h2><i class="fas fa-store"></i> عن المتجر</h2>
+        <p>متجر Temu Yemen هو المتجر الرائد في تقديم أفضل المنتجات في اليمن. نحن ملتزمون بتقديم خدمة عالية الجودة ومنتجات متميزة.</p>
+        <img src="store.jpg" alt="متجر Temu Yemen">
+    </section>
 
-    <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <section id="services" class="section">
+        <h2><i class="fas fa-cogs"></i> خدماتنا</h2>
+        <ul>
+            <li>توفير منتجات متنوعة وعالية الجودة</li>
+            <li>خدمة توصيل سريعة</li>
+            <li>دعم عملاء متميز</li>
+        </ul>
+    </section>
 
-    <div class="content">
-        <header>
-            <h1> Temu Yemen</h1>
-        </header>
-
-        <div class="container">
-            <section id="about" class="section active">
-                <h2><i class="fas fa-store"></i> عن المتجر</h2>
-                <p> Temu Yemen هو المتجر الرائد في تقديم أفضل المنتجات في اليمن. نحن ملتزمون بتقديم خدمة عالية الجودة ومنتجات متميزة.</p>
-                <img src="store.jpg" alt="متجر Temu Yemen">
-            </section>
-
-            <section id="services" class="section">
-                <h2><i class="fas fa-cogs"></i> خدماتنا</h2>
-                <ul>
-                    <li>توفير منتجات متنوعة وعالية الجودة</li>
-                    <li>خدمة توصيل سريعة</li>
-                    <li>دعم عملاء متميز</li>
-                    <li>خدمات ما بعد البيع</li>
-                    <li>تقديم عروض وخصومات خاصة</li>
-                    <li>إمكانية استرجاع المنتجات</li>
-                </ul>
-            </section>
-
-            <section id="products" class="section">
-                <h2><i class="fas fa-box"></i> المنتجات</h2>
-                <div class="products">
-                    <div class="product">
-                        <img src="product1.jpg" alt="منتج 1">
-                        <h3>منتج 1</h3>
-                        <p>وصف مختصر للمنتج.</p>
-                        <a href="#" class="btn">اطلب الآن</a>
-                    </div>
-                    <div class="product">
-                        <img src="product2.jpg" alt="منتج 2">
-                        <h3>منتج 2</h3>
-                        <p>وصف مختصر للمنتج.</p>
-                        <a href="#" class="btn">اطلب الآن</a>
-                    </div>
-                </div>
-            </section>
-
-            <section id="contact" class="section">
-                <h2><i class="fas fa-envelope"></i> اتصل بنا</h2>
-                <p><i class="fas fa-envelope"></i> البريد الإلكتروني: info@temuyemen.com</p>
-                <p><i class="fas fa-phone"></i> الهاتف: 771774634</p>
-            </section>
+    <section id="products" class="section">
+        <h2><i class="fas fa-box"></i> المنتجات</h2>
+        <div class="product">
+            <img src="product1.jpg" alt="منتج 1">
+            <h3>منتج 1</h3>
+            <p>وصف مختصر للمنتج.</p>
+            <a href="#" class="btn">اطلب الآن</a>
         </div>
-    </div>
+        <div class="product">
+            <img src="product2.jpg" alt="منتج 2">
+            <h3>منتج 2</h3>
+            <p>وصف مختصر للمنتج.</p>
+            <a href="#" class="btn">اطلب الآن</a>
+        </div>
+        <!-- يمكنك إضافة المزيد من المنتجات هنا -->
+    </section>
+
+    <section id="contact" class="section">
+        <h2><i class="fas fa-envelope"></i> اتصل بنا</h2>
+        <p><i class="fas fa-envelope"></i> البريد الإلكتروني: info@temuyemen.com</p>
+        <p><i class="fas fa-phone"></i> الهاتف: 771774634</p>
+    </section>
 </div>
 
 <footer>
-    <p>&copy; 2024  Temu Yemen. جميع الحقوق محفوظة.</p>
+    <p>&copy; 2024 متجر Temu Yemen. جميع الحقوق محفوظة.</p>
 </footer>
 
 <script>
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('active');
-    }
-
     function showSection(sectionId) {
         var sections = document.querySelectorAll('.section');
         sections.forEach(function(section) {
             section.classList.remove('active');
         });
         document.getElementById(sectionId).classList.add('active');
-    }
-
-    function login() {
-        var username = document.getElementById('username').value;
-        var password = document.getElementById('password').value;
-        var errorMessage = document.getElementById('error-message');
-
-        if (username === 'khaled' && password === '77177') {
-            document.querySelector('.login-container').style.display = 'none';
-            document.querySelector('.content-container').style.display = 'flex';
-        } else {
-            errorMessage.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
-        }
-    }
-
-    function createAccount() {
-        alert('الرجاء التواصل مع المهندس خالد النظاري لكي يفعل لك إذن دخول. الهاتف: 771774634');
     }
 </script>
 
