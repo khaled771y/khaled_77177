@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر Temu Yemen</title>
+    <title> Temu Yemen</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -149,39 +149,19 @@
             color: white;
             text-align: center;
             flex-grow: 1;
+            font-size: 0.8em; /* تصغير حجم الأيقونات */
         }
         .bottom-nav a i {
             display: block;
-            font-size: 1.2em; /* تصغير الأيقونات */
+            font-size: 1em;
+            margin-bottom: 5px; /* تخفيض بعض التباعد بين الأيقونة والنص */
         }
-        .bottom-nav a span {
-            font-size: 0.9em; /* تصغير النص */
-        }
-        /* صفحة الترحيب */
-        .welcome {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .welcome .banner {
-            background-color: #FF7043;
-            color: white;
-            padding: 20px;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-        }
-        .carousel {
-            position: relative;
-            max-width: 100%;
-            margin: auto;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-        .carousel img {
+        .slideshow img {
             width: 100%;
             height: auto;
             display: none;
         }
-        .carousel img.active {
+        .slideshow img.active {
             display: block;
         }
     </style>
@@ -189,35 +169,28 @@
 <body>
 
 <header>
-    <h1> Temu Yemen</h1>
+    <h1>متجر Temu Yemen</h1>
 </header>
 
 <nav>
-    <a onclick="showSection('welcome')"><i class="fas fa-info-circle"></i> عن المتجر</a>
-    <a onclick="showSection('services')"><i class="fas fa-concierge-bell"></i> خدماتنا</a>
-    <a onclick="showSection('products')"><i class="fas fa-shopping-bag"></i> المنتجات</a>
-    <a onclick="showSection('contact')"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
+    <a onclick="showSection('welcome')"><i class="fas fa-home"></i> الصفحة الرئيسية</a>
+    <a onclick="showSection('services')"><i class="fas fa-th-large"></i> الفئات</a>
+    <a onclick="showSection('favorites')"><i class="fas fa-heart"></i> المفضلات</a>
+    <a onclick="showSection('cart')"><i class="fas fa-shopping-cart"></i> سلة المشتريات</a>
+    <a onclick="showSection('account')"><i class="fas fa-user"></i> الحساب</a>
 </nav>
 
 <div class="container">
     <section id="welcome" class="section active">
-        <div class="welcome">
-            <div class="banner">
-                <p>مرحبًا بكم في متجر Temu Yemen!</p>
-            </div>
-            <div class="carousel">
-                <img src="image1.jpg" class="active" alt="صورة 1">
-                <img src="image2.jpg" alt="صورة 2">
-                <img src="image3.jpg" alt="صورة 3">
-                <img src="image4.jpg" alt="صورة 4">
-            </div>
+        <h2>مرحبًا بك في متجر Temu Yemen!</h2>
+        <p>نحن نقدم أفضل المنتجات وأجودها لكم. تفضلوا بزيارة متجرنا واستمتعوا بتجربة تسوق رائعة.</p>
+        <p>إعلان: عروض خاصة لفترة محدودة!</p>
+        <div class="slideshow">
+            <img src="slide1.jpg" alt="صورة 1" class="active">
+            <img src="slide2.jpg" alt="صورة 2">
+            <img src="slide3.jpg" alt="صورة 3">
+            <img src="slide4.jpg" alt="صورة 4">
         </div>
-    </section>
-
-    <section id="about" class="section">
-        <h2><i class="fas fa-store"></i> عن المتجر</h2>
-        <p>متجر Temu Yemen هو المتجر الرائد في تقديم أفضل المنتجات في اليمن. نحن ملتزمون بتقديم خدمة عالية الجودة ومنتجات متميزة.</p>
-        <img src="store.jpg" alt="متجر Temu Yemen">
     </section>
 
     <section id="services" class="section">
@@ -229,95 +202,60 @@
         </ul>
     </section>
 
-    <section id="products" class="section">
-        <h2><i class="fas fa-box"></i> المنتجات</h2>
-        <div class="product">
-            <img src="product1.jpg" alt="منتج 1">
-            <h3>منتج 1</h3>
-            <p>وصف مختصر للمنتج.</p>
-            <a href="#" class="btn">اطلب الآن</a>
-        </div>
-        <div class="product">
-            <img src="product2.jpg" alt="منتج 2">
-            <h3>منتج 2</h3>
-            <p>وصف مختصر للمنتج.</p>
-            <a href="#" class="btn">اطلب الآن</a>
-        </div>
-        <!-- يمكنك إضافة المزيد من المنتجات هنا -->
+    <section id="favorites" class="section">
+        <h2><i class="fas fa-heart"></i> المفضلات</h2>
+        <p>قائمة المنتجات المفضلة لديك.</p>
     </section>
 
-    <section id="contact" class="section">
-        <h2><i class="fas fa-envelope"></i> اتصل بنا</h2>
-        <p><i class="fas fa-envelope"></i> البريد الإلكتروني: info@temuyemen.com</p>
-        <p><i class="fas fa-phone"></i> الهاتف: 780595958</p>
+    <section id="cart" class="section">
+        <h2><i class="fas fa-shopping-cart"></i> سلة المشتريات</h2>
+        <p>عربة التسوق الخاصة بك.</p>
+    </section>
+
+    <section id="account" class="section">
+        <h2><i class="fas fa-user"></i> الحساب</h2>
+        <p>معلومات حسابك الشخصي.</p>
     </section>
 </div>
 
 <footer>
-    <p>&copy; 2024 Temu Yemen. جميع الحقوق محفوظة.</p>
+    <p>&copy; 2024 متجر Temu Yemen. جميع الحقوق محفوظة.</p>
 </footer>
 
 <!-- شريط سفلي -->
 <div class="bottom-nav">
-    <a href="#" onclick="showSection('welcome')">
-        <i class="fas fa-home"></i>
-        <span>الصفحة الرئيسية</span>
-    </a>
-    <a href="#" onclick="showSection('services')">
-        <i class="fas fa-concierge-bell"></i>
-        <span>الخدمات</span>
-    </a>
-    <a href="#" onclick="showSection('products')">
-        <i class="fas fa-shopping-bag"></i>
-        <span>المنتجات</span>
-    </a>
-    <a href="#" onclick="showSection('contact')">
-        <i class="fas fa-phone-alt"></i>
-        <span>اتصل بنا</span>
-    </a>
+    <a onclick="showSection('welcome')"><i class="fas fa-home"></i> الصفحة الرئيسية</a>
+    <a onclick="showSection('services')"><i class="fas fa-th-large"></i> الفئات</a>
+    <a onclick="showSection('favorites')"><i class="fas fa-heart"></i> المفضلات</a>
+    <a onclick="showSection('cart')"><i class="fas fa-shopping-cart"></i> سلة المشتريات</a>
+    <a onclick="showSection('account')"><i class="fas fa-user"></i> الحساب</a>
 </div>
 
 <script>
-    var currentImageIndex = 0;
-    var images = document.querySelectorAll('.carousel img');
-
-    function showNextImage() {
-        images[currentImageIndex].classList.remove('active');
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        images[currentImageIndex].classList.add('active');
-    }
-
-    setInterval(showNextImage, 3000); // تغيير الصورة كل 3 ثواني
-<script>
     function showSection(sectionId) {
-        // إزالة الصفحة النشطة من الأقسام في الشريط العلوي
-        var sectionsTopNav = document.querySelectorAll('nav a');
-        sectionsTopNav.forEach(function(section) {
-            section.classList.remove('active');
-        });
-        // إظهار الصفحة النشطة في الشريط العلوي
-        var activeTopNavSection = document.querySelector('nav a[href="#' + sectionId + '"]');
-        activeTopNavSection.classList.add('active');
-
-        // إزالة الصفحة النشطة من الأقسام في الشريط السفلي
-        var sectionsBottomNav = document.querySelectorAll('.bottom-nav a');
-        sectionsBottomNav.forEach(function(section) {
-            section.classList.remove('active');
-        });
-        // إظهار الصفحة النشطة في الشريط السفلي
-        var activeBottomNavSection = document.querySelector('.bottom-nav a[href="#' + sectionId + '"]');
-        activeBottomNavSection.classList.add('active');
-
-        // إظهار القسم المطلوب
         var sections = document.querySelectorAll('.section');
         sections.forEach(function(section) {
             section.classList.remove('active');
         });
         document.getElementById(sectionId).classList.add('active');
     }
-</script>
 
+    // Slideshow
+    let slideIndex = 0;
+    function showSlides() {
+        let slides = document.querySelectorAll('.slideshow img');
+        slides.forEach((slide, index) => {
+            slide.classList.remove('active');
+        });
+        slideIndex++;
+        if (slideIndex > slides.length) {slideIndex = 1}
+        slides[slideIndex-1].classList.add('active');
+        setTimeout(showSlides, 3000); // Change image every 3 seconds
+    }
+
+    // Start the slideshow
+    showSlides();
+</script>
 
 </body>
 </html>
-
