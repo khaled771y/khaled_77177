@@ -13,6 +13,7 @@
             padding: 0;
             background-color: #ffffff;
             color: #333333;
+            padding-bottom: 60px; /* لإفساح المجال للشريط السفلي */
         }
         header {
             background-color: #FF5733;
@@ -132,23 +133,88 @@
             background-color: #FF5733;
             color: white;
         }
+        /* شريط سفلي */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #FF7043;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .bottom-nav a {
+            padding: 10px;
+            color: white;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .bottom-nav a i {
+            display: block;
+            font-size: 1.2em; /* تصغير الأيقونات */
+        }
+        .bottom-nav a span {
+            font-size: 0.9em; /* تصغير النص */
+        }
+        /* صفحة الترحيب */
+        .welcome {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .welcome .banner {
+            background-color: #FF7043;
+            color: white;
+            padding: 20px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .carousel {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        .carousel img {
+            width: 100%;
+            height: auto;
+            display: none;
+        }
+        .carousel img.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>متجر Temu Yemen</h1>
+    <h1> Temu Yemen</h1>
 </header>
 
 <nav>
-    <a onclick="showSection('about')"><i class="fas fa-info-circle"></i> عن المتجر</a>
+    <a onclick="showSection('welcome')"><i class="fas fa-info-circle"></i> عن المتجر</a>
     <a onclick="showSection('services')"><i class="fas fa-concierge-bell"></i> خدماتنا</a>
     <a onclick="showSection('products')"><i class="fas fa-shopping-bag"></i> المنتجات</a>
     <a onclick="showSection('contact')"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
 </nav>
 
 <div class="container">
-    <section id="about" class="section active">
+    <section id="welcome" class="section active">
+        <div class="welcome">
+            <div class="banner">
+                <p>مرحبًا بكم في متجر Temu Yemen!</p>
+            </div>
+            <div class="carousel">
+                <img src="image1.jpg" class="active" alt="صورة 1">
+                <img src="image2.jpg" alt="صورة 2">
+                <img src="image3.jpg" alt="صورة 3">
+                <img src="image4.jpg" alt="صورة 4">
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
         <h2><i class="fas fa-store"></i> عن المتجر</h2>
         <p>متجر Temu Yemen هو المتجر الرائد في تقديم أفضل المنتجات في اليمن. نحن ملتزمون بتقديم خدمة عالية الجودة ومنتجات متميزة.</p>
         <img src="store.jpg" alt="متجر Temu Yemen">
@@ -191,8 +257,58 @@
     <p>&copy; 2024 متجر Temu Yemen. جميع الحقوق محفوظة.</p>
 </footer>
 
+<!-- شريط سفلي -->
+<div class="bottom-nav">
+    <a href="#" onclick="showSection('welcome')">
+        <i class="fas fa-home"></i>
+        <span>الصفحة الرئيسية</span>
+    </a>
+    <a href="#" onclick="showSection('services')">
+        <i class="fas fa-concierge-bell"></i>
+        <span>الخدمات</span>
+    </a>
+    <a href="#" onclick="showSection('products')">
+        <i class="fas fa-shopping-bag"></i>
+        <span>المنتجات</span>
+    </a>
+    <a href="#" onclick="showSection('contact')">
+        <i class="fas fa-phone-alt"></i>
+        <span>اتصل بنا</span>
+    </a>
+</div>
+
+<script>
+    var currentImageIndex = 0;
+    var images = document.querySelectorAll('.carousel img');
+
+    function showNextImage() {
+        images[currentImageIndex].classList.remove('active');
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        images[currentImageIndex].classList.add('active');
+    }
+
+    setInterval(showNextImage, 3000); // تغيير الصورة كل 3 ثواني
 <script>
     function showSection(sectionId) {
+        // إزالة الصفحة النشطة من الأقسام في الشريط العلوي
+        var sectionsTopNav = document.querySelectorAll('nav a');
+        sectionsTopNav.forEach(function(section) {
+            section.classList.remove('active');
+        });
+        // إظهار الصفحة النشطة في الشريط العلوي
+        var activeTopNavSection = document.querySelector('nav a[href="#' + sectionId + '"]');
+        activeTopNavSection.classList.add('active');
+
+        // إزالة الصفحة النشطة من الأقسام في الشريط السفلي
+        var sectionsBottomNav = document.querySelectorAll('.bottom-nav a');
+        sectionsBottomNav.forEach(function(section) {
+            section.classList.remove('active');
+        });
+        // إظهار الصفحة النشطة في الشريط السفلي
+        var activeBottomNavSection = document.querySelector('.bottom-nav a[href="#' + sectionId + '"]');
+        activeBottomNavSection.classList.add('active');
+
+        // إظهار القسم المطلوب
         var sections = document.querySelectorAll('.section');
         sections.forEach(function(section) {
             section.classList.remove('active');
@@ -201,5 +317,7 @@
     }
 </script>
 
+
 </body>
 </html>
+
