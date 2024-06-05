@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temu Yemen</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,12 +13,76 @@
             margin: 0;
             padding-bottom: 60px; /* For bottom navigation bar */
         }
-        header, footer {
-            background-color: #FF5733;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #FF5733; /* لون الخلفية برتقالي */
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        .top-bar .logo {
+            display: flex;
+            align-items: center;
+        }
+        .top-bar .logo i {
+            font-size: 28px;
+            color: #fff; /* لون الأيقونة بيضاء */
+        }
+        .top-bar .logo span {
+            margin-left: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff; /* لون النص بيضاء */
+        }
+        .top-bar .search-bar {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 20px;
+        }
+        .top-bar .search-bar input[type="text"] {
+            width: 100%;
+            max-width: 800px; /* تحديد الحجم ليكون مناسباً للشاشات 4K */
+            padding: 7px 20px; /* تكبير الحجم */
+            border: none;
+            border-radius: 20px; /* زوايا مدورة */
+            font-size: 20px; /* تكبير الخط */
+            background-color: #fff; /* لون الخلفية بيضاء */
+            color: #FF5733; /* لون النص برتقالي */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .top-bar .search-bar input[type="text"]::placeholder {
+            color: #FF5733; /* لون النص الافتراضي برتقالي */
+        }
+        .top-bar .search-bar input[type="text"]:focus {
+            outline: none;
+        }
+        .top-bar .icons {
+            display: flex;
+            align-items: center;
+        }
+        .top-bar .icons div {
+            margin-left: 20px;
+        }
+        .top-bar .icons i {
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .top-bar .cart-count {
+            position: relative;
+            top: -10px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            font-size: 14px;
+            padding: 5px 8px;
+            border-radius: 50%;
+        }
+        
+        
         nav {
             background-color: #FF7043;
             padding: 10px;
@@ -157,19 +221,23 @@
 </head>
 <body>
     <header>
-        <div class="logo">
-            <img src="images/loo.png" alt="Temu Yemen Logo">
-            <h1>Temu Yemen</h1>
-        </div>
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="بحث بالكود">
-            <i class="fas fa-search" onclick="searchProduct()"></i>
-        </div>
-        <div class="cart-icon" onclick="showCart()">
-            <i class="fas fa-shopping-cart"></i>
-            <div class="cart-count" id="cart-count">0</div>
-        </div>
-    </header>
+        <div class="top-bar">
+    <div class="logo">
+        <i class="fas fa-store"></i>
+        <span>Temu Yemen</span>
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="ابحث عن المنتجات">
+    </div>
+    <div class="customer-service" onclick="showCustomerService()">
+        <i class="fas fa-headset"></i>
+    </div>
+    <div class="cart" onclick="showCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+</div>
+
     <nav>
         <a href="#men" onclick="showSection('men')"><i class="fas fa-male"></i>رجال</a>
         <a href="#women" onclick="showSection('women')"><i class="fas fa-female"></i>نساء</a>
