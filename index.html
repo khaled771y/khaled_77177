@@ -399,11 +399,30 @@
             </div>
         </div>
     </div>
+    <footer>
+        <p>&copy; 2023 Temu Yemen. جميع الحقوق محفوظة.</p>
+    </footer>
     <div class="bottom-nav">
-        <a href="#home" onclick="showSection('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
-        <a href="#men" onclick="showSection('men')"><i class="fas fa-male"></i><span>رجال</span></a>
-        <a href="#women" onclick="showSection('women')"><i class="fas fa-female"></i><span>نساء</span></a>
-        <a href="#cart" onclick="showCart()"><i class="fas fa-shopping-cart"></i><span>السلة</span></a>
+        <a href="#home" onclick="showSection('home')">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </a>
+        <a href="#categories" onclick="showSection('categories')">
+            <i class="fas fa-th"></i>
+            <span>الفئات</span>
+        </a>
+        <a href="#favorites" onclick="showSection('favorites')">
+            <i class="fas fa-heart"></i>
+            <span>المفضلات</span>
+        </a>
+        <a href="#cart" onclick="showCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span>السلة</span>
+        </a>
+        <a href="#account" onclick="showSection('account')">
+            <i class="fas fa-user"></i>
+            <span>الحساب</span>
+        </a>
     </div>
     <script>
         let cart = [];
