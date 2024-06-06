@@ -17,7 +17,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #FF5733;
+            background-color: #FF5733; /* لون الخلفية برتقالي */
             padding: 10px 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
@@ -27,13 +27,13 @@
         }
         .top-bar .logo i {
             font-size: 28px;
-            color: #fff;
+            color: #fff; /* لون الأيقونة بيضاء */
         }
         .top-bar .logo span {
             margin-left: 10px;
             font-size: 24px;
             font-weight: bold;
-            color: #fff;
+            color: #fff; /* لون النص بيضاء */
         }
         .top-bar .search-bar {
             flex: 1;
@@ -44,17 +44,17 @@
         }
         .top-bar .search-bar input[type="text"] {
             width: 100%;
-            max-width: 800px;
-            padding: 7px 20px;
+            max-width: 800px; /* تحديد الحجم ليكون مناسباً للشاشات 4K */
+            padding: 7px 20px; /* تكبير الحجم */
             border: none;
-            border-radius: 11px;
-            font-size: 20px;
-            background-color: #fff;
-            color: #FF5733;
+            border-radius: 11px; /* زوايا مدورة */
+            font-size: 20px; /* تكبير الخط */
+            background-color: #fff; /* لون الخلفية بيضاء */
+            color: #FF5733; /* لون النص برتقالي */
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .top-bar .search-bar input[type="text"]::placeholder {
-            color: #FF5733;
+            color: #FF5733; /* لون النص الافتراضي برتقالي */
         }
         .top-bar .search-bar input[type="text"]:focus {
             outline: none;
@@ -151,6 +151,7 @@
             gap: 10px;
             scroll-behavior: smooth;
         }
+
         .carousel img {
             flex: 0 0 auto;
             width: 80px;
@@ -159,6 +160,7 @@
             border-radius: 50%;
             animation: slide 30s linear infinite;
         }
+
         @keyframes slide {
             0% {
                 transform: translateX(100%);
@@ -244,22 +246,22 @@
 <body>
     <header>
         <div class="top-bar">
-            <div class="logo">
-                <i class="fas fa-store"></i>
-                <span>Temu Yemen</span>
-            </div>
-            <div class="search-bar">
-                <input type="text" placeholder="ابحث عن المنتجات">
-            </div>
-            <div class="customer-service" onclick="showCustomerService()">
-                <i class="fas fa-headset"></i>
-            </div>
-            <div class="cart" onclick="showCart()">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count" id="cart-count">0</span>
-            </div>
-        </div>
-    </header>
+    <div class="logo">
+        <i class="fas fa-store"></i>
+        <span>Temu Yemen</span>
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="ابحث عن المنتجات">
+    </div>
+    <div class="customer-service" onclick="showCustomerService()">
+        <i class="fas fa-headset"></i>
+    </div>
+    <div class="cart" onclick="showCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+</div>
+
     <nav>
         <a href="#men" onclick="showSection('men')"><i class="fas fa-male"></i>رجال</a>
         <a href="#women" onclick="showSection('women')"><i class="fas fa-female"></i>نساء</a>
@@ -274,116 +276,379 @@
     </nav>
     <div class="container">
         <div class="banner">
-            <p>توصيل سريع مجاني على الطلبات التي تزيد عن 2000 ريال يمني</p>
+            <p>توصيل سريع مجاني على الطلبات الأكثر من 100 ريال</p>
         </div>
-        <div class="slideshow">
-            <img src="banner1.jpg" alt="Banner 1" class="active">
-            <img src="banner2.jpg" alt="Banner 2">
-            <img src="banner3.jpg" alt="Banner 3">
-        </div>
-        <div class="section" id="men">
-            <h2>قسم الرجال</h2>
-            <div class="products">
-                <div class="product" onclick="showProductDetails(1)">
-                    <img src="images/men3.jpg" alt="Men's Product 1">
-                    <h3>منتج رجال 1</h3>
-                    <p>5000 ريال</p>
+        <div id="home" class="section active">
+            <div class="slideshow">
+                <img src="images/slide11.jpeg" class="active" alt="Slide 1">
+                <img src="images/slide12.jpeg" alt="Slide 2">
+                <img src="images/slide14.jpeg" alt="Slide 3">
+            </div>
+            <h2>المنتجات المميزة</h2>
+            <div class="featured-products">
+                <div class="featured-product" data-code="P001" onclick="showProductDetails('P001')">
+                    <img src="images/women2.jpeg" alt="Product 1">
+                    <h3>منتج 1</h3>
                 </div>
-                <div class="product" onclick="showProductDetails(2)">
-                    <img src="images/men2.jpg" alt="Men's Product 2">
-                    <h3>منتج رجال 2</h3>
-                    <p>4500 ريال</p>
+                <div class="featured-product" data-code="P002" onclick="showProductDetails('P002')">
+                    <img src="images/men4.jpg" alt="Product 2">
+                    <h3>منتج 2</h3>
                 </div>
-                <div class="product" onclick="showProductDetails(3)">
-                    <img src="images/men1.jpg" alt="Men's Product 3">
-                    <h3>منتج رجال 3</h3>
-                    <p>6000 ريال</p>
+                <div class="featured-product" data-code="P003" onclick="showProductDetails('P003')">
+                    <img src="images/kids3.jpg" alt="Product 3">
+                    <h3>منتج 3</h3>
                 </div>
             </div>
         </div>
-        <!-- Add similar sections for women, boys, girls, newborn, accessories, smartphones, electronics, brands, shajlam -->
+        <!-- صور دائرية صغيرة للمنتجات المختارة -->
+        <div class="carousel">
+            <img src="https://via.placeholder.com/80" alt="Product 1">
+            <img src="https://via.placeholder.com/80" alt="Product 2">
+            <img src="https://via.placeholder.com/80" alt="Product 3">
+            <img src="https://via.placeholder.com/80" alt="Product 4">
+            <img src="https://via.placeholder.com/80" alt="Product 5">
+            <img src="https://via.placeholder.com/80" alt="Product 6">
+            <img src="https://via.placeholder.com/80" alt="Product 7">
+            <img src="https://via.placeholder.com/80" alt="Product 8">
+            <img src="https://via.placeholder.com/80" alt="Product 9">
+            <img src="https://via.placeholder.com/80" alt="Product 10">
+        </div>
+      </div>
+    </div>
+        <div id="men" class="section">
+            <h2>منتجات الرجال</h2>
+            <div class="products">
+                <div class="product" data-code="M001" onclick="showProductDetails('M001')">
+                    <img src="images/men1.jpeg" alt="Men Product 1">
+                    <h3>منتج رجال 1</h3>
+                </div>
+                <div class="product" data-code="M002" onclick="showProductDetails('M002')">
+                    <img src="images/men2.jpg" alt="Men Product 2">
+                    <h3>منتج رجال 2</h3>
+                </div>
+                <div class="product" data-code="M003" onclick="showProductDetails('M003')">
+                    <img src="images/men3.jpg" alt="Men Product 3">
+                    <h3>منتج رجال 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="women" class="section">
+            <h2>منتجات النساء</h2>
+            <div class="products">
+                <div class="product" data-code="W001" onclick="showProductDetails('W001')">
+                    <img src="images/women1.jpeg" alt="Women Product 1">
+                    <h3>منتج نساء 1</h3>
+                </div>
+                <div class="product" data-code="W002" onclick="showProductDetails('W002')">
+                    <img src="images/women2.jpeg" alt="Women Product 2">
+                    <h3>منتج نساء 2</h3>
+                </div>
+                <div class="product" data-code="W003" onclick="showProductDetails('W003')">
+                    <img src="images/women3.jpeg" alt="Women Product 3">
+                    <h3>منتج نساء 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="boys" class="section">
+            <h2>منتجات الولادي</h2>
+            <div class="products">
+                <div class="product" data-code="B001" onclick="showProductDetails('B001')">
+                    <img src="images/boys1.jpg" alt="Boys Product 1">
+                    <h3>منتج ولادي 1</h3>
+                </div>
+                <div class="product" data-code="B002" onclick="showProductDetails('B002')">
+                    <img src="images/boys2.jpg" alt="Boys Product 2">
+                    <h3>منتج ولادي 2</h3>
+                </div>
+                <div class="product" data-code="B003" onclick="showProductDetails('B003')">
+                    <img src="images/boys3.jpg" alt="Boys Product 3">
+                    <h3>منتج ولادي 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="girls" class="section">
+            <h2>منتجات البناتي</h2>
+            <div class="products">
+                <div class="product" data-code="G001" onclick="showProductDetails('G001')">
+                    <img src="images/girls1.jpg" alt="Girls Product 1">
+                    <h3>منتج بناتي 1</h3>
+                </div>
+                <div class="product" data-code="G002" onclick="showProductDetails('G002')">
+                    <img src="images/girls2.jpg" alt="Girls Product 2">
+                    <h3>منتج بناتي 2</h3>
+                </div>
+                <div class="product" data-code="G003" onclick="showProductDetails('G003')">
+                    <img src="images/girls3.jpg" alt="Girls Product 3">
+                    <h3>منتج بناتي 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="newborn" class="section">
+            <h2>منتجات المواليد</h2>
+            <div class="products">
+                <div class="product" data-code="N001" onclick="showProductDetails('N001')">
+                    <img src="images/newborn1.jpg" alt="Newborn Product 1">
+                    <h3>منتج مواليد 1</h3>
+                </div>
+                <div class="product" data-code="N002" onclick="showProductDetails('N002')">
+                    <img src="images/newborn2.jpg" alt="Newborn Product 2">
+                    <h3>منتج مواليد 2</h3>
+                </div>
+                <div class="product" data-code="N003" onclick="showProductDetails('N003')">
+                    <img src="images/newborn3.jpg" alt="Newborn Product 3">
+                    <h3>منتج مواليد 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="accessories" class="section">
+            <h2>منتجات الإكسسوارات</h2>
+            <div class="products">
+                <div class="product" data-code="A001" onclick="showProductDetails('A001')">
+                    <img src="images/accessory1.jpg" alt="Accessory Product 1">
+                    <h3>منتج إكسسوار 1</h3>
+                </div>
+                <div class="product" data-code="A002" onclick="showProductDetails('A002')">
+                    <img src="images/accessory2.jpg" alt="Accessory Product 2">
+                    <h3>منتج إكسسوار 2</h3>
+                </div>
+                <div class="product" data-code="A003" onclick="showProductDetails('A003')">
+                    <img src="images/accessory3.jpg" alt="Accessory Product 3">
+                    <h3>منتج إكسسوار 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="smartphones" class="section">
+            <h2>منتجات الهواتف الذكية</h2>
+            <div class="products">
+                <div class="product" data-code="S001" onclick="showProductDetails('S001')">
+                    <img src="images/smartphone1.jpg" alt="Smartphone Product 1">
+                    <h3>هاتف ذكي 1</h3>
+                </div>
+                <div class="product" data-code="S002" onclick="showProductDetails('S002')">
+                    <img src="images/smartphone2.jpg" alt="Smartphone Product 2">
+                    <h3>هاتف ذكي 2</h3>
+                </div>
+                <div class="product" data-code="S003" onclick="showProductDetails('S003')">
+                    <img src="images/smartphone3.jpg" alt="Smartphone Product 3">
+                    <h3>هاتف ذكي 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="electronics" class="section">
+            <h2>منتجات الإلكترونيات</h2>
+            <div class="products">
+                <div class="product" data-code="E001" onclick="showProductDetails('E001')">
+                    <img src="images/electronic1.jpg" alt="Electronics Product 1">
+                    <h3>إلكترونيات 1</h3>
+                </div>
+                <div class="product" data-code="E002" onclick="showProductDetails('E002')">
+                    <img src="images/electronic2.jpg" alt="Electronics Product 2">
+                    <h3>إلكترونيات 2</h3>
+                </div>
+                <div class="product" data-code="E003" onclick="showProductDetails('E003')">
+                    <img src="images/electronic3.jpg" alt="Electronics Product 3">
+                    <h3>إلكترونيات 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="brands" class="section">
+            <h2>منتجات الماركات</h2>
+            <div class="products">
+                <div class="product" data-code="BR001" onclick="showProductDetails('BR001')">
+                    <img src="images/brand1.jpg" alt="Brand Product 1">
+                    <h3>ماركة 1</h3>
+                </div>
+                <div class="product" data-code="BR002" onclick="showProductDetails('BR002')">
+                    <img src="images/brand2.jpg" alt="Brand Product 2">
+                    <h3>ماركة 2</h3>
+                </div>
+                <div class="product" data-code="BR003" onclick="showProductDetails('BR003')">
+                    <img src="images/brand3.jpg" alt="Brand Product 3">
+                    <h3>ماركة 3</h3>
+                </div>
+            </div>
+        </div>
+        <div id="shajlam" class="section">
+            <h2>منتجات Shglam</h2>
+            <div class="products">
+                <div class="product" data-code="SH001" onclick="showProductDetails('SH001')">
+                    <img src="images/shglam1.jpg" alt="Shglam Product 1">
+                    <h3>Shglam 1</h3>
+                </div>
+                <div class="product" data-code="SH002" onclick="showProductDetails('SH002')">
+                    <img src="images/shglam2.jpg" alt="Shglam Product 2">
+                    <h3>Shglam 2</h3>
+                </div>
+                <div class="product" data-code="SH003" onclick="showProductDetails('SH003')">
+                    <img src="images/shglam3.jpg" alt="Shglam Product 3">
+                    <h3>Shglam 3</h3>
+                </div>
+            </div>
+        </div>
         <div id="product-details">
             <h2>تفاصيل المنتج</h2>
-            <img src="product1.jpg" alt="Product Image">
-            <p>وصف المنتج هنا.</p>
-            <p>السعر: 5000 ريال</p>
-            <div class="size-options">
-                <button onclick="selectSize(this)">S</button>
-                <button onclick="selectSize(this)">M</button>
-                <button onclick="selectSize(this)">L</button>
-                <button onclick="selectSize(this)">XL</button>
+            <img id="product-image" src="" alt="Product Image">
+            <p id="product-code"></p>
+            <p id="product-price"></p>
+            <div class="size-options" id="size-options">
+                <label>المقاس:</label>
+                <button onclick="selectSize('S')">S</button>
+                <button onclick="selectSize('M')">M</button>
+                <button onclick="selectSize('L')">L</button>
+                <button onclick="selectSize('XL')">XL</button>
             </div>
-            <button class="btn" onclick="addToCart()">أضف إلى السلة</button>
+            <button class="btn" onclick="addToCart()">إضافة إلى السلة</button>
         </div>
         <div id="cart-details">
-            <h2>سلة المشتريات</h2>
-            <div class="cart-item">
-                <img src="product1.jpg" alt="Product Image">
-                <p>منتج 1</p>
-                <p>5000 ريال</p>
-                <button class="btn" onclick="removeFromCart()">حذف</button>
-            </div>
+            <h2>تفاصيل السلة</h2>
+            <div id="cart-items"></div>
             <div class="cart-total">
-                <p>الإجمالي: 5000 ريال</p>
+                <strong>المجموع: </strong><span id="cart-total">0</span> ريال
             </div>
             <div class="cart-share">
-                <a href="#" class="btn">مشاركة سلة المشتريات</a>
+                <a href="#" class="btn">شارك السلة</a>
             </div>
         </div>
     </div>
     <div class="bottom-nav">
-        <a href="#" onclick="showSection('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
-        <a href="#" onclick="showSection('categories')"><i class="fas fa-th"></i><span>الفئات</span></a>
-        <a href="#" onclick="showSection('notifications')"><i class="fas fa-bell"></i><span>الإشعارات</span></a>
-        <a href="#" onclick="showSection('profile')"><i class="fas fa-user"></i><span>حسابي</span></a>
+        <a href="#home" onclick="showSection('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
+        <a href="#categories" onclick="showSection('categories')"><i class="fas fa-th"></i><span>التصنيفات</span></a>
+        <a href="#offers" onclick="showSection('offers')"><i class="fas fa-tags"></i><span>العروض</span></a>
+        <a href="#favorites" onclick="showSection('favorites')"><i class="fas fa-heart"></i><span>المفضلة</span></a>
+        <a href="#account" onclick="showSection('account')"><i class="fas fa-user"></i><span>حسابي</span></a>
     </div>
     <script>
+        let cart = [];
+        let currentSize = '';
+
         function showSection(sectionId) {
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
             document.getElementById(sectionId).classList.add('active');
         }
 
-        function showProductDetails(productId) {
-            document.getElementById('product-details').style.display = 'block';
+        function showProductDetails(productCode) {
+            const product = getProductByCode(productCode);
+            if (product) {
+                document.getElementById('product-image').src = product.image;
+                document.getElementById('product-code').textContent = 'كود المنتج: ' + product.code;
+                document.getElementById('product-price').textContent = 'السعر: ' + product.price + ' ريال';
+                document.getElementById('product-details').style.display = 'block';
+                currentSize = ''; // Reset the size selection
+                document.querySelectorAll('.size-options button').forEach(button => {
+                    button.classList.remove('active');
+                });
+            }
+        }
+
+        function getProductByCode(code) {
+            const products = {
+                'P001': {image: 'images/women2.jpeg', price: 150, code: 'P001'},
+                'P002': {image: 'images/men4.jpg', price: 200, code: 'P002'},
+                'P003': {image: 'images/kids3.jpg', price: 120, code: 'P003'},
+                'M001': {image: 'images/men1.jpeg', price: 180, code: 'M001'},
+                'M002': {image: 'images/men2.jpg', price: 220, code: 'M002'},
+                'M003': {image: 'images/men3.jpg', price: 160, code: 'M003'},
+                'W001': {image: 'images/women1.jpeg', price: 140, code: 'W001'},
+                'W002': {image: 'images/women2.jpeg', price: 190, code: 'W002'},
+                'W003': {image: 'images/women3.jpeg', price: 170, code: 'W003'},
+                'B001': {image: 'images/boys1.jpg', price: 130, code: 'B001'},
+                'B002': {image: 'images/boys2.jpg', price: 140, code: 'B002'},
+                'B003': {image: 'images/boys3.jpg', price: 150, code: 'B003'},
+                'G001': {image: 'images/girls1.jpg', price: 120, code: 'G001'},
+                'G002': {image: 'images/girls2.jpg', price: 130, code: 'G002'},
+                'G003': {image: 'images/girls3.jpg', price: 140, code: 'G003'},
+                'N001': {image: 'images/newborn1.jpg', price: 100, code: 'N001'},
+                'N002': {image: 'images/newborn2.jpg', price: 110, code: 'N002'},
+                'N003': {image: 'images/newborn3.jpg', price: 120, code: 'N003'},
+                'A001': {image: 'images/accessory1.jpg', price: 50, code: 'A001'},
+                'A002': {image: 'images/accessory2.jpg', price: 60, code: 'A002'},
+                'A003': {image: 'images/accessory3.jpg', price: 70, code: 'A003'},
+                'S001': {image: 'images/smartphone1.jpg', price: 800, code: 'S001'},
+                'S002': {image: 'images/smartphone2.jpg', price: 850, code: 'S002'},
+                'S003': {image: 'images/smartphone3.jpg', price: 900, code: 'S003'},
+                'E001': {image: 'images/electronic1.jpg', price: 300, code: 'E001'},
+                'E002': {image: 'images/electronic2.jpg', price: 350, code: 'E002'},
+                'E003': {image: 'images/electronic3.jpg', price: 400, code: 'E003'},
+                'BR001': {image: 'images/brand1.jpg', price: 500, code: 'BR001'},
+                'BR002': {image: 'images/brand2.jpg', price: 550, code: 'BR002'},
+                'BR003': {image: 'images/brand3.jpg', price: 600, code: 'BR003'},
+                'SH001': {image: 'images/shglam1.jpg', price: 250, code: 'SH001'},
+                'SH002': {image: 'images/shglam2.jpg', price: 300, code: 'SH002'},
+                'SH003': {image: 'images/shglam3.jpg', price: 350, code: 'SH003'}
+            };
+            return products[code];
+        }
+
+        function selectSize(size) {
+            currentSize = size;
+            document.querySelectorAll('.size-options button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.size-options button[onclick="selectSize('${size}')"]`).classList.add('active');
         }
 
         function addToCart() {
-            let cartCount = parseInt(document.getElementById('cart-count').innerText);
-            cartCount += 1;
-            document.getElementById('cart-count').innerText = cartCount;
+            const productCode = document.getElementById('product-code').textContent.split(' ')[2];
+            const product = getProductByCode(productCode);
+            if (product && currentSize) {
+                cart.push({ ...product, size: currentSize });
+                updateCartCount();
+                alert('تمت إضافة المنتج إلى السلة بنجاح');
+                document.getElementById('product-details').style.display = 'none';
+            } else {
+                alert('يرجى تحديد المقاس');
+            }
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').textContent = cart.length;
+        }
+
+        function showCart() {
             document.getElementById('cart-details').style.display = 'block';
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price;
+                cartItems.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.code}">
+                        <div>
+                            <p>كود المنتج: ${item.code}</p>
+                            <p>المقاس: ${item.size}</p>
+                            <p>السعر: ${item.price} ريال</p>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('cart-total').textContent = total;
         }
 
-        function removeFromCart() {
-            let cartCount = parseInt(document.getElementById('cart-count').innerText);
-            if (cartCount > 0) {
-                cartCount -= 1;
-                document.getElementById('cart-count').innerText = cartCount;
+        function searchProduct() {
+            const searchInput = document.getElementById('search-input').value.trim();
+            if (searchInput) {
+                const product = getProductByCode(searchInput.toUpperCase());
+                if (product) {
+                    showProductDetails(product.code);
+                } else {
+                    alert('لم يتم العثور على المنتج');
+                }
             }
-            if (cartCount === 0) {
-                document.getElementById('cart-details').style.display = 'none';
-            }
         }
 
-        function showCustomerService() {
-            alert('خدمة العملاء غير متوفرة حاليا');
-        }
-
-        function selectSize(button) {
-            const buttons = document.querySelectorAll('.size-options button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
-
-        // Slideshow
         let slideIndex = 0;
-        const slides = document.querySelectorAll('.slideshow img');
-        setInterval(() => {
-            slides[slideIndex].classList.remove('active');
-            slideIndex = (slideIndex + 1) % slides.length;
-            slides[slideIndex].classList.add('active');
-        }, 3000);
+        function showSlides() {
+            let slides = document.querySelectorAll('.slideshow img');
+            slides.forEach(slide => slide.classList.remove('active'));
+            slideIndex++;
+            if (slideIndex > slides.length) {slideIndex = 1}
+            slides[slideIndex-1].classList.add('active');
+            setTimeout(showSlides, 3000); // Change image every 3 seconds
+        }
+        showSlides();
     </script>
 </body>
 </html>
