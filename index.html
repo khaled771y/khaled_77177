@@ -263,8 +263,6 @@
                 </div>
             </div>
         </div>
-        <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore-compat.js"></script>
     </header>
     <nav>
         <a href="#home" onclick="showSection('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
@@ -520,79 +518,46 @@
                 </div>
             </div>
         </div>
-       <div id="product-details" class="section">
+        <div id="product-details">
             <h2>تفاصيل المنتج</h2>
+            <img id="product-image" src="" alt="Product Image">
+            <p id="product-name">اسم المنتج</p>
+            <p id="product-price">السعر</p>
+            <p id="product-description">وصف المنتج</p>
             <div class="size-options">
-                <button onclick="selectSize(this)">S</button>
-                <button onclick="selectSize(this)">M</button>
-                <button onclick="selectSize(this)">L</button>
-                <button onclick="selectSize(this)">XL</button>
+                <button onclick="selectSize('S')">S</button>
+                <button onclick="selectSize('M')">M</button>
+                <button onclick="selectSize('L')">L</button>
+                <button onclick="selectSize('XL')">XL</button>
             </div>
-            <button class="btn" onclick="addToCart()">أضف إلى السلة</button>
+            <button class="btn" onclick="addToCart()">إضافة إلى السلة</button>
         </div>
-
-        <div id="cart-details" class="section">
-            <h2>سلة التسوق</h2>
-            <div id="cart-items">
-                <!-- سيتم إدخال عناصر السلة هنا -->
-            </div>
+        <div id="cart-details">
+            <h2>عربة التسوق</h2>
+            <div id="cart-items"></div>
             <div class="cart-total">
-                <p>المجموع: <span id="cart-total">0</span> ريال</p>
+                <p>إجمالي السعر: <span id="cart-total">0 ريال</span></p>
             </div>
-            <div class="checkout">
-                <h3>طرق الدفع</h3>
-                <div class="payment-methods">
-                    <input type="radio" id="cod" name="payment-method" value="COD">
-                    <label for="cod">الدفع عند الاستلام</label><br>
-                    <input type="radio" id="credit-card" name="payment-method" value="Credit Card">
-                    <label for="credit-card">بطاقة ائتمان</label><br>
-                    <input type="radio" id="paypal" name="payment-method" value="PayPal">
-                    <label for="paypal">باي بال</label><br>
-                </div>
-                <button class="btn" onclick="confirmPayment()">تأكيد الدفع</button>
+            <div class="cart-share">
+                <p>مشاركة:</p>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourwebsite.com/cart" class="btn">فيسبوك</a>
+                <a href="https://wa.me/?text=https://yourwebsite.com/cart" class="btn">واتساب</a>
             </div>
-        </div>
-
-        <div id="payment-confirmation" class="section">
-            <h2>تأكيد الدفع</h2>
-            <p>تم تأكيد طلبك بنجاح!</p>
-            <p>المبلغ الإجمالي: <span id="confirmation-total">0</span> ريال</p>
-            <p>طريقة الدفع: <span id="confirmation-method"></span></p>
-            <button class="btn" onclick="showSection('home')">العودة إلى الصفحة الرئيسية</button>
         </div>
     </div>
-
-  <div class="bottom-nav">
+    <div class="bottom-nav">
         <a href="#home" onclick="showSection('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
         <a href="#categories" onclick="showSection('categories')"><i class="fas fa-th-list"></i><span>الأقسام</span></a>
         <a href="#cart" onclick="showCart()"><i class="fas fa-shopping-cart"></i><span>عربة التسوق</span></a>
         <a href="#account" onclick="showSection('account')"><i class="fas fa-user"></i><span>حسابي</span></a>
     </div>
 
-
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAatuXY7VPtB39zcN3L-z2jfHBX6NTfqoA",
-            authDomain: "temu-yemen.firebaseapp.com",
-            projectId: "temu-yemen",
-            storageBucket: "temu-yemen.appspot.com",
-            messagingSenderId: "687344852319",
-            appId: "1:687344852319:web:dc5f95ce4dd7572ef96aea",
-            measurementId: "G-NLSSTZM62R"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        let cart = [];
-        let cartTotal = 0;
-
-        function showSlides() {
-            // عرض الشرائح (يبقى كما هو)
-        }
-        showSlides();
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slideshow img');
+        const cartItems = [];
+        let cartCount = 0;
+        let selectedProduct = null;
 
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(section => {
@@ -601,66 +566,79 @@
             document.getElementById(sectionId).classList.add('active');
         }
 
-        function showProductDetails(productName) {
-            alert('عرض تفاصيل ' + productName);
-            showSection('product-details');
+        function showCustomerService() {
+            alert("اتصل بخدمة العملاء على الرقم 771774634");
+        }
+
+        function showCart() {
+            const cartDetails = document.getElementById('cart-details');
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+            cartItems.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <p>${item.name}</p>
+                    <p>${item.price} ريال</p>
+                    <button onclick="removeFromCart('${item.id}')">حذف</button>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+            document.getElementById('cart-total').innerText = `${cartItems.reduce((total, item) => total + item.price, 0)} ريال`;
+            cartDetails.style.display = 'block';
+        }
+
+        function showProductDetails(productId) {
+            selectedProduct = {
+                id: productId,
+                image: 'images/product.jpg',
+                name: `Product ${productId}`,
+                price: 100,
+                description: `Description of Product ${productId}`
+            };
+            document.getElementById('product-image').src = selectedProduct.image;
+            document.getElementById('product-name').innerText = selectedProduct.name;
+            document.getElementById('product-price').innerText = `${selectedProduct.price} ريال`;
+            document.getElementById('product-description').innerText = selectedProduct.description;
+            document.getElementById('product-details').style.display = 'block';
         }
 
         function addToCart() {
-            // إضافة العنصر إلى السلة
-            cart.push({ name: 'منتج 1', price: 100 });
-            cartTotal += 100;
-            updateCart();
-            saveCartToFirestore();
+            cartItems.push(selectedProduct);
+            cartCount++;
+            document.getElementById('cart-count').innerText = cartCount;
+            alert('تمت إضافة المنتج إلى السلة');
         }
 
-        function updateCart() {
-            document.getElementById('cart-count').textContent = cart.length;
-            let cartItemsElement = document.getElementById('cart-items');
-            cartItemsElement.innerHTML = '';
-            cart.forEach(item => {
-                let newItem = document.createElement('div');
-                newItem.className = 'cart-item';
-                newItem.innerHTML = `<img src="product1.jpg" alt="منتج"><span>${item.name}</span><span>${item.price} ريال</span>`;
-                cartItemsElement.appendChild(newItem);
-            });
-            document.getElementById('cart-total').textContent = cartTotal;
-        }
-
-        function saveCartToFirestore() {
-            db.collection('carts').add({
-                items: cart,
-                total: cartTotal,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                console.log('Cart saved successfully.');
-            }).catch((error) => {
-                console.error('Error saving cart: ', error);
-            });
-        }
-
-        function confirmPayment() {
-            let selectedMethod = document.querySelector('input[name="payment-method"]:checked');
-            if (!selectedMethod) {
-                alert('يرجى اختيار طريقة الدفع');
-                return;
+        function removeFromCart(productId) {
+            const itemIndex = cartItems.findIndex(item => item.id === productId);
+            if (itemIndex !== -1) {
+                cartItems.splice(itemIndex, 1);
+                cartCount--;
+                document.getElementById('cart-count').innerText = cartCount;
+                showCart();
             }
-
-            let confirmationTotal = document.getElementById('confirmation-total');
-            confirmationTotal.textContent = cartTotal;
-
-            let confirmationMethod = document.getElementById('confirmation-method');
-            confirmationMethod.textContent = selectedMethod.nextSibling.textContent;
-
-            showSection('payment-confirmation');
         }
 
-        function selectSize(button) {
-            document.querySelectorAll('.size-options button').forEach(btn => {
-                btn.classList.remove('active');
+        function selectSize(size) {
+            document.querySelectorAll('.size-options button').forEach(button => {
+                button.classList.remove('active');
             });
-            button.classList.add('active');
+            document.querySelector(`.size-options button[onclick="selectSize('${size}')"]`).classList.add('active');
         }
+
+        function showNextSlide() {
+            slides[slideIndex].classList.remove('active');
+            slideIndex = (slideIndex + 1) % slides.length;
+            slides[slideIndex].classList.add('active');
+        }
+
+        setInterval(showNextSlide, 3000); // Change image every 3 seconds
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('home');
+        });
     </script>
 </body>
 </html>
