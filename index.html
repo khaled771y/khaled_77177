@@ -151,7 +151,6 @@
             gap: 10px;
             scroll-behavior: smooth;
         }
-
         .carousel img {
             flex: 0 0 auto;
             width: 80px;
@@ -160,7 +159,6 @@
             border-radius: 50%;
             animation: slide 30s linear infinite;
         }
-
         @keyframes slide {
             0% {
                 transform: translateX(100%);
@@ -187,7 +185,7 @@
             width: 50px;
             height: auto;
         }
-        .cart-total, .cart-share {
+        .cart-total, .cart-share, .payment-methods {
             text-align: center;
             margin-top: 20px;
         }
@@ -272,10 +270,10 @@
         <a href="#girls" onclick="showSection('girls')"><i class="fas fa-girl"></i>بناتي</a>
         <a href="#newborn" onclick="showSection('newborn')"><i class="fas fa-baby"></i>مواليد</a>
         <a href="#accessories" onclick="showSection('accessories')"><i class="fas fa-gem"></i>إكسسوارات</a>
-        <a href="#smartphones" onclick="showSection('smartphones')"><i class="fas fa-mobile-alt"></i>هواتف</a>
-        <a href="#electronics" onclick="showSection('electronics')"><i class="fas fa-plug"></i>إلكترونيات</a>
+        <a href="#smartphones" onclick="showSection('smartphones')"><i class="fas fa-mobile-alt"></i>هواتف ذكية</a>
+        <a href="#electronics" onclick="showSection('electronics')"><i class="fas fa-laptop"></i>إلكترونيات</a>
     </nav>
-    <div class="container">
+<div class="container">
         <div class="banner">
             <p>عروض خاصة في عيد الأضحى! لا تفوت الفرصة!</p>
         </div>
@@ -519,11 +517,10 @@
             </div>
         </div>
         <div id="product-details">
-            <h2>تفاصيل المنتج</h2>
             <img id="product-image" src="" alt="Product Image">
-            <p id="product-name">اسم المنتج</p>
-            <p id="product-price">السعر</p>
-            <p id="product-description">وصف المنتج</p>
+            <h2 id="product-name"></h2>
+            <p id="product-price"></p>
+            <p id="product-description"></p>
             <div class="size-options">
                 <button onclick="selectSize('S')">S</button>
                 <button onclick="selectSize('M')">M</button>
@@ -533,29 +530,32 @@
             <button class="btn" onclick="addToCart()">إضافة إلى السلة</button>
         </div>
         <div id="cart-details">
-            <h2>عربة التسوق</h2>
+            <h2>السلة</h2>
             <div id="cart-items"></div>
             <div class="cart-total">
-                <p>إجمالي السعر: <span id="cart-total">0 ريال</span></p>
+                الإجمالي: <span id="cart-total">0 ريال</span>
+            </div>
+            <div class="payment-methods">
+                <h3>طرق الدفع</h3>
+                <button class="btn" onclick="payWith('credit-card')">بطاقة ائتمان</button>
+                <button class="btn" onclick="payWith('paypal')">PayPal</button>
+                <button class="btn" onclick="payWith('cash')">الدفع نقداً عند الاستلام</button>
             </div>
             <div class="cart-share">
-                <p>مشاركة:</p>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourwebsite.com/cart" class="btn">فيسبوك</a>
-                <a href="https://wa.me/?text=https://yourwebsite.com/cart" class="btn">واتساب</a>
+                <a href="#" class="btn">مشاركة السلة</a>
             </div>
         </div>
     </div>
     <div class="bottom-nav">
         <a href="#home" onclick="showSection('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
-        <a href="#categories" onclick="showSection('categories')"><i class="fas fa-th-list"></i><span>الأقسام</span></a>
-        <a href="#cart" onclick="showCart()"><i class="fas fa-shopping-cart"></i><span>عربة التسوق</span></a>
-        <a href="#account" onclick="showSection('account')"><i class="fas fa-user"></i><span>حسابي</span></a>
+        <a href="#categories" onclick="showSection('categories')"><i class="fas fa-list"></i><span>التصنيفات</span></a>
+        <a href="#offers" onclick="showSection('offers')"><i class="fas fa-tags"></i><span>العروض</span></a>
+        <a href="#profile" onclick="showSection('profile')"><i class="fas fa-user"></i><span>الحساب</span></a>
+        <a href="#cart" onclick="showSection('cart')"><i class="fas fa-shopping-cart"></i><span>السلة</span></a>
     </div>
-
     <script>
         let slideIndex = 0;
-        const slides = document.querySelectorAll('.slideshow img');
-        const cartItems = [];
+        let cartItems = [];
         let cartCount = 0;
         let selectedProduct = null;
 
@@ -567,7 +567,7 @@
         }
 
         function showCustomerService() {
-            alert("اتصل بخدمة العملاء على الرقم 771774634");
+            alert('للتواصل مع خدمة العملاء، يرجى الاتصال على 123-456-789');
         }
 
         function showCart() {
@@ -575,50 +575,31 @@
             const cartItemsContainer = document.getElementById('cart-items');
             cartItemsContainer.innerHTML = '';
             cartItems.forEach(item => {
-                const cartItem = document.createElement('div');
-                cartItem.classList.add('cart-item');
-                cartItem.innerHTML = `
+                const cartItem = `<div class="cart-item">
                     <img src="${item.image}" alt="${item.name}">
-                    <p>${item.name}</p>
-                    <p>${item.price} ريال</p>
-                    <button onclick="removeFromCart('${item.id}')">حذف</button>
-                `;
-                cartItemsContainer.appendChild(cartItem);
+                    <div>
+                        <p>${item.name}</p>
+                        <p>${item.price} ريال</p>
+                    </div>
+                    <button onclick="removeFromCart('${item.id}')">إزالة</button>
+                </div>`;
+                cartItemsContainer.innerHTML += cartItem;
             });
-            document.getElementById('cart-total').innerText = `${cartItems.reduce((total, item) => total + item.price, 0)} ريال`;
+            document.getElementById('cart-total').innerText = `${calculateTotal()} ريال`;
             cartDetails.style.display = 'block';
         }
 
+        function calculateTotal() {
+            return cartItems.reduce((total, item) => total + item.price, 0);
+        }
+
         function showProductDetails(productId) {
-            selectedProduct = {
-                id: productId,
-                image: 'images/product.jpg',
-                name: `Product ${productId}`,
-                price: 100,
-                description: `Description of Product ${productId}`
-            };
+            selectedProduct = products.find(product => product.id === productId);
             document.getElementById('product-image').src = selectedProduct.image;
             document.getElementById('product-name').innerText = selectedProduct.name;
             document.getElementById('product-price').innerText = `${selectedProduct.price} ريال`;
             document.getElementById('product-description').innerText = selectedProduct.description;
             document.getElementById('product-details').style.display = 'block';
-        }
-
-        function addToCart() {
-            cartItems.push(selectedProduct);
-            cartCount++;
-            document.getElementById('cart-count').innerText = cartCount;
-            alert('تمت إضافة المنتج إلى السلة');
-        }
-
-        function removeFromCart(productId) {
-            const itemIndex = cartItems.findIndex(item => item.id === productId);
-            if (itemIndex !== -1) {
-                cartItems.splice(itemIndex, 1);
-                cartCount--;
-                document.getElementById('cart-count').innerText = cartCount;
-                showCart();
-            }
         }
 
         function selectSize(size) {
@@ -628,16 +609,48 @@
             document.querySelector(`.size-options button[onclick="selectSize('${size}')"]`).classList.add('active');
         }
 
-        function showNextSlide() {
-            slides[slideIndex].classList.remove('active');
-            slideIndex = (slideIndex + 1) % slides.length;
-            slides[slideIndex].classList.add('active');
+        function addToCart() {
+            if (!selectedProduct) return;
+            const size = document.querySelector('.size-options button.active')?.innerText;
+            cartItems.push({ ...selectedProduct, size });
+            document.getElementById('cart-count').innerText = ++cartCount;
+            alert('تمت إضافة المنتج إلى السلة');
         }
 
-        setInterval(showNextSlide, 3000); // Change image every 3 seconds
+        function removeFromCart(productId) {
+            const index = cartItems.findIndex(item => item.id === productId);
+            if (index !== -1) {
+                cartItems.splice(index, 1);
+                document.getElementById('cart-count').innerText = --cartCount;
+                showCart();
+            }
+        }
+
+        function payWith(method) {
+            alert(`تم اختيار طريقة الدفع: ${method}`);
+            // Implement the payment logic here
+        }
+
+        function showSlides() {
+            const slides = document.querySelectorAll('.slideshow img');
+            slides.forEach(slide => slide.classList.remove('active'));
+            slideIndex = (slideIndex + 1) % slides.length;
+            slides[slideIndex].classList.add('active');
+            setTimeout(showSlides, 3000);
+        }
+
+        const products = [
+            { id: 'P001', name: 'فستان نسائي ضيق', price: 120, image: 'images/women2.jpeg', description: 'وصف المنتج 1' },
+            { id: 'P002', name: 'بدله رجالي', price: 150, image: 'images/men4.jpg', description: 'وصف المنتج 2' },
+            { id: 'P003', name: 'طقم ولادي', price: 100, image: 'images/kids3.jpeg', description: 'وصف المنتج 3' },
+            { id: 'M001', name: 'بدله تيشرت قطن', price: 180, image: 'images/men1.jpeg', description: 'وصف المنتج 4' },
+            { id: 'M002', name: 'بنطلون وشميز كتان', price: 200, image: 'images/men2.jpg', description: 'وصف المنتج 5' },
+            { id: 'W001', name: 'منتج نسائي 1', price: 150, image: 'images/women1.jpg', description: 'وصف المنتج 6' },
+            // Add other products similarly...
+        ];
 
         document.addEventListener('DOMContentLoaded', () => {
-            showSection('home');
+            showSlides();
         });
     </script>
 </body>
