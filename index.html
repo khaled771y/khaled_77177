@@ -185,7 +185,7 @@
             width: 50px;
             height: auto;
         }
-        .cart-total, .cart-share, .payment-methods {
+        .cart-total, .cart-share {
             text-align: center;
             margin-top: 20px;
         }
@@ -270,10 +270,10 @@
         <a href="#girls" onclick="showSection('girls')"><i class="fas fa-girl"></i>بناتي</a>
         <a href="#newborn" onclick="showSection('newborn')"><i class="fas fa-baby"></i>مواليد</a>
         <a href="#accessories" onclick="showSection('accessories')"><i class="fas fa-gem"></i>إكسسوارات</a>
-        <a href="#smartphones" onclick="showSection('smartphones')"><i class="fas fa-mobile-alt"></i>هواتف ذكية</a>
+        <a href="#smartphones" onclick="showSection('smartphones')"><i class="fas fa-mobile-alt"></i>هواتف</a>
         <a href="#electronics" onclick="showSection('electronics')"><i class="fas fa-laptop"></i>إلكترونيات</a>
     </nav>
-<div class="container">
+     <div class="container">
         <div class="banner">
             <p>عروض خاصة في عيد الأضحى! لا تفوت الفرصة!</p>
         </div>
@@ -639,19 +639,18 @@
             setTimeout(showSlides, 3000);
         }
 
-        const products = [
+     const products = [
             { id: 'P001', name: 'فستان نسائي ضيق', price: 120, image: 'images/women2.jpeg', description: 'وصف المنتج 1' },
             { id: 'P002', name: 'بدله رجالي', price: 150, image: 'images/men4.jpg', description: 'وصف المنتج 2' },
             { id: 'P003', name: 'طقم ولادي', price: 100, image: 'images/kids3.jpeg', description: 'وصف المنتج 3' },
             { id: 'M001', name: 'بدله تيشرت قطن', price: 180, image: 'images/men1.jpeg', description: 'وصف المنتج 4' },
             { id: 'M002', name: 'بنطلون وشميز كتان', price: 200, image: 'images/men2.jpg', description: 'وصف المنتج 5' },
             { id: 'W001', name: 'منتج نسائي 1', price: 150, image: 'images/women1.jpg', description: 'وصف المنتج 6' },
-            // Add other products similarly...
+            { id: 'W001', name: 'منتج نسائي 1', price: 150, image: 'images/women1.jpg', description: 'وصف المنتج 6' },
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
             showSlides();
-        });
-    </script>
+        });    </script>
 </body>
 </html>
