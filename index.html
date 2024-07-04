@@ -5,594 +5,555 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temu Yemen</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            direction: rtl;
-            text-align: right;
-            margin: 0;
-            padding-bottom: 60px;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #FF5733;
-            padding: 10px 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .top-bar .logo {
-            display: flex;
-            align-items: center;
-        }
-        .top-bar .logo i {
-            font-size: 28px;
-            color: #fff;
-        }
-        .top-bar .logo span {
-            margin-left: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-        }
-        .top-bar .search-bar {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 20px;
-        }
-        .top-bar .search-bar input[type="text"] {
-            width: 100%;
-            max-width: 800px;
-            padding: 7px 20px;
-            border: none;
-            border-radius: 11px;
-            font-size: 20px;
-            background-color: #fff;
-            color: #FF5733;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .top-bar .search-bar input[type="text"]::placeholder {
-            color: #FF5733;
-        }
-        .top-bar .search-bar input[type="text"]:focus {
-            outline: none;
-        }
-        .top-bar .icons {
-            display: flex;
-            align-items: center;
-        }
-        .top-bar .icons div {
-            margin-left: 20px;
-        }
-        .top-bar .icons i {
-            font-size: 24px;
-            color: #fff;
-            cursor: pointer;
-        }
-        .top-bar .cart-count {
-            position: relative;
-            top: -10px;
-            right: -10px;
-            background-color: red;
-            color: white;
-            font-size: 14px;
-            padding: 5px 8px;
-            border-radius: 50%;
-        }
-        nav {
-            background-color: #FF7043;
-            padding: 10px;
-            display: flex;
-            overflow-x: auto;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-        }
-        nav a i {
-            margin-left: 5px;
-        }
-        .container {
-            padding: 20px;
-        }
-        .banner {
-            background-color: #FFC300;
-            padding: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .slideshow {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-        .slideshow img {
-            width: 100%;
-            display: none;
-        }
-        .slideshow img.active {
-            display: block;
-        }
-        .slideshow img.active {
-            display: block;
-        }
-        .section {
-            display: none;
-        }
-        .section.active {
-            display: block;
-        }
-        .products, .featured-products {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .product, .featured-product {
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 5px;
-            margin: 6px;
-            flex: 1 1 calc(40% - 20px);
-            box-sizing: border-box;
-            cursor: pointer;
-        }
-        .product img, .featured-product img {
-            width: 100%;
-            height: auto;
-        }
-        .carousel {
-            display: flex;
-            overflow-x: auto;
-            padding: 10px 0;
-            margin-bottom: 20px;
-            gap: 10px;
-            scroll-behavior: smooth;
-        }
-        .carousel img {
-            flex: 0 0 auto;
-            width: 80px;
-            height: 80px;
-            margin: 0 5px;
-            border-radius: 50%;
-            animation: slide 30s linear infinite;
-        }
-        @keyframes slide {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-        #product-details, #cart-details {
-            display: none;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding: 10px 0;
-        }
-        .cart-item img {
-            width: 50px;
-            height: auto;
-        }
-        .cart-total, .cart-share {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 10px 20px;
-            color: #fff;
-            background-color: #FF5733;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .btn-google {
-            background-color: #db4437;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            padding: 10px 0;
-            width: 100%;
-            max-width: 200px;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-google i {
-            margin-right: 10px;
-        }
-        .cart-share a:hover {
-            background-color: #FF7043;
-        }
-        .size-options button {
-            margin: 5px;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-            cursor: pointer;
-        }
-        .size-options button.active {
-            background-color: #FF5733;
-            color: #fff;
-        }
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #FF5733;
-            color: #fff;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            height: 60px;
-            box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
-        }
-        .bottom-nav a {
-            color: #fff;
-            text-decoration: none;
-            text-align: center;
-            flex: 1;
-        }
-        .bottom-nav a i {
-            display: block;
-            font-size: 24px;
-        }
-        .bottom-nav a span {
-            display: block;
-            font-size: 12px;
-        }
-        .auth-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-        .auth-input {
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            width: 100%;
-            max-width: 300px;
-            box-sizing: border-box;
-        }
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+    text-align: right;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FF5733;
+    color: #fff;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+}
+
+.top-bar .logo {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar .logo i {
+    margin-left: 1rem;
+    font-size: 2rem;
+}
+
+.top-bar .icons {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar .icons div {
+    margin-left: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    padding: 0 1rem;
+}
+
+.search-bar input {
+    width: 100%;
+    max-width: 600px;
+    padding: 1rem;
+    font-size: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem 0 0 0.5rem;
+    outline: none;
+    background-color: #fff;
+    color: #FF5733;
+}
+
+.search-bar button {
+    padding: 1rem;
+    font-size: 1.2rem;
+    border: 1px solid #FF5733;
+    background-color: #FF5733;
+    color: #fff;
+    border-radius: 0 0.5rem 0.5rem 0;
+    cursor: pointer;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #FF7043;
+    padding: 1rem 0;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 1rem 2rem;
+}
+
+nav a:hover {
+    background-color: #FF5733;
+}
+
+.container {
+    padding: 2rem;
+}
+
+.slideshow {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.slideshow img {
+    width: 100%;
+    display: none;
+    border-radius: 1rem;
+}
+
+.slideshow img.active {
+    display: block;
+}
+
+.carousel {
+    display: flex;
+    overflow-x: auto;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    scroll-behavior: smooth;
+}
+
+.carousel img {
+    flex: 0 0 auto;
+    width: 10rem;
+    height: 10rem;
+    margin: 0 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product {
+    border: 1px solid #ddd;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 0.5rem;
+    flex: 1 1 calc(48% - 1rem);
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.product:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.product img {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+}
+
+.product-details-page {
+    display: none;
+    padding: 2rem;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.product-details img {
+    width: 100%;
+    max-width: 20rem;
+    height: auto;
+    border-radius: 1rem;
+}
+
+.product-details h3 {
+    font-size: 2rem;
+    margin: 0;
+    color: #FF5733;
+}
+
+.product-details p {
+    font-size: 1.5rem;
+}
+
+.cart-page {
+    display: none;
+    padding: 2rem;
+}
+
+.cart-page h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    position: relative;
+}
+
+.cart-item img {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 1rem;
+    margin-left: 2rem;
+}
+
+.cart-item h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    flex: 1;
+    color: #FF5733;
+}
+
+.cart-item p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.cart-item .remove-item {
+    background: none;
+    border: none;
+    color: #FF5733;
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #FF5733;
+    color: #fff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 5rem;
+    box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+}
+
+.bottom-nav a {
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    flex: 1;
+    font-size: 1rem;
+}
+
+.bottom-nav a i {
+    display: block;
+    font-size: 1.5rem;
+}
+
+.bottom-nav a span {
+    display: block;
+    font-size: 1rem;
+}
+
+.bottom-nav .wide-button {
+    flex: 3;
+    background-color: #FF7043;
+    border-radius: 0.5rem;
+    text-align: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.bottom-nav .wide-button span {
+    display: inline;
+    font-size: 1rem;
+}
+
+/* استعلامات الوسائط */
+@media (max-width: 768px) {
+    .top-bar {
+        font-size: 1.2rem;
+    }
+
+    .top-bar .logo i,
+    .top-bar .icons div {
+        font-size: 1.2rem;
+    }
+
+    .search-bar input,
+    .search-bar button {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+
+    nav {
+        font-size: 1rem;
+    }
+
+    nav a {
+        padding: 0.8rem 1.5rem;
+    }
+
+    .carousel img {
+        width: 8rem;
+        height: 8rem;
+    }
+
+    .product {
+        flex: 1 1 calc(100% - 1rem);
+    }
+
+    .product-details img {
+        max-width: 15rem;
+    }
+
+    .cart-item img {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .cart-item h3 {
+        font-size: 1.2rem;
+    }
+
+    .cart-item .remove-item {
+        font-size: 1.2rem;
+    }
+
+    .bottom-nav {
+        height: 4rem;
+    }
+
+    .bottom-nav a i {
+        font-size: 1.2rem;
+    }
+
+    .bottom-nav .wide-button {
+        font-size: 1rem;
+    }
+}
     </style>
 </head>
 <body>
-    <header>
-        <div class="top-bar">
-            <div class="logo">
-                <i class="fas fa-store"></i>
-                <span>Temu Yemen</span>
+    <div class="top-bar">
+        <div class="logo">
+            <i class="fas fa-store"></i>
+            <span>Temu Yemen</span>
+        </div>
+        <div class="icons">
+            <div><i class="fas fa-bell"></i></div>
+            <div><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></div>
+            <div><i class="fas fa-heart"></i></div>
+            <div><i class="fas fa-user"></i></div>
+        </div>
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="عروض...">
+        <button><i class="fas fa-search"></i></button>
+    </div>
+    <nav>
+        <a href="#explore"><i class="fas fa-search"></i>استكشف</a>
+        <a href="#fashion"><i class="fas fa-tshirt"></i>أزياء</a>
+        <a href="#home"><i class="fas fa-home"></i>البيت</a>
+        <a href="#snippets"><i class="fas fa-book-open"></i>مقتطفات</a>
+    </nav>
+    <div class="container">
+        <div class="slideshow">
+            <img src="slide1.jpg" alt="Slide 1" class="active">
+            <img src="images/slide11.jpeg" alt="Slide 2">
+            <img src="images/slide14.jpeg" alt="Slide 3">
+            <img src="images/slide12.jpeg" alt="Slide 4">
+        </div>
+        <div class="carousel">
+            <img src="images/women3.jpg" alt="Ad 1">
+            <img src="images/kids2.jpeg" alt="Ad 2">
+            <img src="images/kids1.jpeg" alt="Ad 3">
+            <img src="images/men5.jpg" alt="Ad 4">
+        </div>
+        <div class="products">
+            <div class="product" onclick="showProductDetails('product1.jpg', 'منتج 1', '$19.99', '12345')">
+                <img src="images/men5.jpg" alt="Product 1">
+                <h3>منتج 1</h3>
+                <p>$19.99</p>
             </div>
-            <div class="search-bar">
-                <input type="text" placeholder="ابحث عن المنتجات...">
+            <div class="product" onclick="showProductDetails('product2.jpg', 'منتج 2', '$29.99', '67890')">
+                <img src="images/kids1.jpg" alt="Product 2">
+                <h3>منتج 2</h3>
+                <p>$29.99</p>
             </div>
-            <div class="icons">
-                <div><i class="fas fa-user" onclick="showSection('account')"></i></div>
-                <div><i class="fas fa-shopping-cart" onclick="showCart()"></i></div>
+            <div class="product" onclick="showProductDetails('product3.jpg', 'منتج 3', '$39.99', '11223')">
+                <img src="images/women2.jpeg" alt="Product 3">
+                <h3>منتج 3</h3>
+                <p>$39.99</p>
+            </div>
+            <div class="product" onclick="showProductDetails('product4.jpg', 'منتج 4', '$49.99', '44556')">
+                <img src="product4.jpg" alt="Product 4">
+                <h3>منتج 4</h3>
+                <p>$49.99</p>
             </div>
         </div>
-        <nav>
-            <a href="#home" onclick="showSection('home')"><i class="fas fa-home"></i>الرئيسية</a>
-            <a href="#men" onclick="showSection('men')"><i class="fas fa-male"></i>رجالي</a>
-            <a href="#women" onclick="showSection('women')"><i class="fas fa-female"></i>نسائي</a>
-            <a href="#boys" onclick="showSection('boys')"><i class="fas fa-child"></i>ولادي</a>
-            <a href="#girls" onclick="showSection('girls')"><i class="fas fa-child"></i>بناتي</a>
-            <a href="#discounts" onclick="showSection('discounts')"><i class="fas fa-tags"></i>تخفيضات</a>
-        </nav>
-    </header>
-    <main class="container">
-        <div id="home" class="section active">
-            <div class="banner">إعلان مميز</div>
-            <div class="slideshow">
-                <img src="images/slide11.jpeg" class="active">
-                <img src="images/slide12.jpeg">
-                <img src="images/slide14.jpeg">
-            </div>
-            <h2>المنتجات المميزة</h2>
-            <div class="featured-products">
-                <div class="featured-product" onclick="showProductDetails('Product 1')">
-                    <img src="images/women2.jpeg">
-                    <h3>Product 1</h3>
-                    <p>Price: $100</p>
-                </div>
-                <div class="featured-product" onclick="showProductDetails('Product 2')">
-                    <img src="images/men4.jpg">
-                    <h3>Product 2</h3>
-                    <p>Price: $80</p>
-                </div>
-            </div>
-            <div class="carousel">
-                <img src="images/kids2.jpeg" alt="item">
-                <img src="images/women3.jpg" alt="item">
-                <img src="images/men5.jpg" alt="item">
-                <img src="images/kids1.jpeg" alt="item">
-            </div>
-            <h2>كل المنتجات</h2>
-            <div class="products">
-                <div class="product" onclick="showProductDetails('Product A')">
-                    <img src="images/men2.jpg">
-                    <h3>Product A</h3>
-                    <p>Price: $50</p>
-                </div>
-                <div class="product" onclick="showProductDetails('Product B')">
-                    <img src="images/men3.jpg">
-                    <h3>Product B</h3>
-                    <p>Price: $60</p>
-                </div>
-            </div>
+    </div>
+    <div class="product-details-page" id="product-details-page">
+        <div class="product-details">
+            <img id="product-img" src="" alt="">
+            <h3 id="product-name"></h3>
+            <p id="product-price"></p>
+            <p id="product-code"></p>
+            <button onclick="addToCart()">إضافة إلى السلة</button>
         </div>
-        <div id="boys" class="section">
-            <h2>ولادي</h2>
-            <div class="products">
-                <div id="boys1" class="product" onclick="showProductDetails('boys1')">
-                    <img src="boys1.jpg" alt="Boys Product 1">
-                    <h3>منتج ولادي 1</h3>
-                </div>
-                <div id="boys2" class="product" onclick="showProductDetails('boys2')">
-                    <img src="boys2.jpg" alt="Boys Product 2">
-                    <h3>منتج ولادي 2</h3>
-                </div>
-            </div>
+    </div>
+    <div class="cart-page" id="cart-page">
+        <h2>سلة التسوق</h2>
+        <div class="cart-items" id="cart-items"></div>
+    </div>
+    <div class="account-page" id="account-page" style="display: none;">
+        <h2>حساب المستخدم</h2>
+        <form id="account-form" onsubmit="createAccount(event)">
+            <label for="username">اسم المستخدم:</label>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">كلمة المرور:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit">إنشاء حساب</button>
+        </form>
+    </div>
+    <div class="bottom-nav">
+        <a href="#" onclick="showHomePage()"><i class="fas fa-home"></i><span>الرئيسية</span></a>
+        <a href="#categories"><i class="fas fa-th-large"></i><span>الفئات</span></a>
+        <div class="wide-button" onclick="showCartPage()">
+            <span>العروض</span>
+            <i class="fas fa-tag"></i>
         </div>
-        <div id="girls" class="section">
-            <h2>بناتي</h2>
-            <div class="products">
-                <div id="girls1" class="product" onclick="showProductDetails('girls1')">
-                    <img src="girls1.jpg" alt="Girls Product 1">
-                    <h3>منتج بناتي 1</h3>
-                </div>
-                <div id="girls2" class="product" onclick="showProductDetails('girls2')">
-                    <img src="girls2.jpg" alt="Girls Product 2">
-                    <h3>منتج بناتي 2</h3>
-                </div>
-            </div>
-        </div>
-        <div id="discounts" class="section">
-            <h2>تخفيضات</h2>
-            <div class="products">
-                <div id="discount1" class="product" onclick="showProductDetails('discount1')">
-                    <img src="discount1.jpg" alt="Discount Product 1">
-                    <h3>منتج تخفيضات 1</h3>
-                </div>
-                <div id="discount2" class="product" onclick="showProductDetails('discount2')">
-                    <img src="discount2.jpg" alt="Discount Product 2">
-                    <h3>منتج تخفيضات 2</h3>
-                </div>
-            </div>
-        </div>
-        <div id="product-details"></div>
-        <div id="cart-details">
-            <h2>سلة المشتريات</h2>
-            <div class="cart-items">
-                <!-- سيتم عرض عناصر السلة هنا -->
-            </div>
-            <div class="cart-total">
-                <h3>المجموع: <span id="total-price">0</span> ريال</h3>
-            </div>
-            <div class="cart-actions">
-                <button class="btn" onclick="checkout()">تأكيد السلة</button>
-            </div>
-        </div>
-        <div id="account" class="section">
-            <div class="auth-container">
-                <div id="login-form">
-                    <h2>تسجيل الدخول</h2>
-                    <input type="email" id="login-email" class="auth-input" placeholder="البريد الإلكتروني">
-                    <input type="password" id="login-password" class="auth-input" placeholder="كلمة المرور">
-                    <button class="btn" onclick="login()">تسجيل الدخول</button>
-                    <p>هل تريد إنشاء حساب؟ <a href="#" onclick="showSignup()">أنشئ حساباً</a></p>
-                    <button class="btn-google" onclick="loginWithGoogle()">
-                        <i class="fab fa-google"></i> التسجيل عبر جوجل
-                    </button>
-                </div>
-                <div id="signup-form" style="display: none;">
-                    <h2>إنشاء حساب</h2>
-                    <input type="email" id="signup-email" class="auth-input" placeholder="البريد الإلكتروني">
-                    <input type="password" id="signup-password" class="auth-input" placeholder="كلمة المرور">
-                    <input type="text" id="signup-name" class="auth-input" placeholder="الاسم الكامل">
-                    <button class="btn" onclick="signup()">إنشاء حساب</button>
-                    <p>لديك حساب بالفعل؟ <a href="#" onclick="showLogin()">تسجيل الدخول</a></p>
-                </div>
-                <div id="account-info" style="display: none;"></div>
-            </div>
-        </div>
-    </main>
-    <footer class="bottom-nav">
-        <a href="#home" onclick="showSection('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
-        <a href="#men" onclick="showSection('men')"><i class="fas fa-male"></i><span>رجالي</span></a>
-        <a href="#women" onclick="showSection('women')"><i class="fas fa-female"></i><span>نسائي</span></a>
-        <a href="#boys" onclick="showSection('boys')"><i class="fas fa-child"></i><span>ولادي</span></a>
-        <a href="#girls" onclick="showSection('girls')"><i class="fas fa-child"></i><span>بناتي</span></a>
-        <a href="#discounts" onclick="showSection('discounts')"><i class="fas fa-tags"></i><span>تخفيضات</span></a>
-    </footer>
+        <a href="#cart" onclick="showCartPage()"><i class="fas fa-shopping-cart"></i><span>السلة</span></a>
+        <a href="#" onclick="showAccountPage()"><i class="fas fa-user"></i><span>الحساب</span></a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = {
-    apiKey: "AIzaSyAatuXY7VPtB39zcN3L-z2jfHBX6NTfqoA",
-            authDomain: "temu-yemen.firebaseapp.com",
-            projectId: "temu-yemen",
-            storageBucket: "temu-yemen.appspot.com",
-            messagingSenderId: "687344852319",
-            appId: "1:687344852319:web:dc5f95ce4dd7572ef96aea",
-            measurementId: "G-NLSSTZM62R"
-        };
-firebase.initializeApp(firebaseConfig);
+        // Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyAatuXY7VPtB39zcN3L-z2jfHBX6NTfqoA",
+        authDomain: "temu-yemen.firebaseapp.com",
+        projectId: "temu-yemen",
+        storageBucket: "temu-yemen.appspot.com",
+        messagingSenderId: "687344852319",
+        appId: "1:687344852319:web:dc5f95ce4dd7572ef96aea",
+        measurementId: "G-NLSSTZM62R"
+    };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var auth = firebase.auth();
+        var db = firebase.firestore();
 
-function showSection(sectionId) {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(section => section.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-}
+        let selectedProduct = {};
 
-function showSignup() {
-    document.getElementById('login-form').style.display = 'none';
-    document.getElementById('signup-form').style.display = 'block';
-}
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.slideshow img');
+            let currentSlide = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
 
-function showLogin() {
-    document.getElementById('signup-form').style.display = 'none';
-    document.getElementById('login-form').style.display = 'block';
-}
+        setInterval(() => showSlide(currentSlide + 1), 3000);
 
-function login() {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Signed in
-            var user = userCredential.user;
-            console.log(user);
-            showAccountInfo(user);
-        })
-        .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.error(errorMessage);
-            alert(errorMessage);
-        });
-}
+        function showProductDetails(img, name, price, code) {
+            selectedProduct = { img, name, price, code };
+            document.getElementById('product-img').src = img;
+            document.getElementById('product-name').textContent = name;
+            document.getElementById('product-price').textContent = price;
+            document.getElementById('product-code').textContent = `كود المنتج: ${code}`;
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('product-details-page').style.display = 'block';
+        }
 
-function signup() {
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-    const name = document.getElementById('signup-name').value;
+        function addToCart() {
+            const { img, name, price, code } = selectedProduct;
+            const cartItems = document.getElementById('cart-items');
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-item');
 
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Signed up
-            var user = userCredential.user;
-            console.log(user);
-            user.updateProfile({
-                displayName: name
-            }).then(() => {
-                showAccountInfo(user);
-            }).catch((error) => {
-                console.error(error.message);
-                alert(error.message);
-            });
-        })
-        .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.error(errorMessage);
-            alert(errorMessage);
-        });
-}
+            cartItem.innerHTML = `
+                <img src="${img}" alt="${name}">
+                <h3>${name}</h3>
+                <p>${price}</p>
+                <p>كود المنتج: ${code}</p>
+                <button class="remove-item" onclick="removeFromCart(this)">&#10005;</button>
+            `;
 
-function loginWithGoogle() {
-    var provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider)
-        .then((result) => {
-            // Signed in with Google
-            var user = result.user;
-            console.log(user);
-            showAccountInfo(user);
-        })
-        .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.error(errorMessage);
-            alert(errorMessage);
-        });
-}
+            cartItems.appendChild(cartItem);
+            document.querySelector('.cart-count').textContent = parseInt(document.querySelector('.cart-count').textContent) + 1;
+            showCartPage();
+        }
 
-function showAccountInfo(user) {
-    const accountInfo = document.getElementById('account-info');
-    accountInfo.innerHTML = `
-        <h2>مرحباً ${user.displayName || 'بك'}</h2>
-        <p>تم تسجيل الدخول بنجاح!</p>
-        <p>البريد الإلكتروني: ${user.email}</p>
-        <button class="btn" onclick="logout()">تسجيل الخروج</button>
-    `;
-    document.getElementById('login-form').style.display = 'none';
-    document.getElementById('signup-form').style.display = 'none';
-    accountInfo.style.display = 'block';
-}
+        function removeFromCart(button) {
+            const cartItem = button.parentElement;
+            cartItem.remove();
+            document.querySelector('.cart-count').textContent = parseInt(document.querySelector('.cart-count').textContent) - 1;
+        }
 
-function logout() {
-    firebase.auth().signOut().then(() => {
-        // Signed out
-        document.getElementById('account-info').style.display = 'none';
-        document.getElementById('login-form').style.display = 'block';
-        document.getElementById('signup-form').style.display = 'none';
-        alert('تم تسجيل الخروج بنجاح!');
-    }).catch((error) => {
-        console.error(error.message);
-        alert(error.message);
-    });
-}
+        function showCartPage() {
+            document.getElementById('cart-page').style.display = 'block';
+            document.getElementById('product-details-page').style.display = 'none';
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('account-page').style.display = 'none';
+        }
 
-function showProductDetails(productId) {
-    const productDetails = document.getElementById('product-details');
-    productDetails.innerHTML = `
-        <h2>تفاصيل المنتج</h2>
-        <img src="${productId}.jpg" alt="Product Image">
-        <p>اسم المنتج ${productId}</p>
-        <button class="btn" onclick="addToCart('${productId}', 100)">أضف إلى السلة</button>
-    `;
-    productDetails.style.display = 'block';
-    window.scrollTo(0, productDetails.offsetTop);
-}
+        function showAccountPage() {
+            document.getElementById('account-page').style.display = 'block';
+            document.getElementById('cart-page').style.display = 'none';
+            document.getElementById('product-details-page').style.display = 'none';
+            document.querySelector('.container').style.display = 'none';
+        }
 
-function addToCart(productId, price) {
-    const cartItems = document.querySelector('.cart-items');
-    const item = document.createElement('div');
-    item.classList.add('cart-item');
-    item.innerHTML = `
-        <img src="${productId}.jpg" alt="Product Image">
-        <div>
-            <h4>منتج ${productId}</h4>
-            <p>السعر: ${price} ريال</p>
-        </div>
-        <button class="btn" onclick="removeFromCart(this)">حذف</button>
-    `;
-    cartItems.appendChild(item);
+        function showHomePage() {
+            document.getElementById('account-page').style.display = 'none';
+            document.getElementById('cart-page').style.display = 'none';
+            document.getElementById('product-details-page').style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+        }
 
-    // Update total price
-    const totalPrice = document.getElementById('total-price');
-    const currentTotal = parseInt(totalPrice.textContent);
-    totalPrice.textContent = currentTotal + price;
-}
+        function createAccount(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-function removeFromCart(button) {
-    const item = button.parentElement;
-    const price = parseInt(item.querySelector('p').textContent.split(' ')[1]);
-    const totalPrice = document.getElementById('total-price');
-    const currentTotal = parseInt(totalPrice.textContent);
-    totalPrice.textContent = currentTotal - price;
-    item.remove();
-}
-
-function checkout() {
-    alert('تم تأكيد السلة بنجاح!');
-    document.querySelector('.cart-items').innerHTML = '';
-    document.getElementById('total-price').textContent = '0';
-}
-
-// Initial setup
-showSection('home');
-</script>
+            auth.createUserWithEmailAndPassword(username, password)
+                .then((userCredential) => {
+                    // Account created successfully
+                    alert('تم إنشاء الحساب بنجاح');
+                })
+                .catch((error) => {
+                    console.error('Error creating account:', error.message);
+                    alert('خطأ في إنشاء الحساب: ' + error.message);
+                });
+        }
+    </script>
 </body>
 </html>
