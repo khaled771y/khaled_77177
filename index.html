@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temu Yemen</title>
+    <title>Temu Yemen - مُحسّن</title>
+    <!-- خط الأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- مكاتب Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -201,6 +204,9 @@
             cursor: pointer;
             text-decoration: none;
         }
+        .btn:hover {
+            background-color: #FF7043;
+        }
         .btn-google {
             background-color: #db4437;
             color: white;
@@ -274,6 +280,13 @@
             max-width: 300px;
             box-sizing: border-box;
         }
+        /* إصلاح زر الإغلاق في الـ CSS */
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -304,15 +317,11 @@
             border-top: 1px solid #ddd;
             padding-top: 10px;
         }
-        .close-btn            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
 
+    <!-- شريط علوي -->
     <div class="top-bar">
         <div class="logo">
             <i class="fas fa-star"></i><span>تيمو يمن</span>
@@ -321,10 +330,12 @@
             <input type="text" placeholder="ابحث عن منتج">
         </div>
         <div class="icons">
+            <!-- تسجيل الدخول / الخروج -->
             <div id="login-container">
                 <i class="fas fa-sign-in-alt" id="login-icon" onclick="toggleAuthForm()"></i>
                 <span id="user-name"></span>
             </div>
+            <!-- أيقونة السلة -->
             <div>
                 <i class="fas fa-shopping-cart" onclick="toggleCartDetails()">
                     <span class="cart-count" id="cart-count">0</span>
@@ -333,6 +344,7 @@
         </div>
     </div>
 
+    <!-- قائمة التصفح العلوية -->
     <nav>
         <a href="#" onclick="showSection('home')"><i class="fas fa-home"></i>الرئيسية</a>
         <a href="#" onclick="showSection('products')"><i class="fas fa-th"></i>المنتجات</a>
@@ -341,15 +353,18 @@
         <a href="#" onclick="showSection('categories')"><i class="fas fa-list"></i>الفئات</a>
     </nav>
 
+    <!-- المحتوى الرئيسي -->
     <div class="container">
         <div class="banner">إعلان مميز هنا</div>
 
         <div class="slideshow">
+            <!-- صور العرض المتحرك -->
             <img src="images/slide11.jpeg" class="active" alt="Slide 1">
             <img src="images/slide14.jpeg" alt="Slide 2">
             <img src="images/slide13.jpeg" alt="Slide 3">
         </div>
 
+        <!-- أقسام الصفحة -->
         <div id="home" class="section active">
             <h2>الرئيسية</h2>
             <div class="carousel">
@@ -375,6 +390,7 @@
 
         <div id="products" class="section">
             <h2>المنتجات</h2>
+            <!-- أمثلة منتجات -->
             <div class="products">
                 <div class="product" onclick="showProductDetails(1)">
                     <img src="https://via.placeholder.com/150" alt="Product 1">
@@ -432,11 +448,15 @@
             <p>استعرض الفئات المختلفة هنا.</p>
         </div>
 
+        <!-- تفاصيل المنتج -->
         <div id="product-details"></div>
+        <!-- تفاصيل السلة -->
         <div id="cart-details"></div>
+        <!-- ملف المستخدم -->
         <div id="user-profile" style="display: none;"></div>
     </div>
 
+    <!-- شريط التنقل السفلي -->
     <div class="bottom-nav">
         <a href="#" onclick="showSection('home')">
             <i class="fas fa-home"></i>
@@ -460,19 +480,29 @@
         </a>
     </div>
 
+    <!-- نافذة تسجيل الدخول/إنشاء حساب -->
     <div id="auth-form" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="toggleAuthForm()">&times;</span>
-            <h2>تسجيل الدخول</h2>
-            <input type="email" id="email" placeholder="البريد الإلكتروني">
-            <input type="password" id="password" placeholder="كلمة المرور">
-            <button onclick="login()">تسجيل الدخول</button>
-            <button onclick="loginWithGoogle()">تسجيل الدخول باستخدام جوجل</button>
+            <div class="modal-header">
+                <h2>تسجيل الدخول / إنشاء حساب</h2>
+                <button class="close-btn" onclick="toggleAuthForm()">&times;</button>
+            </div>
+            <div style="text-align: center; margin: 10px 0;">
+                <input type="email" id="email" placeholder="البريد الإلكتروني" class="auth-input">
+                <input type="password" id="password" placeholder="كلمة المرور" class="auth-input">
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="login()">تسجيل الدخول</button>
+                <button class="btn" onclick="signUp()">إنشاء حساب</button>
+                <button class="btn-google" onclick="loginWithGoogle()">
+                    <i class="fab fa-google"></i>تسجيل باستخدام جوجل
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Firebase configuration
+        // إعدادات Firebase
         var firebaseConfig = {
             apiKey: "AIzaSyAatuXY7VPtB39zcN3L-z2jfHBX6NTfqoA",
             authDomain: "temu-yemen.firebaseapp.com",
@@ -482,31 +512,43 @@
             appId: "1:687344852319:web:dc5f95ce4dd7572ef96aea",
             measurementId: "G-NLSSTZM62R"
         };
-        // Initialize Firebase
+        // تهيئة Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Display login modal after 1 minute
-        setTimeout(toggleAuthForm, 60000);
+        // عرض نافذة تسجيل الدخول بعد دقيقة من فتح الصفحة (اختياري)
+        // setTimeout(toggleAuthForm, 60000);
 
+        // يتم تنفيذ هذه الدالة عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function () {
             checkAuthState();
             updateCartCount();
             initializeSlideshow();
         });
 
+        // التحقق من حالة تسجيل الدخول
         function checkAuthState() {
             firebase.auth().onAuthStateChanged(user => {
                 if (user) {
+                    // المستخدم مسجّل دخوله
                     document.getElementById('user-name').textContent = user.email;
                     loadCart(user.uid);
                     displayUserProfile(user);
+                    // تغيير أيقونة تسجيل الدخول لتكون أيقونة "تسجيل خروج" مثلاً
+                    document.getElementById('login-icon').classList.remove('fa-sign-in-alt');
+                    document.getElementById('login-icon').classList.add('fa-sign-out-alt');
+                    document.getElementById('login-icon').onclick = logout;
                 } else {
+                    // لا يوجد مستخدم مسجّل
                     document.getElementById('user-name').textContent = '';
+                    document.getElementById('login-icon').classList.remove('fa-sign-out-alt');
+                    document.getElementById('login-icon').classList.add('fa-sign-in-alt');
+                    document.getElementById('login-icon').onclick = toggleAuthForm;
                 }
             });
         }
 
+        // دالة إظهار قسم معين وإخفاء البقية
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
@@ -514,14 +556,19 @@
             document.getElementById(sectionId).classList.add('active');
         }
 
+        // عرض تفاصيل المنتج (بسيط كـ مثال)
         function showProductDetails(productId) {
             const productDetails = document.getElementById('product-details');
-            productDetails.innerHTML = `<h3>تفاصيل المنتج ${productId}</h3>
+            productDetails.innerHTML = `
+                <h3>تفاصيل المنتج ${productId}</h3>
                 <p>وصف مفصل للمنتج ${productId}</p>
-                <button onclick="addToCart(${productId})">إضافة إلى السلة</button>`;
+                <button onclick="addToCart(${productId})">إضافة إلى السلة</button>
+            `;
             productDetails.style.display = 'block';
         }
 
+        // إضافة منتج إلى السلة
+        // في المثال يتم حفظ معرف المنتج فقط؛ يمكن تطويره بإضافة حقل "الكمية" أو "السعر" وغيرها.
         function addToCart(productId) {
             const user = firebase.auth().currentUser;
             if (user) {
@@ -529,10 +576,16 @@
                 cartRef.get().then(doc => {
                     if (doc.exists) {
                         const cart = doc.data().items || [];
-                        cart.push(productId);
+                        // البحث إن كان المنتج موجودًا مسبقًا
+                        const existingItem = cart.find(item => item.productId === productId);
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            cart.push({ productId: productId, quantity: 1 });
+                        }
                         cartRef.set({ items: cart });
                     } else {
-                        cartRef.set({ items: [productId] });
+                        cartRef.set({ items: [{ productId: productId, quantity: 1 }] });
                     }
                     updateCartCount();
                     alert('تم إضافة المنتج إلى السلة');
@@ -544,13 +597,16 @@
             }
         }
 
+        // تحديث عدد المنتجات في أيقونة السلة
         function updateCartCount() {
             const user = firebase.auth().currentUser;
             if (user) {
                 db.collection('carts').doc(user.uid).get().then(doc => {
                     if (doc.exists) {
                         const cart = doc.data().items || [];
-                        document.getElementById('cart-count').textContent = cart.length;
+                        // حساب إجمالي الكميات في السلة
+                        const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+                        document.getElementById('cart-count').textContent = totalQuantity;
                     } else {
                         document.getElementById('cart-count').textContent = 0;
                     }
@@ -563,6 +619,7 @@
             }
         }
 
+        // إظهار/إخفاء تفاصيل السلة
         function toggleCartDetails() {
             const cartDetails = document.getElementById('cart-details');
             const user = firebase.auth().currentUser;
@@ -570,9 +627,27 @@
                 db.collection('carts').doc(user.uid).get().then(doc => {
                     if (doc.exists) {
                         const cart = doc.data().items || [];
-                        cartDetails.innerHTML = `<h3>تفاصيل السلة</h3>
-                            ${cart.map(id => `<p>منتج ${id}</p>`).join('')}
-                            <button onclick="clearCart()">إفراغ السلة</button>`;
+                        if (cart.length === 0) {
+                            cartDetails.innerHTML = `
+                                <h3>تفاصيل السلة</h3>
+                                <p>السلة فارغة</p>
+                            `;
+                        } else {
+                            let cartContent = '<h3>تفاصيل السلة</h3>';
+                            cart.forEach(item => {
+                                cartContent += `
+                                    <div class="cart-item">
+                                        <p>منتج ${item.productId} - الكمية: ${item.quantity || 1}</p>
+                                        <button onclick="updateItemQuantity(${item.productId}, 'inc')">+</button>
+                                        <button onclick="updateItemQuantity(${item.productId}, 'dec')">-</button>
+                                    </div>
+                                `;
+                            });
+                            cartContent += `
+                                <button onclick="clearCart()">إفراغ السلة</button>
+                            `;
+                            cartDetails.innerHTML = cartContent;
+                        }
                         cartDetails.style.display = cartDetails.style.display === 'block' ? 'none' : 'block';
                     } else {
                         cartDetails.innerHTML = '<h3>تفاصيل السلة</h3><p>السلة فارغة</p>';
@@ -581,11 +656,45 @@
                     console.error('Error displaying cart details:', e);
                 });
             } else {
-                cartDetails.innerHTML = '<h3>تفاصيل السلة</h3><p>يرجى تسجيل الدخول لعرض السلة</p>';
+                cartDetails.innerHTML = `
+                    <h3>تفاصيل السلة</h3>
+                    <p>يرجى تسجيل الدخول لعرض السلة</p>
+                `;
                 cartDetails.style.display = 'block';
             }
         }
 
+        // دالة لزيادة/إنقاص كمية منتج معين في السلة
+        function updateItemQuantity(productId, operation) {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+            const cartRef = db.collection('carts').doc(user.uid);
+            cartRef.get().then(doc => {
+                if (doc.exists) {
+                    let cart = doc.data().items || [];
+                    cart = cart.map(item => {
+                        if (item.productId === productId) {
+                            if (operation === 'inc') {
+                                item.quantity = (item.quantity || 1) + 1;
+                            } else if (operation === 'dec') {
+                                item.quantity = (item.quantity || 1) - 1;
+                                if (item.quantity < 1) {
+                                    item.quantity = 1; // منع الوصول للصفر أو السالب
+                                }
+                            }
+                        }
+                        return item;
+                    });
+                    cartRef.set({ items: cart }).then(() => {
+                        updateCartCount();
+                        toggleCartDetails(); // لإعادة التحميل
+                        toggleCartDetails(); // إظهار النافذة مجددًا
+                    });
+                }
+            });
+        }
+
+        // إفراغ السلة
         function clearCart() {
             const user = firebase.auth().currentUser;
             if (user) {
@@ -601,14 +710,20 @@
             }
         }
 
+        // فتح/إغلاق نافذة المصادقة
         function toggleAuthForm() {
             const authForm = document.getElementById('auth-form');
-            authForm.style.display = authForm.style.display === 'block' ? 'none' : 'block';
+            authForm.style.display = (authForm.style.display === 'block' ? 'none' : 'block');
         }
 
+        // تسجيل الدخول
         function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if (!email || !password) {
+                alert('الرجاء إدخال البريد الإلكتروني وكلمة المرور.');
+                return;
+            }
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     toggleAuthForm();
@@ -620,6 +735,27 @@
                 });
         }
 
+        // إنشاء حساب جديد
+        function signUp() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if (!email || !password) {
+                alert('الرجاء تعبئة البريد الإلكتروني وكلمة المرور.');
+                return;
+            }
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    alert('تم إنشاء الحساب بنجاح!');
+                    toggleAuthForm();
+                    displayUserProfile(userCredential.user);
+                })
+                .catch(error => {
+                    console.error('Sign Up error:', error);
+                    alert('خطأ في إنشاء الحساب: ' + error.message);
+                });
+        }
+
+        // تسجيل الدخول باستخدام جوجل
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             firebase.auth().signInWithPopup(provider)
@@ -633,6 +769,19 @@
                 });
         }
 
+        // تسجيل الخروج
+        function logout() {
+            firebase.auth().signOut()
+                .then(() => {
+                    alert('تم تسجيل الخروج بنجاح.');
+                    document.getElementById('user-profile').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                });
+        }
+
+        // تهيئة العرض المتحرك (السلايد شو)
         function initializeSlideshow() {
             let slideIndex = 0;
             const slides = document.querySelectorAll('.slideshow img');
@@ -643,6 +792,7 @@
             }, 3000);
         }
 
+        // تحميل بيانات السلة عند تسجيل الدخول
         function loadCart(uid) {
             db.collection('carts').doc(uid).get().then(doc => {
                 if (doc.exists) {
@@ -658,11 +808,14 @@
             });
         }
 
+        // عرض ملف المستخدم
         function displayUserProfile(user) {
             const userProfile = document.getElementById('user-profile');
-            userProfile.innerHTML = `<h3>ملف المستخدم</h3>
+            userProfile.innerHTML = `
+                <h3>ملف المستخدم</h3>
                 <p>البريد الإلكتروني: ${user.email}</p>
-                <button onclick="loadCart('${user.uid}')">عرض السلة</button>`;
+                <button onclick="toggleCartDetails()">عرض السلة</button>
+            `;
             userProfile.style.display = 'block';
         }
     </script>
