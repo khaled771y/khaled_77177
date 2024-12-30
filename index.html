@@ -3,820 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temu Yemen - مُحسّن</title>
-    <!-- خط الأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- مكاتب Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-
+    <title>MCR - منصة البث المباشر</title>
+    <meta name="theme-color" content="#1e1e2e">
+    <link rel="icon" href="https://via.placeholder.com/16x16/1e1e2e/FFFFFF/?text=MCR" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/video.js@8.5.2/dist/video-js.css" rel="stylesheet">
     <style>
+        /* الأساسيات */
         body {
-            font-family: Arial, sans-serif;
-            direction: rtl;
-            text-align: right;
             margin: 0;
-            padding-bottom: 60px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #1e1e2e, #2b2b3b);
+            color: #fff;
+            overflow-x: hidden;
         }
-        .top-bar {
+
+        /* الشريط العلوي */
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #FF5733;
-            padding: 10px 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .top-bar .logo {
-            display: flex;
-            align-items: center;
-        }
-        .top-bar .logo i {
-            font-size: 28px;
-            color: #fff;
-        }
-        .top-bar .logo span {
-            margin-left: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-        }
-        .top-bar .search-bar {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 20px;
-        }
-        .top-bar .search-bar input[type="text"] {
-            width: 100%;
-            max-width: 800px;
-            padding: 7px 20px;
-            border: none;
-            border-radius: 11px;
-            font-size: 20px;
-            background-color: #fff;
-            color: #FF5733;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .top-bar .search-bar input[type="text"]::placeholder {
-            color: #FF5733;
-        }
-        .top-bar .search-bar input[type="text"]:focus {
-            outline: none;
-        }
-        .top-bar .icons {
-            display: flex;
-            align-items: center;
-        }
-        .top-bar .icons div {
-            margin-left: 20px;
-        }
-        .top-bar .icons i {
-            font-size: 24px;
-            color: #fff;
-            cursor: pointer;
-        }
-        .top-bar .cart-count {
-            position: relative;
-            top: -10px;
-            right: -10px;
-            background-color: red;
-            color: white;
-            font-size: 14px;
-            padding: 5px 8px;
-            border-radius: 50%;
-        }
-        nav {
-            background-color: #FF7043;
-            padding: 10px;
-            display: flex;
-            overflow-x: auto;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-        }
-        nav a i {
-            margin-left: 5px;
-        }
-        .container {
-            padding: 20px;
-        }
-        .banner {
-            background-color: #FFC300;
-            padding: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .slideshow {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-        .slideshow img {
-            width: 100%;
-            display: none;
-        }
-        .slideshow img.active {
-            display: block;
-        }
-        .section {
-            display: none;
-        }
-        .section.active {
-            display: block;
-        }
-        .products, .featured-products {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .product, .featured-product {
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 5px;
-            margin: 6px;
-            flex: 1 1 calc(40% - 20px);
-            box-sizing: border-box;
-            cursor: pointer;
-        }
-        .product img, .featured-product img {
-            width: 100%;
-            height: auto;
-        }
-        .carousel {
-            display: flex;
-            overflow-x: auto;
-            padding: 10px 0;
-            margin-bottom: 20px;
-            gap: 10px;
-            scroll-behavior: smooth;
-        }
-        .carousel img {
-            flex: 0 0 auto;
-            width: 80px;
-            height: 80px;
-            margin: 0 5px;
-            border-radius: 50%;
-            animation: slide 30s linear infinite;
-        }
-        @keyframes slide {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-        #product-details, #cart-details {
-            display: none;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding: 10px 0;
-        }
-        .cart-item img {
-            width: 50px;
-            height: auto;
-        }
-        .cart-total, .cart-share {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 10px 20px;
-            color: #fff;
-            background-color: #FF5733;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .btn:hover {
-            background-color: #FF7043;
-        }
-        .btn-google {
-            background-color: #db4437;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            padding: 10px 0;
-            width: 100%;
-            max-width: 200px;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-google i {
-            margin-right: 10px;
-        }
-        .cart-share a:hover {
-            background-color: #FF7043;
-        }
-        .size-options button {
-            margin: 5px;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-            cursor: pointer;
-        }
-        .size-options button.active {
-            background-color: #FF5733;
-            color: #fff;
-        }
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #FF5733;
-            color: #fff;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            height: 60px;
-            box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
-        }
-        .bottom-nav a {
-            color: #fff;
-            text-decoration: none;
-            text-align: center;
-            flex: 1;
-        }
-        .bottom-nav a i {
-            display: block;
-            font-size: 24px;
-        }
-        .bottom-nav a span {
-            display: block;
-            font-size: 12px;
-        }
-        .auth-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-        .auth-input {
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            width: 100%;
-            max-width: 300px;
-            box-sizing: border-box;
-        }
-        /* إصلاح زر الإغلاق في الـ CSS */
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: #1e1e2e;
+            padding: 10px 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
             z-index: 1000;
-            max-width: 400px;
-            width: 100%;
         }
-        .modal.show {
-            display: block;
+
+        header .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ff9800;
         }
-        .modal-header, .modal-footer {
+
+        header .menu-toggle {
+            font-size: 1.8em;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100%;
+            background: #2b2b3b;
+            transform: translateX(-100%);
+            padding: 20px;
+            box-shadow: 2px 0 12px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1100;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #ff9800;
+        }
+
+        .sidebar p {
+            font-size: 1em;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .sidebar .contact {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #fff;
+        }
+
+        .sidebar .close-btn {
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* رسالة الترحيب */
+        .welcome {
+            text-align: center;
+            margin: 50px 0;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .welcome h1 {
+            font-size: 3em;
+            color: #ff9800;
+        }
+
+        .welcome p {
+            font-size: 1.2em;
+            color: #ccc;
+        }
+
+        /* مشغل الفيديو */
+        .video-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: center;
+            margin: 40px auto;
+            max-width: 900px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
-        .modal-header {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
+
+        .video-js {
+            width: 100%;
+            height: 500px;
         }
-        .modal-footer {
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
+
+        /* أزرار التحكم */
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .controls button {
+            background: linear-gradient(135deg, #ff9800, #ffb347);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .controls button:hover {
+            background: linear-gradient(135deg, #ffb347, #ff9800);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #1e1e2e;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .welcome h1 {
+                font-size: 2em;
+            }
+
+            .welcome p {
+                font-size: 1em;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <!-- شريط علوي -->
-    <div class="top-bar">
-        <div class="logo">
-            <i class="fas fa-star"></i><span>تيمو يمن</span>
-        </div>
-        <div class="search-bar">
-            <input type="text" placeholder="ابحث عن منتج">
-        </div>
-        <div class="icons">
-            <!-- تسجيل الدخول / الخروج -->
-            <div id="login-container">
-                <i class="fas fa-sign-in-alt" id="login-icon" onclick="toggleAuthForm()"></i>
-                <span id="user-name"></span>
-            </div>
-            <!-- أيقونة السلة -->
-            <div>
-                <i class="fas fa-shopping-cart" onclick="toggleCartDetails()">
-                    <span class="cart-count" id="cart-count">0</span>
-                </i>
-            </div>
-        </div>
+    <!-- الشريط العلوي -->
+    <header>
+        <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+        <div class="logo">MCR</div>
+    </header>
+
+    <!-- القائمة الجانبية -->
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" onclick="toggleSidebar()">✖</div>
+        <h2>حول المهندس</h2>
+        <p>
+            المهندس خالد عبدالحكيم النظاري، خبير في شبكات المايكروتك وأمن المعلومات، يمتلك خبرة واسعة في تطوير الأنظمة الحديثة.
+        </p>
+        <p class="contact">📞 للتواصل: <a href="tel:771774634" style="color:#ff9800;">771774634</a></p>
     </div>
 
-    <!-- قائمة التصفح العلوية -->
-    <nav>
-        <a href="#" onclick="showSection('home')"><i class="fas fa-home"></i>الرئيسية</a>
-        <a href="#" onclick="showSection('products')"><i class="fas fa-th"></i>المنتجات</a>
-        <a href="#" onclick="showSection('featured')"><i class="fas fa-star"></i>مميزة</a>
-        <a href="#" onclick="showSection('offers')"><i class="fas fa-tags"></i>عروض</a>
-        <a href="#" onclick="showSection('categories')"><i class="fas fa-list"></i>الفئات</a>
-    </nav>
+    <!-- رسالة ترحيبية -->
+    <section class="welcome">
+        <h1>مرحبًا بكم في MCR</h1>
+        <p>أفضل منصة بث مباشر بجودة عالية وتجربة سلسة</p>
+    </section>
 
-    <!-- المحتوى الرئيسي -->
-    <div class="container">
-        <div class="banner">إعلان مميز هنا</div>
+    <!-- مشغل الفيديو -->
+    <section class="video-container">
+        <video id="my-video" class="video-js vjs-custom-skin" controls autoplay preload="auto"
+            poster="https://via.placeholder.com/900x500/252525/FFFFFF/?text=MCR">
+            <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+        </video>
+    </section>
 
-        <div class="slideshow">
-            <!-- صور العرض المتحرك -->
-            <img src="images/slide11.jpeg" class="active" alt="Slide 1">
-            <img src="images/slide14.jpeg" alt="Slide 2">
-            <img src="images/slide13.jpeg" alt="Slide 3">
-        </div>
+    <!-- أزرار التحكم -->
+    <section class="controls">
+        <button onclick="rewindVideo()">⏪ تأخير 5 ثوان</button>
+        <button onclick="playPauseVideo()">⏯️ تشغيل/إيقاف مؤقت</button>
+        <button onclick="forwardVideo()">⏩ تقديم 5 ثوان</button>
+        <button onclick="toggleFullscreen()">⛶ شاشة كاملة</button>
+    </section>
 
-        <!-- أقسام الصفحة -->
-        <div id="home" class="section active">
-            <h2>الرئيسية</h2>
-            <div class="carousel">
-                <img src="images/kids2.jpeg" alt="Product 1">
-                <img src="images/women3.jpg" alt="Product 2">
-                <img src="images/men5.jpg" alt="Product 3">
-                <img src="images/kids1.jpeg" alt="Product 4">
-            </div>
-            <div class="offers">
-                <h3>عروض مميزة</h3>
-                <div class="products">
-                    <div class="product" onclick="showProductDetails(5)">
-                        <img src="images/men2.jpg" alt="Offer 1">
-                        <p>عرض 1</p>
-                    </div>
-                    <div class="product" onclick="showProductDetails(6)">
-                        <img src="images/men3.jpg" alt="Offer 2">
-                        <p>عرض 2</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <footer>&copy; 2024 MCR | جميع الحقوق محفوظة</footer>
 
-        <div id="products" class="section">
-            <h2>المنتجات</h2>
-            <!-- أمثلة منتجات -->
-            <div class="products">
-                <div class="product" onclick="showProductDetails(1)">
-                    <img src="https://via.placeholder.com/150" alt="Product 1">
-                    <p>منتج 1</p>
-                </div>
-                <div class="product" onclick="showProductDetails(2)">
-                    <img src="https://via.placeholder.com/150" alt="Product 2">
-                    <p>منتج 2</p>
-                </div>
-                <div class="product" onclick="showProductDetails(3)">
-                    <img src="https://via.placeholder.com/150" alt="Product 3">
-                    <p>منتج 3</p>
-                </div>
-                <div class="product" onclick="showProductDetails(4)">
-                    <img src="https://via.placeholder.com/150" alt="Product 4">
-                    <p>منتج 4</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="featured" class="section">
-            <h2>منتجات مميزة</h2>
-            <div class="featured-products">
-                <div class="featured-product" onclick="showProductDetails(7)">
-                    <img src="https://via.placeholder.com/150" alt="Featured Product 1">
-                    <p>منتج مميز 1</p>
-                </div>
-                <div class="featured-product" onclick="showProductDetails(8)">
-                    <img src="https://via.placeholder.com/150" alt="Featured Product 2">
-                    <p>منتج مميز 2</p>
-                </div>
-                <div class="featured-product" onclick="showProductDetails(9)">
-                    <img src="https://via.placeholder.com/150" alt="Featured Product 3">
-                    <p>منتج مميز 3</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="offers" class="section">
-            <h2>العروض</h2>
-            <div class="products">
-                <div class="product" onclick="showProductDetails(10)">
-                    <img src="https://via.placeholder.com/150" alt="Offer Product 1">
-                    <p>منتج عرض 1</p>
-                </div>
-                <div class="product" onclick="showProductDetails(11)">
-                    <img src="https://via.placeholder.com/150" alt="Offer Product 2">
-                    <p>منتج عرض 2</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="categories" class="section">
-            <h2>الفئات</h2>
-            <p>استعرض الفئات المختلفة هنا.</p>
-        </div>
-
-        <!-- تفاصيل المنتج -->
-        <div id="product-details"></div>
-        <!-- تفاصيل السلة -->
-        <div id="cart-details"></div>
-        <!-- ملف المستخدم -->
-        <div id="user-profile" style="display: none;"></div>
-    </div>
-
-    <!-- شريط التنقل السفلي -->
-    <div class="bottom-nav">
-        <a href="#" onclick="showSection('home')">
-            <i class="fas fa-home"></i>
-            <span>الرئيسية</span>
-        </a>
-        <a href="#" onclick="showSection('products')">
-            <i class="fas fa-th"></i>
-            <span>المنتجات</span>
-        </a>
-        <a href="#" onclick="showSection('featured')">
-            <i class="fas fa-star"></i>
-            <span>مميزة</span>
-        </a>
-        <a href="#" onclick="showSection('offers')">
-            <i class="fas fa-tags"></i>
-            <span>عروض</span>
-        </a>
-        <a href="#" onclick="showSection('categories')">
-            <i class="fas fa-list"></i>
-            <span>الفئات</span>
-        </a>
-    </div>
-
-    <!-- نافذة تسجيل الدخول/إنشاء حساب -->
-    <div id="auth-form" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>تسجيل الدخول / إنشاء حساب</h2>
-                <button class="close-btn" onclick="toggleAuthForm()">&times;</button>
-            </div>
-            <div style="text-align: center; margin: 10px 0;">
-                <input type="email" id="email" placeholder="البريد الإلكتروني" class="auth-input">
-                <input type="password" id="password" placeholder="كلمة المرور" class="auth-input">
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="login()">تسجيل الدخول</button>
-                <button class="btn" onclick="signUp()">إنشاء حساب</button>
-                <button class="btn-google" onclick="loginWithGoogle()">
-                    <i class="fab fa-google"></i>تسجيل باستخدام جوجل
-                </button>
-            </div>
-        </div>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/video.js@8.5.2/dist/video.min.js"></script>
     <script>
-        // إعدادات Firebase
-        var firebaseConfig = {
-            apiKey: "AIzaSyAatuXY7VPtB39zcN3L-z2jfHBX6NTfqoA",
-            authDomain: "temu-yemen.firebaseapp.com",
-            projectId: "temu-yemen",
-            storageBucket: "temu-yemen.appspot.com",
-            messagingSenderId: "687344852319",
-            appId: "1:687344852319:web:dc5f95ce4dd7572ef96aea",
-            measurementId: "G-NLSSTZM62R"
-        };
-        // تهيئة Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const player = videojs('my-video');
 
-        // عرض نافذة تسجيل الدخول بعد دقيقة من فتح الصفحة (اختياري)
-        // setTimeout(toggleAuthForm, 60000);
+        function rewindVideo() { player.currentTime(player.currentTime() - 5); }
+        function forwardVideo() { player.currentTime(player.currentTime() + 5); }
+        function playPauseVideo() { player.paused() ? player.play() : player.pause(); }
+        function toggleFullscreen() { player.isFullscreen() ? player.exitFullscreen() : player.requestFullscreen(); }
 
-        // يتم تنفيذ هذه الدالة عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function () {
-            checkAuthState();
-            updateCartCount();
-            initializeSlideshow();
-        });
-
-        // التحقق من حالة تسجيل الدخول
-        function checkAuthState() {
-            firebase.auth().onAuthStateChanged(user => {
-                if (user) {
-                    // المستخدم مسجّل دخوله
-                    document.getElementById('user-name').textContent = user.email;
-                    loadCart(user.uid);
-                    displayUserProfile(user);
-                    // تغيير أيقونة تسجيل الدخول لتكون أيقونة "تسجيل خروج" مثلاً
-                    document.getElementById('login-icon').classList.remove('fa-sign-in-alt');
-                    document.getElementById('login-icon').classList.add('fa-sign-out-alt');
-                    document.getElementById('login-icon').onclick = logout;
-                } else {
-                    // لا يوجد مستخدم مسجّل
-                    document.getElementById('user-name').textContent = '';
-                    document.getElementById('login-icon').classList.remove('fa-sign-out-alt');
-                    document.getElementById('login-icon').classList.add('fa-sign-in-alt');
-                    document.getElementById('login-icon').onclick = toggleAuthForm;
-                }
-            });
-        }
-
-        // دالة إظهار قسم معين وإخفاء البقية
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-        }
-
-        // عرض تفاصيل المنتج (بسيط كـ مثال)
-        function showProductDetails(productId) {
-            const productDetails = document.getElementById('product-details');
-            productDetails.innerHTML = `
-                <h3>تفاصيل المنتج ${productId}</h3>
-                <p>وصف مفصل للمنتج ${productId}</p>
-                <button onclick="addToCart(${productId})">إضافة إلى السلة</button>
-            `;
-            productDetails.style.display = 'block';
-        }
-
-        // إضافة منتج إلى السلة
-        // في المثال يتم حفظ معرف المنتج فقط؛ يمكن تطويره بإضافة حقل "الكمية" أو "السعر" وغيرها.
-        function addToCart(productId) {
-            const user = firebase.auth().currentUser;
-            if (user) {
-                const cartRef = db.collection('carts').doc(user.uid);
-                cartRef.get().then(doc => {
-                    if (doc.exists) {
-                        const cart = doc.data().items || [];
-                        // البحث إن كان المنتج موجودًا مسبقًا
-                        const existingItem = cart.find(item => item.productId === productId);
-                        if (existingItem) {
-                            existingItem.quantity += 1;
-                        } else {
-                            cart.push({ productId: productId, quantity: 1 });
-                        }
-                        cartRef.set({ items: cart });
-                    } else {
-                        cartRef.set({ items: [{ productId: productId, quantity: 1 }] });
-                    }
-                    updateCartCount();
-                    alert('تم إضافة المنتج إلى السلة');
-                }).catch(e => {
-                    console.error('Error updating cart:', e);
-                });
-            } else {
-                alert('يرجى تسجيل الدخول لإضافة منتجات إلى السلة');
-            }
-        }
-
-        // تحديث عدد المنتجات في أيقونة السلة
-        function updateCartCount() {
-            const user = firebase.auth().currentUser;
-            if (user) {
-                db.collection('carts').doc(user.uid).get().then(doc => {
-                    if (doc.exists) {
-                        const cart = doc.data().items || [];
-                        // حساب إجمالي الكميات في السلة
-                        const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-                        document.getElementById('cart-count').textContent = totalQuantity;
-                    } else {
-                        document.getElementById('cart-count').textContent = 0;
-                    }
-                }).catch(e => {
-                    console.error('Error updating cart count:', e);
-                    document.getElementById('cart-count').textContent = 0;
-                });
-            } else {
-                document.getElementById('cart-count').textContent = 0;
-            }
-        }
-
-        // إظهار/إخفاء تفاصيل السلة
-        function toggleCartDetails() {
-            const cartDetails = document.getElementById('cart-details');
-            const user = firebase.auth().currentUser;
-            if (user) {
-                db.collection('carts').doc(user.uid).get().then(doc => {
-                    if (doc.exists) {
-                        const cart = doc.data().items || [];
-                        if (cart.length === 0) {
-                            cartDetails.innerHTML = `
-                                <h3>تفاصيل السلة</h3>
-                                <p>السلة فارغة</p>
-                            `;
-                        } else {
-                            let cartContent = '<h3>تفاصيل السلة</h3>';
-                            cart.forEach(item => {
-                                cartContent += `
-                                    <div class="cart-item">
-                                        <p>منتج ${item.productId} - الكمية: ${item.quantity || 1}</p>
-                                        <button onclick="updateItemQuantity(${item.productId}, 'inc')">+</button>
-                                        <button onclick="updateItemQuantity(${item.productId}, 'dec')">-</button>
-                                    </div>
-                                `;
-                            });
-                            cartContent += `
-                                <button onclick="clearCart()">إفراغ السلة</button>
-                            `;
-                            cartDetails.innerHTML = cartContent;
-                        }
-                        cartDetails.style.display = cartDetails.style.display === 'block' ? 'none' : 'block';
-                    } else {
-                        cartDetails.innerHTML = '<h3>تفاصيل السلة</h3><p>السلة فارغة</p>';
-                    }
-                }).catch(e => {
-                    console.error('Error displaying cart details:', e);
-                });
-            } else {
-                cartDetails.innerHTML = `
-                    <h3>تفاصيل السلة</h3>
-                    <p>يرجى تسجيل الدخول لعرض السلة</p>
-                `;
-                cartDetails.style.display = 'block';
-            }
-        }
-
-        // دالة لزيادة/إنقاص كمية منتج معين في السلة
-        function updateItemQuantity(productId, operation) {
-            const user = firebase.auth().currentUser;
-            if (!user) return;
-            const cartRef = db.collection('carts').doc(user.uid);
-            cartRef.get().then(doc => {
-                if (doc.exists) {
-                    let cart = doc.data().items || [];
-                    cart = cart.map(item => {
-                        if (item.productId === productId) {
-                            if (operation === 'inc') {
-                                item.quantity = (item.quantity || 1) + 1;
-                            } else if (operation === 'dec') {
-                                item.quantity = (item.quantity || 1) - 1;
-                                if (item.quantity < 1) {
-                                    item.quantity = 1; // منع الوصول للصفر أو السالب
-                                }
-                            }
-                        }
-                        return item;
-                    });
-                    cartRef.set({ items: cart }).then(() => {
-                        updateCartCount();
-                        toggleCartDetails(); // لإعادة التحميل
-                        toggleCartDetails(); // إظهار النافذة مجددًا
-                    });
-                }
-            });
-        }
-
-        // إفراغ السلة
-        function clearCart() {
-            const user = firebase.auth().currentUser;
-            if (user) {
-                db.collection('carts').doc(user.uid).set({ items: [] }).then(() => {
-                    updateCartCount();
-                    toggleCartDetails();
-                    alert('تم إفراغ السلة');
-                }).catch(e => {
-                    console.error('Error clearing cart:', e);
-                });
-            } else {
-                alert('يرجى تسجيل الدخول لإفراغ السلة');
-            }
-        }
-
-        // فتح/إغلاق نافذة المصادقة
-        function toggleAuthForm() {
-            const authForm = document.getElementById('auth-form');
-            authForm.style.display = (authForm.style.display === 'block' ? 'none' : 'block');
-        }
-
-        // تسجيل الدخول
-        function login() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            if (!email || !password) {
-                alert('الرجاء إدخال البريد الإلكتروني وكلمة المرور.');
-                return;
-            }
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    toggleAuthForm();
-                    displayUserProfile(userCredential.user);
-                })
-                .catch(error => {
-                    console.error('Login error:', error);
-                    alert('خطأ في تسجيل الدخول: ' + error.message);
-                });
-        }
-
-        // إنشاء حساب جديد
-        function signUp() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            if (!email || !password) {
-                alert('الرجاء تعبئة البريد الإلكتروني وكلمة المرور.');
-                return;
-            }
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    alert('تم إنشاء الحساب بنجاح!');
-                    toggleAuthForm();
-                    displayUserProfile(userCredential.user);
-                })
-                .catch(error => {
-                    console.error('Sign Up error:', error);
-                    alert('خطأ في إنشاء الحساب: ' + error.message);
-                });
-        }
-
-        // تسجيل الدخول باستخدام جوجل
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider)
-                .then(result => {
-                    toggleAuthForm();
-                    displayUserProfile(result.user);
-                })
-                .catch(error => {
-                    console.error('Google login error:', error);
-                    alert('خطأ في تسجيل الدخول باستخدام جوجل: ' + error.message);
-                });
-        }
-
-        // تسجيل الخروج
-        function logout() {
-            firebase.auth().signOut()
-                .then(() => {
-                    alert('تم تسجيل الخروج بنجاح.');
-                    document.getElementById('user-profile').style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Logout error:', error);
-                });
-        }
-
-        // تهيئة العرض المتحرك (السلايد شو)
-        function initializeSlideshow() {
-            let slideIndex = 0;
-            const slides = document.querySelectorAll('.slideshow img');
-            setInterval(() => {
-                slides[slideIndex].classList.remove('active');
-                slideIndex = (slideIndex + 1) % slides.length;
-                slides[slideIndex].classList.add('active');
-            }, 3000);
-        }
-
-        // تحميل بيانات السلة عند تسجيل الدخول
-        function loadCart(uid) {
-            db.collection('carts').doc(uid).get().then(doc => {
-                if (doc.exists) {
-                    const cart = doc.data().items || [];
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    updateCartCount();
-                } else {
-                    localStorage.setItem('cart', JSON.stringify([]));
-                    updateCartCount();
-                }
-            }).catch(e => {
-                console.error('Error loading cart:', e);
-            });
-        }
-
-        // عرض ملف المستخدم
-        function displayUserProfile(user) {
-            const userProfile = document.getElementById('user-profile');
-            userProfile.innerHTML = `
-                <h3>ملف المستخدم</h3>
-                <p>البريد الإلكتروني: ${user.email}</p>
-                <button onclick="toggleCartDetails()">عرض السلة</button>
-            `;
-            userProfile.style.display = 'block';
+        // Toggle sidebar visibility
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
         }
     </script>
 </body>
