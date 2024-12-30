@@ -3,117 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCR - منصة البث المباشر</title>
-    <meta name="theme-color" content="#1e1e2e">
-    <link rel="icon" href="https://via.placeholder.com/16x16/1e1e2e/FFFFFF/?text=MCR" type="image/x-icon">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="منصة KHALED - أفضل بث مباشر للشبكات بجودة عالية.">
+    <title>KHALED - بث مباشر</title>
+    <link rel="icon" href="https://via.placeholder.com/16x16/1a1a2e/FFFFFF/?text=KH" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/video.js@8.5.2/dist/video-js.css" rel="stylesheet">
     <style>
-        /* الأساسيات */
+        /* === الأساسيات === */
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #e94560;
+            --text-color: #ffffff;
+            --button-hover: #d63447;
+        }
+
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #1e1e2e, #2b2b3b);
-            color: #fff;
+            background: var(--primary-color);
+            color: var(--text-color);
             overflow-x: hidden;
         }
 
-        /* الشريط العلوي */
+        /* === شريط التنقل === */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #1e1e2e;
-            padding: 10px 30px;
+            background: var(--secondary-color);
+            padding: 10px 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        header .logo {
+        .logo {
             font-size: 1.8em;
             font-weight: bold;
-            color: #ff9800;
+            color: var(--accent-color);
         }
 
-        header .menu-toggle {
-            font-size: 1.8em;
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 2em;
             cursor: pointer;
-            color: #fff;
+            color: var(--text-color);
         }
 
-        /* القائمة الجانبية */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 300px;
-            height: 100%;
-            background: #2b2b3b;
-            transform: translateX(-100%);
-            padding: 20px;
-            box-shadow: 2px 0 12px rgba(0,0,0,0.4);
-            transition: transform 0.3s ease-in-out;
-            z-index: 1100;
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .sidebar h2 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            color: #ff9800;
-        }
-
-        .sidebar p {
-            font-size: 1em;
-            line-height: 1.6;
-            color: #ddd;
-        }
-
-        .sidebar .contact {
-            margin-top: 20px;
-            font-size: 1em;
-            color: #fff;
-        }
-
-        .sidebar .close-btn {
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #fff;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
-        /* رسالة الترحيب */
+        /* === رسالة الترحيب === */
         .welcome {
             text-align: center;
-            margin: 50px 0;
-            animation: fadeIn 1.5s ease-in-out;
+            padding: 50px 20px;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
         }
 
         .welcome h1 {
             font-size: 3em;
-            color: #ff9800;
+            margin-bottom: 10px;
         }
 
         .welcome p {
             font-size: 1.2em;
-            color: #ccc;
+            opacity: 0.8;
         }
 
-        /* مشغل الفيديو */
+        /* === مشغل الفيديو === */
         .video-container {
             display: flex;
             justify-content: center;
-            margin: 40px auto;
+            align-items: center;
+            margin: 30px auto;
             max-width: 900px;
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
         .video-js {
@@ -121,85 +102,123 @@
             height: 500px;
         }
 
-        /* أزرار التحكم */
+        /* === أزرار التحكم === */
         .controls {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
             gap: 15px;
-            margin: 30px 0;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
 
         .controls button {
-            background: linear-gradient(135deg, #ff9800, #ffb347);
+            background: var(--accent-color);
             border: none;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
+            color: var(--text-color);
+            padding: 10px 20px;
             font-size: 1em;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
-            transition: all 0.3s ease;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
         .controls button:hover {
-            background: linear-gradient(135deg, #ffb347, #ff9800);
-            transform: translateY(-3px);
+            background: var(--button-hover);
         }
 
-        /* Footer */
+        /* === أزرار القنوات === */
+        .channel-buttons {
+            text-align: center;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .channel-buttons button {
+            padding: 10px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .channel-buttons button:nth-child(1) {
+            background-color: green;
+            color: white;
+        }
+
+        .channel-buttons button:nth-child(2) {
+            background-color: blue;
+            color: white;
+        }
+
+        .channel-buttons button:nth-child(3) {
+            background-color: yellow;
+            color: black;
+        }
+
+        /* === Footer === */
         footer {
             text-align: center;
-            padding: 15px;
-            background: #1e1e2e;
+            padding: 20px;
+            background: var(--secondary-color);
             font-size: 0.9em;
+            margin-top: 30px;
         }
 
+        /* === الهواتف المحمولة === */
         @media (max-width: 768px) {
+            nav {
+                display: none;
+                flex-direction: column;
+                background: var(--secondary-color);
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                padding: 10px 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
             .welcome h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
 
-            .welcome p {
-                font-size: 1em;
+            .controls button {
+                flex: 1 1 auto;
             }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <!-- الشريط العلوي -->
+    <!-- شريط التنقل -->
     <header>
-        <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
-        <div class="logo">MCR</div>
+        <div class="logo">KHALED</div>
+        <nav>
+            <a href="#">الرئيسية</a>
+            <a href="#">عن المبرمج</a>
+            <a href="#">تواصل معنا</a>
+        </nav>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     </header>
-
-    <!-- القائمة الجانبية -->
-    <div class="sidebar" id="sidebar">
-        <div class="close-btn" onclick="toggleSidebar()">✖</div>
-        <h2>حول المهندس</h2>
-        <p>
-            المهندس خالد عبدالحكيم النظاري، خبير في شبكات المايكروتك وأمن المعلومات، يمتلك خبرة واسعة في تطوير الأنظمة الحديثة.
-        </p>
-        <p class="contact">📞 للتواصل: <a href="tel:771774634" style="color:#ff9800;">771774634</a></p>
-    </div>
 
     <!-- رسالة ترحيبية -->
     <section class="welcome">
-        <h1>مرحبًا بكم في MCR</h1>
-        <p>أفضل منصة بث مباشر بجودة عالية وتجربة سلسة</p>
+        <h1>مرحبًا بك في منصة KHALED</h1>
+        <p>أفضل تجربة للبث المباشر بجودة عالية واحترافية مع المهندس خالد النضاري</p>
     </section>
 
     <!-- مشغل الفيديو -->
     <section class="video-container">
-        <video id="my-video" class="video-js vjs-custom-skin" controls autoplay preload="auto"
-            poster="https://via.placeholder.com/900x500/252525/FFFFFF/?text=MCR">
+        <video id="my-video" class="video-js" controls autoplay preload="auto">
             <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
         </video>
     </section>
@@ -212,22 +231,26 @@
         <button onclick="toggleFullscreen()">⛶ شاشة كاملة</button>
     </section>
 
-    <footer>&copy; 2024 MCR | جميع الحقوق محفوظة</footer>
+    <!-- أزرار القنوات -->
+    <section class="channel-buttons">
+        <button onclick="changeChannel('https://test-stream.m3u8')">القناة 1</button>
+        <button onclick="changeChannel('https://channel2.m3u8')">القناة 2</button>
+        <button onclick="window.location.href='https://www.khaled.pro/emby'">الاستراحة</button>
+    </section>
+
+    <footer>
+        &copy; 2024 KHALED | جميع الحقوق محفوظة
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/video.js@8.5.2/dist/video.min.js"></script>
     <script>
         const player = videojs('my-video');
-
         function rewindVideo() { player.currentTime(player.currentTime() - 5); }
         function forwardVideo() { player.currentTime(player.currentTime() + 5); }
         function playPauseVideo() { player.paused() ? player.play() : player.pause(); }
         function toggleFullscreen() { player.isFullscreen() ? player.exitFullscreen() : player.requestFullscreen(); }
-
-        // Toggle sidebar visibility
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
-        }
+        function changeChannel(stream) { player.src({ type: 'application/x-mpegURL', src: stream }); player.play(); }
+        function toggleMenu() { document.querySelector('nav').classList.toggle('show'); }
     </script>
 </body>
 </html>
