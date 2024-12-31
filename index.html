@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1a1a2e">
-    <meta name="description" content="منصة MCRN - أفضل بث مباشر للشبكات بجودة عالية.">
+    <meta name="description" content="منصة MCRN - أفضل بث مباشر بجودة عالية واحترافية.">
     <title>MCRN - بث مباشر</title>
     <link rel="icon" href="https://via.placeholder.com/16x16/1a1a2e/FFFFFF/?text=KH" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/video.js@8.5.2/dist/video-js.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.0/dist/hls.min.js"></script>
     <style>
         :root {
             --primary-color: #1a1a2e;
@@ -54,18 +55,10 @@
             text-decoration: none;
             color: var(--text-color);
             font-weight: 500;
-            transition: color 0.3s;
         }
 
         nav a:hover {
             color: var(--accent-color);
-        }
-
-        .menu-toggle {
-            font-size: 2em;
-            cursor: pointer;
-            color: var(--text-color);
-            display: none;
         }
 
         /* رسالة الترحيب */
@@ -82,14 +75,13 @@
 
         .welcome p {
             font-size: 1.2em;
-            opacity: 0.8;
+            margin-top: 10px;
         }
 
         .platform-info {
             text-align: center;
             margin-top: 10px;
             font-size: 0.9em;
-            color: var(--text-color);
             opacity: 0.7;
         }
 
@@ -101,25 +93,23 @@
             max-width: 900px;
         }
 
-        .video-js {
+        #videoPlayer {
             width: 100%;
             height: 500px;
             border-radius: 10px;
-        }
-
-        /* رسالة التحميل والخطأ */
-        .error-message, .loading-message {
-            text-align: center;
-            font-size: 1.2em;
-            margin-top: 10px;
+            background: black;
         }
 
         .error-message {
+            text-align: center;
             color: #ff4d4f;
+            font-size: 1.2em;
         }
 
         .loading-message {
+            text-align: center;
             color: var(--accent-color);
+            font-size: 1.2em;
         }
 
         /* أزرار القنوات */
@@ -156,57 +146,10 @@
             transform: scale(1.05);
         }
 
-        /* أزرار إضافية للبث الإخباري */
-        .news-buttons {
-            text-align: center;
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .news-buttons button {
-            background: var(--secondary-color);
-            color: var(--text-color);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .news-buttons button i {
-            margin-right: 5px;
-        }
-
-        .news-buttons button:hover {
-            background: var(--accent-color);
-        }
-
         footer {
             text-align: center;
             padding: 20px;
             background: var(--secondary-color);
-            margin-top: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-
-            nav {
-                display: none;
-                flex-direction: column;
-                background: var(--secondary-color);
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                padding: 10px 0;
-            }
         }
     </style>
 </head>
@@ -214,7 +157,6 @@
 
     <header>
         <div class="logo">MCRN</div>
-        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
         <nav>
             <a href="#">الرئيسية</a>
             <a href="#">عن المبرمج</a>
@@ -224,27 +166,46 @@
 
     <section class="welcome">
         <h1>مرحبًا بك في منصة MCRN</h1>
-        <p>أفضل تجربة للبث المباشر بجودة عالية واحترافية</p>
-        <div class="platform-info">هذا البث مقدم بواسطة <strong>المهندس خالد النظاري</strong></div>
+        <p>أفضل تجربة للبث المباشر بجودة عالية واحترافية مع <strong>المهندس خالد النظاري</strong></p>
     </section>
 
     <section class="video-container">
-        <video id="my-video" class="video-js" controls autoplay preload="auto">
-            <source src="http://108.181.191.8:3333/hls/32fa3/playlist.m3u8" type="application/x-mpegURL">
-        </video>
+        <video id="videoPlayer" controls autoplay></video>
     </section>
+
+    <div id="loading-message" class="loading-message">جارٍ تحميل البث...</div>
+    <div id="error-message" class="error-message"></div>
 
     <section class="channel-buttons">
-        <button><i class="fas fa-tv"></i> القناة 1</button>
-        <button><i class="fas fa-play"></i> القناة 2</button>
-        <button><i class="fas fa-pause"></i> الاستراحة</button>
-    </section>
-
-    <section class="news-buttons">
-        <button><i class="fas fa-newspaper"></i> الجزيرة</button>
-        <button><i class="fas fa-broadcast-tower"></i> بث عثمان</button>
+        <button onclick="changeChannel('http://108.181.191.8:3333/hls/32fa3/playlist.m3u8')"><i class="fas fa-tv"></i> القناة 1</button>
+        <button onclick="changeChannel('https://test-stream.m3u8')"><i class="fas fa-play"></i> القناة 2</button>
+        <button onclick="changeChannel('https://aljazeera.net/live')"><i class="fas fa-newspaper"></i> الجزيرة</button>
+        <button onclick="changeChannel('https://alarabiya.net/live')"><i class="fas fa-broadcast-tower"></i> العربية</button>
+        <button onclick="changeChannel('https://osman-stream.com/live')"><i class="fas fa-film"></i> بث عثمان</button>
     </section>
 
     <footer>&copy; 2024 MCRN | جميع الحقوق محفوظة | بواسطة المهندس خالد النظاري</footer>
+
+    <script>
+        const video = document.getElementById('videoPlayer');
+        const loadingMessage = document.getElementById('loading-message');
+        const errorMessage = document.getElementById('error-message');
+
+        function changeChannel(src) {
+            loadingMessage.style.display = 'block';
+            errorMessage.textContent = '';
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(src);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play();
+                    loadingMessage.style.display = 'none';
+                });
+            }
+        }
+
+        changeChannel('http://108.181.191.8:3333/hls/32fa3/playlist.m3u8');
+    </script>
 </body>
 </html>
