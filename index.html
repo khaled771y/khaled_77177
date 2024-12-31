@@ -168,7 +168,7 @@
     <section class="video-container">
         <iframe 
             id="videoPlayer" 
-            src=https://www.youtube.com/live/CjxWtb7jiRk?si=GnzIo-G5A3NOOwvj" 
+            src="https://www.youtube.com/embed/CjxWtb7jiRk?autoplay=1&mute=0&controls=1&modestbranding=1" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
         </iframe>
@@ -176,7 +176,7 @@
         <!-- أزرار التحكم -->
         <div class="controls">
             <button onclick="toggleFullscreen()"><i class="fas fa-expand"></i>تكبير الشاشة</button>
-            <button onclick="captureScreenshot()"><i class="fas fa-camera"></i>التقاط صورة</button>
+            <button onclick="switchChannel()"><i class="fas fa-random"></i>تبديل القناة</button>
         </div>
     </section>
 
@@ -200,12 +200,16 @@
             }
         }
 
-        // التقاط لقطة شاشة
-        function captureScreenshot() {
-            alert('لا يمكن التقاط صورة مباشرة من iframe الخاص بـ YouTube. يمكنك استخدام أداة التقاط الشاشة من جهازك.');
+        // تبديل القناة
+        function switchChannel() {
+            const channels = [
+                'https://www.youtube.com/embed/CjxWtb7jiRk',
+                'https://www.youtube.com/embed/live_stream?channel=UC1oPBUWifc0QOOY8DEKhLuQ'
+            ];
+            const randomChannel = channels[Math.floor(Math.random() * channels.length)];
+            videoPlayer.src = `${randomChannel}?autoplay=1&mute=0&controls=1`;
         }
 
-        // حالة البث
         window.onload = () => {
             document.getElementById('statusMessage').textContent = 'تم تحميل البث بنجاح!';
         };
