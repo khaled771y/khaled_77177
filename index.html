@@ -6,9 +6,13 @@
     <meta name="theme-color" content="#1a1a2e">
     <meta name="description" content="منصة MCRN - أفضل بث مباشر بجودة عالية واحترافية.">
     <title>MCRN - بث مباشر</title>
+    <!-- أيقونة الموقع -->
     <link rel="icon" href="https://via.placeholder.com/16x16/1a1a2e/FFFFFF/?text=KH" type="image/x-icon">
+    <!-- تضمين ملف CSS الخاص بـ Video.js (ليس ضروريًا في حال الاكتفاء بـ Hls.js) -->
     <link href="https://cdn.jsdelivr.net/npm/video.js@8.5.2/dist/video-js.css" rel="stylesheet">
+    <!-- تضمين أيقونات Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- تضمين مكتبة Hls.js -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.0/dist/hls.min.js"></script>
     <style>
         :root {
@@ -78,13 +82,6 @@
             margin-top: 10px;
         }
 
-        .platform-info {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 0.9em;
-            opacity: 0.7;
-        }
-
         /* مشغل الفيديو */
         .video-container {
             display: flex;
@@ -104,6 +101,7 @@
             text-align: center;
             color: #ff4d4f;
             font-size: 1.2em;
+            margin-top: 10px;
         }
 
         .loading-message {
@@ -177,11 +175,21 @@
     <div id="error-message" class="error-message"></div>
 
     <section class="channel-buttons">
-        <button onclick="changeChannel('http://108.181.191.8:3333/hls/32fa3/playlist.m3u8')"><i class="fas fa-tv"></i> القناة 1</button>
-        <button onclick="changeChannel('https://test-stream.m3u8')"><i class="fas fa-play"></i> القناة 2</button>
-        <button onclick="changeChannel('https://aljazeera.net/live')"><i class="fas fa-newspaper"></i> الجزيرة</button>
-        <button onclick="changeChannel('https://alarabiya.net/live')"><i class="fas fa-broadcast-tower"></i> العربية</button>
-        <button onclick="changeChannel('https://osman-stream.com/live')"><i class="fas fa-film"></i> بث عثمان</button>
+        <button onclick="changeChannel('http://108.181.191.8:3333/hls/32fa3/playlist.m3u8')">
+            <i class="fas fa-tv"></i> القناة 1
+        </button>
+        <button onclick="changeChannel('https://test-stream.m3u8')">
+            <i class="fas fa-play"></i> القناة 2
+        </button>
+        <button onclick="changeChannel('https://aljazeera.net/live')">
+            <i class="fas fa-newspaper"></i> الجزيرة
+        </button>
+        <button onclick="changeChannel('https://alarabiya.net/live')">
+            <i class="fas fa-broadcast-tower"></i> العربية
+        </button>
+        <button onclick="changeChannel('https://osman-stream.com/live')">
+            <i class="fas fa-film"></i> بث عثمان
+        </button>
     </section>
 
     <footer>&copy; 2024 MCRN | جميع الحقوق محفوظة | بواسطة المهندس خالد النظاري</footer>
@@ -190,22 +198,80 @@
         const video = document.getElementById('videoPlayer');
         const loadingMessage = document.getElementById('loading-message');
         const errorMessage = document.getElementById('error-message');
+        
+        // متغير عالمي لـ Hls حتى نتمكن من تدميره عند تغيير القناة
+        let hls = null;
 
         function changeChannel(src) {
+            // عرض رسالة التحميل وإخفاء أي رسالة خطأ سابقة
             loadingMessage.style.display = 'block';
             errorMessage.textContent = '';
+
+            // في حال تم اختيار قناة أخرى مسبقًا، نتأكد من تدمير Hls لإنهاء أي بث قديم
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+
+            // إذا كان المتصفح يدعم Hls.js
             if (Hls.isSupported()) {
-                const hls = new Hls();
+                hls = new Hls();
                 hls.loadSource(src);
                 hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play();
+
+                // عند جاهزية الملف للتشغيل
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(() => {
+                        // منع أي أخطاء متعلقة بـ Promise في بعض المتصفحات
+                    });
+                    loadingMessage.style.display = 'none';
+                });
+
+                // التقاط أي أخطاء أثناء التشغيل
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                errorMessage.textContent = 'حدث خطأ في الشبكة. تأكد من اتصال الإنترنت.';
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                errorMessage.textContent = 'حدث خطأ في تشغيل الفيديو. نحاول الإصلاح تلقائيًا...';
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                errorMessage.textContent = 'خطأ غير معروف في البث.';
+                                hls.destroy();
+                                break;
+                        }
+                        loadingMessage.style.display = 'none';
+                    }
+                });
+            }
+            // إذا كان المتصفح يدعم HLS بشكل أصلي (سفاري على iOS مثلاً)
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = src;
+                video.addEventListener('loadedmetadata', function onLoaded() {
+                    video.removeEventListener('loadedmetadata', onLoaded);
+                    video.play().catch(() => {});
+                    loadingMessage.style.display = 'none';
+                });
+                video.addEventListener('error', function onError() {
+                    video.removeEventListener('error', onError);
+                    errorMessage.textContent = 'لا يمكن تشغيل القناة على هذا المتصفح.';
                     loadingMessage.style.display = 'none';
                 });
             }
+            // في حال لم يكن هناك دعم لـ HLS
+            else {
+                errorMessage.textContent = 'البث غير مدعوم على هذا المتصفح.';
+                loadingMessage.style.display = 'none';
+            }
         }
 
-        changeChannel('http://108.181.191.8:3333/hls/32fa3/playlist.m3u8');
+        // استدعاء القناة الافتراضية عند تحميل الصفحة
+        window.onload = function() {
+            changeChannel('http://108.181.191.8:3333/hls/32fa3/playlist.m3u8');
+        };
     </script>
 </body>
 </html>
