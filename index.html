@@ -5,15 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1a1a2e">
     <meta name="description" content="منصة MCRN - أفضل بث مباشر بجودة عالية واحترافية.">
-    <title>MCRN - بث مباشر</title>
-    <!-- أيقونة الموقع -->
+    <title>MCRN - بث مباشر ذكي</title>
     <link rel="icon" href="https://via.placeholder.com/16x16/1a1a2e/FFFFFF/?text=KH" type="image/x-icon">
-    <!-- تضمين ملف CSS الخاص بـ Video.js (ليس ضروريًا في حال الاكتفاء بـ Hls.js) -->
-    <link href="https://cdn.jsdelivr.net/npm/video.js@8.5.2/dist/video-js.css" rel="stylesheet">
-    <!-- تضمين أيقونات Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- تضمين مكتبة Hls.js -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.0/dist/hls.min.js"></script>
     <style>
         :root {
             --primary-color: #1a1a2e;
@@ -65,7 +59,7 @@
             color: var(--accent-color);
         }
 
-        /* رسالة الترحيب */
+        /* الترحيب */
         .welcome {
             text-align: center;
             padding: 40px 20px;
@@ -90,27 +84,14 @@
             max-width: 900px;
         }
 
-        #videoPlayer {
+        .video-container iframe {
             width: 100%;
             height: 500px;
             border-radius: 10px;
-            background: black;
+            border: none;
         }
 
-        .error-message {
-            text-align: center;
-            color: #ff4d4f;
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
-
-        .loading-message {
-            text-align: center;
-            color: var(--accent-color);
-            font-size: 1.2em;
-        }
-
-        /* أزرار القنوات */
+        /* أزرار التحكم في القنوات */
         .channel-buttons {
             text-align: center;
             margin: 30px 0;
@@ -144,6 +125,22 @@
             transform: scale(1.05);
         }
 
+        /* رسالة تحميل أو خطأ */
+        .status-message {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 15px;
+        }
+
+        .loading-message {
+            color: var(--accent-color);
+        }
+
+        .error-message {
+            color: #ff4d4f;
+        }
+
+        /* التذييل */
         footer {
             text-align: center;
             padding: 20px;
@@ -167,111 +164,54 @@
         <p>أفضل تجربة للبث المباشر بجودة عالية واحترافية مع <strong>المهندس خالد النظاري</strong></p>
     </section>
 
+    <!-- مشغل الفيديو -->
     <section class="video-container">
-        <video id="videoPlayer" controls autoplay></video>
+        <iframe id="videoPlayer" src="https://www.youtube.com/embed/zTAbbAHnqQo?autoplay=1&mute=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </section>
 
-    <div id="loading-message" class="loading-message">جارٍ تحميل البث...</div>
-    <div id="error-message" class="error-message"></div>
+    <!-- رسائل الحالة -->
+    <div id="statusMessage" class="status-message loading-message">جارٍ تحميل البث...</div>
 
+    <!-- أزرار القنوات -->
     <section class="channel-buttons">
-        <button onclick="changeChannel('http://108.181.191.8:3333/hls/32fa3/playlist.m3u8')">
-            <i class="fas fa-tv"></i> القناة 1
+        <button onclick="changeChannel('https://www.youtube.com/embed/zTAbbAHnqQo')">
+            <i class="fas fa-tv"></i> حفل جسار فيصل
         </button>
-        <button onclick="changeChannel('https://test-stream.m3u8')">
-            <i class="fas fa-play"></i> القناة 2
+        <button onclick="changeChannel('https://www.youtube.com/embed/live_stream?channel=UC1oPBUWifc0QOOY8DEKhLuQ')">
+            <i class="fas fa-play"></i> قناة مباشر 1
         </button>
-        <button onclick="changeChannel('https://aljazeera.net/live')">
-            <i class="fas fa-newspaper"></i> الجزيرة
+        <button onclick="changeChannel('https://www.youtube.com/embed/live_stream?channel=UCy9iL4A8F3c3Di2V5E0Xb2A')">
+            <i class="fas fa-newspaper"></i> قناة مباشر 2
         </button>
-        <button onclick="changeChannel('https://alarabiya.net/live')">
-            <i class="fas fa-broadcast-tower"></i> العربية
-        </button>
-        <button onclick="changeChannel('https://osman-stream.com/live')">
-            <i class="fas fa-film"></i> بث عثمان
+        <button onclick="changeChannel('https://www.youtube.com/embed/live_stream?channel=UCz0RZemf4W0LkDm0a8DCzTQ')">
+            <i class="fas fa-broadcast-tower"></i> قناة الأخبار
         </button>
     </section>
 
-    <footer>&copy; 2024 MCRN | جميع الحقوق محفوظة | بواسطة المهندس خالد النظاري</footer>
+    <footer>
+        &copy; 2024 MCRN | جميع الحقوق محفوظة | بواسطة المهندس خالد النظاري
+    </footer>
 
     <script>
-        const video = document.getElementById('videoPlayer');
-        const loadingMessage = document.getElementById('loading-message');
-        const errorMessage = document.getElementById('error-message');
-        
-        // متغير عالمي لـ Hls حتى نتمكن من تدميره عند تغيير القناة
-        let hls = null;
+        const videoPlayer = document.getElementById('videoPlayer');
+        const statusMessage = document.getElementById('statusMessage');
 
         function changeChannel(src) {
-            // عرض رسالة التحميل وإخفاء أي رسالة خطأ سابقة
-            loadingMessage.style.display = 'block';
-            errorMessage.textContent = '';
+            statusMessage.textContent = 'جارٍ تحميل القناة...';
+            statusMessage.className = 'status-message loading-message';
 
-            // في حال تم اختيار قناة أخرى مسبقًا، نتأكد من تدمير Hls لإنهاء أي بث قديم
-            if (hls) {
-                hls.destroy();
-                hls = null;
-            }
+            videoPlayer.src = src + '?autoplay=1&mute=0';
 
-            // إذا كان المتصفح يدعم Hls.js
-            if (Hls.isSupported()) {
-                hls = new Hls();
-                hls.loadSource(src);
-                hls.attachMedia(video);
+            videoPlayer.onload = () => {
+                statusMessage.textContent = 'تم تحميل القناة بنجاح!';
+                statusMessage.className = 'status-message';
+            };
 
-                // عند جاهزية الملف للتشغيل
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(() => {
-                        // منع أي أخطاء متعلقة بـ Promise في بعض المتصفحات
-                    });
-                    loadingMessage.style.display = 'none';
-                });
-
-                // التقاط أي أخطاء أثناء التشغيل
-                hls.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) {
-                        switch (data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                errorMessage.textContent = 'حدث خطأ في الشبكة. تأكد من اتصال الإنترنت.';
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                errorMessage.textContent = 'حدث خطأ في تشغيل الفيديو. نحاول الإصلاح تلقائيًا...';
-                                hls.recoverMediaError();
-                                break;
-                            default:
-                                errorMessage.textContent = 'خطأ غير معروف في البث.';
-                                hls.destroy();
-                                break;
-                        }
-                        loadingMessage.style.display = 'none';
-                    }
-                });
-            }
-            // إذا كان المتصفح يدعم HLS بشكل أصلي (سفاري على iOS مثلاً)
-            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = src;
-                video.addEventListener('loadedmetadata', function onLoaded() {
-                    video.removeEventListener('loadedmetadata', onLoaded);
-                    video.play().catch(() => {});
-                    loadingMessage.style.display = 'none';
-                });
-                video.addEventListener('error', function onError() {
-                    video.removeEventListener('error', onError);
-                    errorMessage.textContent = 'لا يمكن تشغيل القناة على هذا المتصفح.';
-                    loadingMessage.style.display = 'none';
-                });
-            }
-            // في حال لم يكن هناك دعم لـ HLS
-            else {
-                errorMessage.textContent = 'البث غير مدعوم على هذا المتصفح.';
-                loadingMessage.style.display = 'none';
-            }
+            videoPlayer.onerror = () => {
+                statusMessage.textContent = 'خطأ في تحميل القناة!';
+                statusMessage.className = 'status-message error-message';
+            };
         }
-
-        // استدعاء القناة الافتراضية عند تحميل الصفحة
-        window.onload = function() {
-            changeChannel('http://108.181.191.8:3333/hls/32fa3/playlist.m3u8');
-        };
     </script>
 </body>
 </html>
