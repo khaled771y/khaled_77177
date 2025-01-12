@@ -104,9 +104,9 @@
       transform: scale(1.1);
     }
 
-    /* إخفاء المحتوى الافتراضي للأقسام */
+    /* الأقسام */
     .section {
-      margin-top: 80px; /* لإفساح مجال تحت شريط التنقل */
+      margin-top: 80px; /* فسحة تحت شريط التنقل */
       text-align: center;
       padding: 20px;
       display: none;
@@ -115,7 +115,6 @@
       margin-left: auto;
       margin-right: auto;
     }
-    /* عند تفعيل القسم المطلوب */
     .section.active {
       display: block;
     }
@@ -124,9 +123,7 @@
       100% { opacity: 1; }
     }
 
-    /*
-     * صندوق الفيديو (نسبة أبعاد 16:9) لجعله متجاوبًا
-     */
+    /* صندوق الفيديو (نسبة أبعاد 16:9) لقناة 1 */
     .video-container {
       position: relative;
       width: 100%;
@@ -150,12 +147,8 @@
       height: 100% !important;
       object-fit: cover;
     }
-    .video-container:hover {
-      transform: scale(1.01);
-      transition: transform 0.3s ease;
-    }
 
-    /* حاوية iframe للقناة 2 */
+    /* iframe للقناة 2 */
     .iframe-container {
       position: relative;
       width: 100%;
@@ -165,7 +158,6 @@
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
       background: #000;
-      /* افتراضيًا لا نعرضها إلا عند اختيار قناة 2 */
       display: none;
     }
     .iframe-container iframe {
@@ -175,7 +167,7 @@
       display: block;
     }
 
-    /* أزرار التحكم */
+    /* أزرار التحكم بفيديو قناة 1 */
     .custom-buttons {
       display: flex;
       justify-content: center;
@@ -246,14 +238,14 @@
       text-decoration: underline;
     }
 
-    /* وسائط (Media Queries) للشاشات الأصغر */
+    /* للشاشات الأصغر */
     @media (max-width: 768px) {
       .custom-buttons .button {
         padding: 10px 20px;
         font-size: 14px;
       }
       .iframe-container iframe {
-        height: 400px; /* تقليل الارتفاع قليلاً للشاشات الأصغر */
+        height: 400px; 
       }
     }
     @media (max-width: 600px) {
@@ -294,7 +286,6 @@
       <i class="fas fa-tv"></i>
       MCRN
     </div>
-    <!-- زر إظهار/إخفاء القائمة في الشاشات الصغيرة -->
     <button class="menu-toggle" id="toggle-menu-btn">
       <i class="fas fa-bars"></i>
     </button>
@@ -310,7 +301,7 @@
   <div id="home-section" class="section active">
     <h1>مرحبًا بك في منصة MCRN للبث المباشر!</h1>
 
-    <!-- صندوق الفيديو لمشغل Video.js (لقناة 1) -->
+    <!-- الفيديو (قناة 1) -->
     <div class="video-container" id="video-container">
       <video
         id="video-player"
@@ -321,13 +312,12 @@
         playsinline
         poster="https://via.placeholder.com/1200x600/000000/FFFFFF/?text=MCRN+LIVE"
       >
-        <!-- سيتم وضع المصدر برمجيًا -->
         <source src="" type="video/mp4" />
         متصفحك لا يدعم تشغيل الفيديو.
       </video>
     </div>
 
-    <!-- حاوية iframe لقناة 2 -->
+    <!-- iframe (قناة 2) -->
     <div class="iframe-container" id="iframe-container">
       <iframe 
         src="https://b.naba24.net/albaplayer/ssc-1/?serv=0"
@@ -336,11 +326,17 @@
       ></iframe>
     </div>
 
-    <!-- أزرار التحكم (خاصة بمشغل Video.js لقناة 1) -->
+    <!-- أزرار التحكم بقناة 1 -->
     <div class="custom-buttons" id="video-controls">
-      <button class="button" id="rewind-btn"><i class="fas fa-backward"></i> إرجاع 10 ثوانٍ</button>
-      <button class="button" id="playpause-btn"><i class="fas fa-play"></i> تشغيل/إيقاف</button>
-      <button class="button" id="forward-btn"><i class="fas fa-forward"></i> تقديم 10 ثوانٍ</button>
+      <button class="button" id="rewind-btn">
+        <i class="fas fa-backward"></i> إرجاع 10 ثوانٍ
+      </button>
+      <button class="button" id="playpause-btn">
+        <i class="fas fa-play"></i> تشغيل/إيقاف
+      </button>
+      <button class="button" id="forward-btn">
+        <i class="fas fa-forward"></i> تقديم 10 ثوانٍ
+      </button>
     </div>
 
     <!-- أزرار القنوات -->
@@ -355,14 +351,12 @@
   <div id="channels-section" class="section">
     <h1>القنوات المفضلة</h1>
     <div class="channels-grid">
-      <!-- قناة 1 -->
       <div class="channel-card" data-channel="1">
         <h3>القناة 1</h3>
         <button class="button card-watch-btn" data-channel="1">
           مشاهدة
         </button>
       </div>
-      <!-- قناة 2 -->
       <div class="channel-card" data-channel="2">
         <h3>القناة 2</h3>
         <button class="button card-watch-btn" data-channel="2">
@@ -415,30 +409,31 @@
 
   <!-- جافاسكربت -->
   <script>
-    //------------------------------
-    // 1) تهيئة مشغل الفيديو
-    //------------------------------
+    //=================================
+    // 1) تهيئة مشغل الفيديو لقناة 1
+    //=================================
     const player = videojs('video-player');
-    
-    // تشغيل قناة 1 افتراضيًا عبر Video.js
     function loadChannel1() {
       // إظهار مشغل الفيديو
       document.getElementById('video-container').style.display = 'block';
       // إخفاء iframe
       document.getElementById('iframe-container').style.display = 'none';
-      // إظهار أزرار تحكم Video.js
+      // إظهار أزرار التحكّم (خاصة بقناة 1)
       document.getElementById('video-controls').style.display = 'flex';
 
-      // ضبط مصدر الفيديو
+      // تغيير مصدر الفيديو
       player.pause();
       player.src({
-        src: 'https://vjs.zencdn.net/v/oceans.mp4', // يمكنك تغيير المصدر لو أردت
+        src: 'https://vjs.zencdn.net/v/oceans.mp4',  // يمكنك تغييره إلى أي فيديو mp4 آخر
         type: 'video/mp4'
       });
+      // محاولة التشغيل
       player.play().catch(err => console.warn('تعذّر تشغيل قناة 1:', err));
     }
 
-    // تشغيل قناة 2 داخل iframe
+    //=================================
+    // 2) تهيئة iframe لقناة 2
+    //=================================
     function loadChannel2() {
       // إخفاء مشغل الفيديو
       document.getElementById('video-container').style.display = 'none';
@@ -446,14 +441,30 @@
       document.getElementById('iframe-container').style.display = 'block';
       // إخفاء أزرار التحكم الخاصة بـVideo.js
       document.getElementById('video-controls').style.display = 'none';
-
-      // هنا لا نحتاج لضبط src للـiframe إن كان ثابتًا
-      // أو إن أردت تغييره برمجيًا: document.querySelector('#iframe-container iframe').src = "رابط آخر"
+      // (إذا أردت تغيير رابط iframe برمجيًا: 
+      //   document.querySelector('#iframe-container iframe').src = 'رابط';
+      // )
     }
 
-    //------------------------------
-    // 2) التحكم في الفيديو (قناة 1)
-    //------------------------------
+    //=================================
+    // 3) التبديل بين القنوات
+    //=================================
+    function switchChannel(num) {
+      if (num === 1) {
+        loadChannel1();
+      } else if (num === 2) {
+        loadChannel2();
+      }
+    }
+
+    // تشغيل قناة 2 افتراضيًا عند فتح الصفحة
+    window.addEventListener('load', () => {
+      switchChannel(2);
+    });
+
+    //=================================
+    // 4) التحكم في فيديو قناة 1
+    //=================================
     const rewindBtn = document.getElementById('rewind-btn');
     const playpauseBtn = document.getElementById('playpause-btn');
     const forwardBtn = document.getElementById('forward-btn');
@@ -463,7 +474,7 @@
     });
     playpauseBtn.addEventListener('click', () => {
       if (player.paused()) {
-        player.play().catch(err => console.warn('تعذّر التشغيل:', err));
+        player.play().catch(err => console.warn('تعذر التشغيل:', err));
       } else {
         player.pause();
       }
@@ -472,83 +483,62 @@
       player.currentTime(player.currentTime() + 10);
     });
 
-    //------------------------------
-    // 3) التبديل بين قناتي 1 و 2
-    //------------------------------
-    function switchChannel(channelNumber) {
-      if (channelNumber === 1) {
-        loadChannel1();
-      } else if (channelNumber === 2) {
-        loadChannel2();
-      }
-    }
-
-    // بمجرد تحميل الصفحة -> شغّل قناة 2 افتراضياً
-    window.addEventListener('load', () => {
-      switchChannel(2);
-    });
-
-    // التعامل مع أزرار "اختر قناة البث"
-    document.querySelectorAll('[data-channel]').forEach(btn => {
-      btn.addEventListener('click', e => {
-        // نمنع روابط القنوات في قسم المفضلة من إعادة التحميل
-        if (e.target.tagName === 'A') e.preventDefault();
-        const channel = parseInt(e.target.getAttribute('data-channel')) 
-                     || parseInt(e.target.closest('[data-channel]').getAttribute('data-channel'));
-        // الانتقال لقسم البث المباشر
+    //=================================
+    // 5) أزرار اختيار القناة
+    //=================================
+    document.querySelectorAll('[data-channel]').forEach((elem) => {
+      elem.addEventListener('click', (e) => {
+        const ch = parseInt(e.target.getAttribute('data-channel')) 
+                || parseInt(e.target.closest('[data-channel]').getAttribute('data-channel'));
+        // عرض قسم البث المباشر
         showSection('home-section', 'link-home');
-        switchChannel(channel);
+        // التبديل للقناة المختارة
+        switchChannel(ch);
       });
     });
 
-    //------------------------------
-    // 4) التنقل بين الأقسام (شريط القوائم)
-    //------------------------------
+    //=================================
+    // 6) التنقّل بين أقسام الموقع
+    //=================================
     const sections = {
-      'home-section':  document.getElementById('home-section'),
+      'home-section':     document.getElementById('home-section'),
       'channels-section': document.getElementById('channels-section'),
-      'rest-section':  document.getElementById('rest-section'),
-      'about-section': document.getElementById('about-section'),
+      'rest-section':     document.getElementById('rest-section'),
+      'about-section':    document.getElementById('about-section'),
     };
-    const navList = document.getElementById('nav-list');
 
-    document.getElementById('link-home').addEventListener('click', e => {
+    function showSection(sectionId, linkId) {
+      Object.values(sections).forEach(sec => sec.classList.remove('active'));
+      sections[sectionId].classList.add('active');
+      document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
+      if (linkId) document.getElementById(linkId).classList.add('active');
+      // إغلاق القائمة بالشاشات الصغيرة
+      if (window.innerWidth <= 600) {
+        document.getElementById('nav-list').classList.remove('show');
+      }
+    }
+
+    // روابط الشريط
+    document.getElementById('link-home').addEventListener('click', (e) => {
       e.preventDefault();
       showSection('home-section', 'link-home');
     });
-    document.getElementById('link-channels').addEventListener('click', e => {
+    document.getElementById('link-channels').addEventListener('click', (e) => {
       e.preventDefault();
       showSection('channels-section', 'link-channels');
     });
-    document.getElementById('link-rest').addEventListener('click', e => {
+    document.getElementById('link-rest').addEventListener('click', (e) => {
       e.preventDefault();
       showSection('rest-section', 'link-rest');
     });
-    document.getElementById('link-about').addEventListener('click', e => {
+    document.getElementById('link-about').addEventListener('click', (e) => {
       e.preventDefault();
       showSection('about-section', 'link-about');
     });
 
-    function showSection(sectionId, linkId) {
-      // إخفاء كل الأقسام
-      Object.values(sections).forEach(sec => sec.classList.remove('active'));
-      // إظهار القسم المطلوب
-      sections[sectionId].classList.add('active');
-
-      // تفعيل الرابط المناسب
-      document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
-      document.getElementById(linkId).classList.add('active');
-
-      // إغلاق القائمة لو كانت مفتوحة على الشاشات الصغيرة
-      if (window.innerWidth <= 600) {
-        navList.classList.remove('show');
-      }
-    }
-
-    //------------------------------
-    // 5) زر القائمة (الشاشات الصغيرة)
-    //------------------------------
+    // زر القائمة
     const toggleMenuBtn = document.getElementById('toggle-menu-btn');
+    const navList = document.getElementById('nav-list');
     toggleMenuBtn.addEventListener('click', () => {
       navList.classList.toggle('show');
     });
