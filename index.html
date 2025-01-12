@@ -106,7 +106,7 @@
 
     /* الأقسام */
     .section {
-      margin-top: 80px; /* فسحة تحت شريط التنقل */
+      margin-top: 80px; /* لإفساح مجال تحت شريط التنقل */
       text-align: center;
       padding: 20px;
       display: none;
@@ -123,7 +123,7 @@
       100% { opacity: 1; }
     }
 
-    /* صندوق الفيديو (نسبة أبعاد 16:9) لقناة 1 */
+    /* حاوية الفيديو (قناة 1) */
     .video-container {
       position: relative;
       width: 100%;
@@ -133,6 +133,7 @@
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
       background: #000;
+      display: none; /* افتراضيًا مخفي (القناة 2 هي الافتراضية) */
     }
     .video-container::before {
       content: "";
@@ -147,8 +148,12 @@
       height: 100% !important;
       object-fit: cover;
     }
+    .video-container:hover {
+      transform: scale(1.01);
+      transition: transform 0.3s ease;
+    }
 
-    /* iframe للقناة 2 */
+    /* حاوية iframe (قناة 2) */
     .iframe-container {
       position: relative;
       width: 100%;
@@ -158,16 +163,16 @@
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
       background: #000;
-      display: none;
+      display: none; /* إفتراضيًا مخفي */
     }
     .iframe-container iframe {
       width: 100%;
-      height: 600px; 
+      height: 600px;
       border: 0;
       display: block;
     }
 
-    /* أزرار التحكم بفيديو قناة 1 */
+    /* أزرار التحكم (قناة 1) */
     .custom-buttons {
       display: flex;
       justify-content: center;
@@ -198,7 +203,7 @@
       font-size: 20px;
     }
 
-    /* قسم القنوات */
+    /* القنوات */
     .channels-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -221,7 +226,27 @@
       color: var(--primary-color);
     }
 
-    /* تذييل الصفحة */
+    /* الاستراحة */
+    .rest-iframe {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+      background: #000;
+    }
+    .rest-iframe iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      display: block;
+      /* يمكن إضافة السماح للتشغيل التلقائي أو غيره */
+      /* مثل: allow="autoplay; encrypted-media" */
+    }
+
+    /* التذييل */
     footer {
       margin-top: auto;
       text-align: center;
@@ -238,14 +263,15 @@
       text-decoration: underline;
     }
 
-    /* للشاشات الأصغر */
+    /* للشاشات الصغيرة */
     @media (max-width: 768px) {
+      .iframe-container iframe,
+      .rest-iframe iframe {
+        height: 400px; 
+      }
       .custom-buttons .button {
         padding: 10px 20px;
         font-size: 14px;
-      }
-      .iframe-container iframe {
-        height: 400px; 
       }
     }
     @media (max-width: 600px) {
@@ -286,25 +312,26 @@
       <i class="fas fa-tv"></i>
       MCRN
     </div>
-    <button class="menu-toggle" id="toggle-menu-btn">
+    <!-- زر القائمة للشاشات الصغيرة -->
+    <button class="menu-toggle" id="toggleMenuBtn">
       <i class="fas fa-bars"></i>
     </button>
-    <ul id="nav-list">
-      <li><a href="#" id="link-home" class="active">البث المباشر</a></li>
-      <li><a href="#" id="link-channels">القنوات</a></li>
-      <li><a href="#" id="link-rest">الاستراحة</a></li>
-      <li><a href="#" id="link-about">عن المطور</a></li>
+    <ul id="navList">
+      <li><a href="#" id="linkHome" class="active">البث المباشر</a></li>
+      <li><a href="#" id="linkChannels">القنوات</a></li>
+      <li><a href="#" id="linkRest">الاستراحة</a></li>
+      <li><a href="#" id="linkAbout">عن المطور</a></li>
     </ul>
   </nav>
 
   <!-- قسم البث المباشر -->
-  <div id="home-section" class="section active">
+  <div id="homeSection" class="section active">
     <h1>مرحبًا بك في منصة MCRN للبث المباشر!</h1>
 
-    <!-- الفيديو (قناة 1) -->
-    <div class="video-container" id="video-container">
+    <!-- قناة 1 (Video.js) -->
+    <div class="video-container" id="videoContainer">
       <video
-        id="video-player"
+        id="videoPlayer"
         class="video-js vjs-big-play-centered"
         controls
         preload="auto"
@@ -317,29 +344,29 @@
       </video>
     </div>
 
-    <!-- iframe (قناة 2) -->
-    <div class="iframe-container" id="iframe-container">
+    <!-- قناة 2 (iframe) -->
+    <div class="iframe-container" id="iframeContainer">
       <iframe 
-        src="https://b.naba24.net/albaplayer/ssc-1/?serv=0"
+        src="https://b.naba24.net/albaplayer/ssc-1/?serv=0" 
         scrolling="auto"
         allowfullscreen="true"
       ></iframe>
     </div>
 
-    <!-- أزرار التحكم بقناة 1 -->
-    <div class="custom-buttons" id="video-controls">
-      <button class="button" id="rewind-btn">
+    <!-- أزرار التحكم بقناة 1 فقط -->
+    <div class="custom-buttons" id="videoControls">
+      <button class="button" id="rewindBtn">
         <i class="fas fa-backward"></i> إرجاع 10 ثوانٍ
       </button>
-      <button class="button" id="playpause-btn">
+      <button class="button" id="playPauseBtn">
         <i class="fas fa-play"></i> تشغيل/إيقاف
       </button>
-      <button class="button" id="forward-btn">
+      <button class="button" id="forwardBtn">
         <i class="fas fa-forward"></i> تقديم 10 ثوانٍ
       </button>
     </div>
 
-    <!-- أزرار القنوات -->
+    <!-- أزرار اختيار القناة -->
     <h2 style="margin-top: 40px;">اختر قناة البث:</h2>
     <div class="custom-buttons">
       <button class="button" data-channel="1">القناة 1 (Video.js)</button>
@@ -348,49 +375,34 @@
   </div>
 
   <!-- قسم القنوات -->
-  <div id="channels-section" class="section">
+  <div id="channelsSection" class="section">
     <h1>القنوات المفضلة</h1>
     <div class="channels-grid">
       <div class="channel-card" data-channel="1">
         <h3>القناة 1</h3>
-        <button class="button card-watch-btn" data-channel="1">
-          مشاهدة
-        </button>
+        <button class="button watch-btn" data-channel="1">مشاهدة</button>
       </div>
       <div class="channel-card" data-channel="2">
         <h3>القناة 2</h3>
-        <button class="button card-watch-btn" data-channel="2">
-          مشاهدة
-        </button>
+        <button class="button watch-btn" data-channel="2">مشاهدة</button>
       </div>
     </div>
   </div>
 
-  <!-- صفحة الاستراحة - تفتح داخل الصفحة -->
-  <div id="rest-section" class="section">
+  <!-- الاستراحة -->
+  <div id="restSection" class="section">
     <h1>استمتع بوقتك في صفحة الاستراحة</h1>
-    <div
-      style="
-        position: relative;
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-        background: #000;
-      "
-    >
+    <div class="rest-iframe">
       <iframe
         src="https://www.technomaster.pro/emby/web/index.html"
-        style="width: 100%; height: 600px; border: none;"
         scrolling="auto"
+        allowfullscreen="true"
       ></iframe>
     </div>
   </div>
 
   <!-- عن المطور -->
-  <div id="about-section" class="section">
+  <div id="aboutSection" class="section">
     <h1>عن المطور</h1>
     <p>تم تصميم هذه المنصة بواسطة المهندس خالد النضاري.</p>
     <p>جميع الحقوق محفوظة 2026 MCRN.</p>
@@ -407,48 +419,44 @@
   <!-- Video.js -->
   <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
 
-  <!-- جافاسكربت -->
+  <!-- أكواد جافاسكربت -->
   <script>
-    //=================================
-    // 1) تهيئة مشغل الفيديو لقناة 1
-    //=================================
-    const player = videojs('video-player');
+    //===============================
+    // 1) تهيئة مشغل الفيديو
+    //===============================
+    const player = videojs('videoPlayer');
+
+    // دالة تفعيل قناة 1 (Video.js)
     function loadChannel1() {
       // إظهار مشغل الفيديو
-      document.getElementById('video-container').style.display = 'block';
+      document.getElementById('videoContainer').style.display = 'block';
       // إخفاء iframe
-      document.getElementById('iframe-container').style.display = 'none';
-      // إظهار أزرار التحكّم (خاصة بقناة 1)
-      document.getElementById('video-controls').style.display = 'flex';
+      document.getElementById('iframeContainer').style.display = 'none';
+      // إظهار أزرار التحكم
+      document.getElementById('videoControls').style.display = 'flex';
 
-      // تغيير مصدر الفيديو
+      // توقف الفيديو أولًا
       player.pause();
+      // ضبط المصدر
       player.src({
-        src: 'https://vjs.zencdn.net/v/oceans.mp4',  // يمكنك تغييره إلى أي فيديو mp4 آخر
+        src: 'https://vjs.zencdn.net/v/oceans.mp4', 
         type: 'video/mp4'
       });
       // محاولة التشغيل
       player.play().catch(err => console.warn('تعذّر تشغيل قناة 1:', err));
     }
 
-    //=================================
-    // 2) تهيئة iframe لقناة 2
-    //=================================
+    // دالة تفعيل قناة 2 (iframe)
     function loadChannel2() {
       // إخفاء مشغل الفيديو
-      document.getElementById('video-container').style.display = 'none';
+      document.getElementById('videoContainer').style.display = 'none';
       // إظهار iframe
-      document.getElementById('iframe-container').style.display = 'block';
-      // إخفاء أزرار التحكم الخاصة بـVideo.js
-      document.getElementById('video-controls').style.display = 'none';
-      // (إذا أردت تغيير رابط iframe برمجيًا: 
-      //   document.querySelector('#iframe-container iframe').src = 'رابط';
-      // )
+      document.getElementById('iframeContainer').style.display = 'block';
+      // إخفاء أزرار التحكم الخاصة بالفيديو
+      document.getElementById('videoControls').style.display = 'none';
     }
 
-    //=================================
-    // 3) التبديل بين القنوات
-    //=================================
+    // التبديل بين القناتين
     function switchChannel(num) {
       if (num === 1) {
         loadChannel1();
@@ -457,22 +465,22 @@
       }
     }
 
-    // تشغيل قناة 2 افتراضيًا عند فتح الصفحة
+    // افتراضيًا -> القناة 2 عند تحميل الصفحة
     window.addEventListener('load', () => {
       switchChannel(2);
     });
 
-    //=================================
-    // 4) التحكم في فيديو قناة 1
-    //=================================
-    const rewindBtn = document.getElementById('rewind-btn');
-    const playpauseBtn = document.getElementById('playpause-btn');
-    const forwardBtn = document.getElementById('forward-btn');
+    //===============================
+    // 2) تحكم في فيديو (قناة 1)
+    //===============================
+    const rewindBtn = document.getElementById('rewindBtn');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
 
     rewindBtn.addEventListener('click', () => {
       player.currentTime(Math.max(player.currentTime() - 10, 0));
     });
-    playpauseBtn.addEventListener('click', () => {
+    playPauseBtn.addEventListener('click', () => {
       if (player.paused()) {
         player.play().catch(err => console.warn('تعذر التشغيل:', err));
       } else {
@@ -483,62 +491,71 @@
       player.currentTime(player.currentTime() + 10);
     });
 
-    //=================================
-    // 5) أزرار اختيار القناة
-    //=================================
-    document.querySelectorAll('[data-channel]').forEach((elem) => {
-      elem.addEventListener('click', (e) => {
-        const ch = parseInt(e.target.getAttribute('data-channel')) 
-                || parseInt(e.target.closest('[data-channel]').getAttribute('data-channel'));
-        // عرض قسم البث المباشر
-        showSection('home-section', 'link-home');
-        // التبديل للقناة المختارة
-        switchChannel(ch);
+    //===============================
+    // 3) أزرار اختيار القناة
+    //===============================
+    document.querySelectorAll('[data-channel]').forEach(elem => {
+      elem.addEventListener('click', () => {
+        const channelNum = parseInt(elem.getAttribute('data-channel'));
+        // إذا كان ذلك من قسم القنوات -> نعود لقسم البث
+        showSection('homeSection', 'linkHome');
+        switchChannel(channelNum);
       });
     });
 
-    //=================================
-    // 6) التنقّل بين أقسام الموقع
-    //=================================
+    //===============================
+    // 4) التنقل بين الأقسام
+    //===============================
+    const navList = document.getElementById('navList');
+
+    // أقسام الصفحة
     const sections = {
-      'home-section':     document.getElementById('home-section'),
-      'channels-section': document.getElementById('channels-section'),
-      'rest-section':     document.getElementById('rest-section'),
-      'about-section':    document.getElementById('about-section'),
+      'homeSection': document.getElementById('homeSection'),
+      'channelsSection': document.getElementById('channelsSection'),
+      'restSection': document.getElementById('restSection'),
+      'aboutSection': document.getElementById('aboutSection'),
     };
 
+    // روابط الشريط
+    document.getElementById('linkHome').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('homeSection', 'linkHome');
+    });
+    document.getElementById('linkChannels').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('channelsSection', 'linkChannels');
+    });
+    document.getElementById('linkRest').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('restSection', 'linkRest');
+    });
+    document.getElementById('linkAbout').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('aboutSection', 'linkAbout');
+    });
+
     function showSection(sectionId, linkId) {
-      Object.values(sections).forEach(sec => sec.classList.remove('active'));
+      // إخفاء جميع الأقسام
+      for (const id in sections) {
+        sections[id].classList.remove('active');
+      }
+      // إظهار القسم المطلوب
       sections[sectionId].classList.add('active');
+
+      // تفعيل الرابط المطلوب
       document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
       if (linkId) document.getElementById(linkId).classList.add('active');
-      // إغلاق القائمة بالشاشات الصغيرة
+
+      // إغلاق القائمة على الشاشات الصغيرة إن كانت مفتوحة
       if (window.innerWidth <= 600) {
-        document.getElementById('nav-list').classList.remove('show');
+        navList.classList.remove('show');
       }
     }
 
-    // روابط الشريط
-    document.getElementById('link-home').addEventListener('click', (e) => {
-      e.preventDefault();
-      showSection('home-section', 'link-home');
-    });
-    document.getElementById('link-channels').addEventListener('click', (e) => {
-      e.preventDefault();
-      showSection('channels-section', 'link-channels');
-    });
-    document.getElementById('link-rest').addEventListener('click', (e) => {
-      e.preventDefault();
-      showSection('rest-section', 'link-rest');
-    });
-    document.getElementById('link-about').addEventListener('click', (e) => {
-      e.preventDefault();
-      showSection('about-section', 'link-about');
-    });
-
-    // زر القائمة
-    const toggleMenuBtn = document.getElementById('toggle-menu-btn');
-    const navList = document.getElementById('nav-list');
+    //===============================
+    // 5) زر القائمة (الشاشات الصغيرة)
+    //===============================
+    const toggleMenuBtn = document.getElementById('toggleMenuBtn');
     toggleMenuBtn.addEventListener('click', () => {
       navList.classList.toggle('show');
     });
