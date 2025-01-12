@@ -1,218 +1,430 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1a1a2e">
-    <meta name="description" content="منصة MCRN - أفضل بث مباشر بجودة عالية واحترافية.">
-    <title>MCRN - بث مباشر ذكي</title>
-    <link rel="icon" href="https://via.placeholder.com/16x16/1a1a2e/FFFFFF/?text=KH" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        /* الألوان والثوابت */
-        :root {
-            --primary-color: #1a1a2e;
-            --secondary-color: #16213e;
-            --accent-color: #e94560;
-            --text-color: #ffffff;
-            --button-hover: #d63447;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>منصة MCRN - بث مباشر واستراحة</title>
 
-        /* إعدادات عامة */
-        body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: var(--primary-color);
-            color: var(--text-color);
-        }
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
 
-        /* شريط التنقل */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--secondary-color);
-            padding: 10px 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  />
 
-        .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--accent-color);
-            cursor: pointer;
-        }
+  <!-- Video.js CSS -->
+  <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
 
-        nav {
-            display: flex;
-            gap: 20px;
-        }
+  <!-- تنسيقات مخصصة -->
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --primary-color: #1f6feb;
+      --hover-color: #ff9900;
+      --text-color: #c9d1d9;
+      --font-family: 'Cairo', sans-serif;
+      --button-hover-color: #ff6f00;
+      --button-color: #1e40af;
+    }
 
-        nav a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-        }
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: background 0.5s;
+    }
 
-        nav a:hover {
-            color: var(--accent-color);
-        }
+    /* شريط التنقل */
+    nav {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      background: rgba(13, 17, 23, 0.95);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      transition: all 0.5s ease;
+    }
 
-        /* رسالة الترحيب */
-        .welcome {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
-        }
+    nav .logo {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-        .welcome h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
+    /* أيقونة القائمة للشاشات الصغيرة */
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      cursor: pointer;
+    }
 
-        .welcome p {
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+      transition: max-height 0.5s ease;
+    }
 
-        /* مشغل الفيديو */
-        .video-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 30px auto;
-            max-width: 900px;
-        }
+    nav ul li {
+      display: inline-block;
+    }
 
-        .video-container iframe {
-            width: 100%;
-            height: 500px;
-            border-radius: 10px;
-            border: none;
-        }
+    nav ul li a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
 
-        /* أزرار التحكم */
-        .controls {
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
+    nav ul li a:hover,
+    nav ul li a.active {
+      background: var(--hover-color);
+      color: var(--bg-color);
+      transform: scale(1.1);
+    }
 
-        .controls button {
-            background: var(--accent-color);
-            color: var(--text-color);
-            border: none;
-            padding: 10px 15px;
-            font-size: 1em;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
+    /* إخفاء المحتوى الافتراضي للأقسام */
+    .content,
+    .rest-content,
+    .about-content,
+    .channels-content {
+      margin-top: 80px; /* لتجنب التداخل مع شريط التنقل */
+      text-align: center;
+      padding: 20px;
+      display: none;
+      animation: fadeIn 0.6s ease-out;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-        .controls button i {
-            margin-right: 5px;
-        }
+    /* عند تفعيل القسم المطلوب */
+    .content.active,
+    .rest-content.active,
+    .about-content.active,
+    .channels-content.active {
+      display: block;
+    }
 
-        .controls button:hover {
-            background: var(--button-hover);
-            transform: scale(1.05);
-        }
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
 
-        /* رسائل الحالة */
-        .status-message {
-            text-align: center;
-            font-size: 1.2em;
-            margin: 15px;
-        }
+    /* صندوق الفيديو */
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: 550px;
+      margin: 20px auto;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+      background: #000;
+      transform: scale(1);
+      transition: transform 0.3s ease;
+    }
 
-        .loading-message {
-            color: var(--accent-color);
-        }
+    .video-container:hover {
+      transform: scale(1.02);
+    }
 
-        .error-message {
-            color: #ff4d4f;
-        }
+    .video-js {
+      width: 100%;
+      height: 100%;
+    }
 
-        /* التذييل */
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--secondary-color);
-        }
-    </style>
+    .custom-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      padding: 12px 30px;
+      background: var(--button-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 5px 10px rgba(31, 111, 235, 0.3);
+      transition: all 0.3s ease, transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background: var(--button-hover-color);
+      transform: translateY(-3px);
+    }
+
+    .button i {
+      font-size: 20px;
+    }
+
+    /* الأقسام المستقبلية */
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .channel-card {
+      background: rgba(31, 111, 235, 0.2);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .channel-card:hover {
+      background: rgba(255, 153, 0, 0.8);
+    }
+
+    .channel-card h3 {
+      margin: 10px 0;
+      color: var(--primary-color);
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      background: rgba(13, 17, 23, 0.95);
+      padding: 15px;
+      font-size: 14px;
+      color: var(--text-color);
+    }
+
+    footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* الوسائط (Media Queries) لجعل التصميم متجاوبًا */
+    @media (max-width: 992px) {
+      .video-container {
+        height: 400px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .video-container {
+        height: 300px;
+      }
+      .custom-buttons .button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .video-container {
+        height: 220px;
+      }
+      nav ul {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: rgba(13, 17, 23, 0.95);
+        flex-direction: column;
+        gap: 0;
+        border-radius: 8px;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+      }
+      nav ul li {
+        width: 100%;
+      }
+      nav ul li a {
+        display: block;
+        padding: 10px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .menu-toggle {
+        display: block;
+      }
+      /* عند تفعيل القائمة */
+      nav ul.show {
+        max-height: 500px; /* قيمة كافية لعرض كل العناصر */
+        transition: max-height 0.5s ease;
+      }
+    }
+  </style>
 </head>
 <body>
+  <nav>
+    <div class="logo">
+      <i class="fas fa-tv"></i>
+      MCRN
+    </div>
+    <!-- زر إظهار/إخفاء القائمة في الشاشات الصغيرة -->
+    <button class="menu-toggle" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul id="nav-list">
+      <li><a href="#" onclick="showContent('content')" class="active">البث المباشر</a></li>
+      <li><a href="#" onclick="showContent('channels-content')">القنوات</a></li>
+      <li><a href="#" onclick="showContent('rest-content')">الاستراحة</a></li>
+      <li><a href="#" onclick="showContent('about-content')">عن المطور</a></li>
+    </ul>
+  </nav>
 
-    <!-- شريط التنقل -->
-    <header>
-        <div class="logo">MCRN</div>
-        <nav>
-            <a href="#">الرئيسية</a>
-            <a href="#">عن المبرمج</a>
-            <a href="#">تواصل معنا</a>
-        </nav>
-    </header>
+  <!-- البث المباشر -->
+  <div id="content" class="content active">
+    <h1>مرحبًا بك في منصة MCRN للبث المباشر!</h1>
+    <div class="video-container">
+      <video
+        id="video-player"
+        class="video-js vjs-big-play-centered"
+        controls
+        preload="auto"
+        autoplay
+        data-setup="{}"
+        poster="https://via.placeholder.com/1200x600/000000/FFFFFF/?text=MCRN+LIVE"
+      >
+        <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
+        <source src="https://vjs.zencdn.net/v/oceans.webm" type="video/webm" />
+        متصفحك لا يدعم تشغيل الفيديو.
+      </video>
+    </div>
+    <div class="custom-buttons">
+      <button class="button" onclick="rewind()">
+        <i class="fas fa-backward"></i> إرجاع 10 ثوانٍ
+      </button>
+      <button class="button" onclick="playPause()">
+        <i class="fas fa-play"></i> تشغيل/إيقاف
+      </button>
+      <button class="button" onclick="forward()">
+        <i class="fas fa-forward"></i> تقديم 10 ثوانٍ
+      </button>
+    </div>
+  </div>
 
-    <!-- الترحيب -->
-    <section class="welcome">
-        <h1>مرحبًا بك في منصة MCRN</h1>
-        <p>أفضل تجربة للبث المباشر بجودة عالية واحترافية مع <strong>المهندس خالد النظاري</strong></p>
-    </section>
+  <!-- القنوات -->
+  <div id="channels-content" class="channels-content">
+    <h1>القنوات المفضلة</h1>
+    <div class="channels-grid">
+      <div class="channel-card">
+        <h3>القناة 1</h3>
+        <button class="button" onclick="alert('فتح القناة 1')">مشاهدة</button>
+      </div>
+      <div class="channel-card">
+        <h3>القناة 2</h3>
+        <button class="button" onclick="alert('فتح القناة 2')">مشاهدة</button>
+      </div>
+    </div>
+  </div>
 
-    <!-- مشغل الفيديو -->
-    <section class="video-container">
-        <iframe 
-            id="videoPlayer" 
-            src="https://www.youtube.com/embed/CjxWtb7jiRk?autoplay=1&mute=0&controls=1&modestbranding=1" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-        </iframe>
-        
-        <!-- أزرار التحكم -->
-        <div class="controls">
-            <button onclick="toggleFullscreen()"><i class="fas fa-expand"></i>تكبير الشاشة</button>
-            <button onclick="switchChannel()"><i class="fas fa-random"></i>تبديل القناة</button>
-        </div>
-    </section>
+  <!-- صفحة الاستراحة -->
+  <div id="rest-content" class="rest-content">
+    <h1>استمتع بوقتك في صفحة الاستراحة</h1>
+    <a href="https://www.technomaster.pro/emby/web/index.html" target="_blank"
+      >الدخول إلى صفحة الاستراحة</a
+    >
+  </div>
 
-    <!-- رسائل الحالة -->
-    <div id="statusMessage" class="status-message loading-message">جارٍ تحميل البث...</div>
+  <!-- عن المطور -->
+  <div id="about-content" class="about-content">
+    <h1>عن المطور</h1>
+    <p>تم تصميم هذه المنصة بواسطة المهندس خالد النضاري.</p>
+    <a href="mailto:developer@example.com">تواصل معنا</a>
+  </div>
 
-    <!-- التذييل -->
-    <footer>
-        &copy; 2024 MCRN | جميع الحقوق محفوظة | بواسطة المهندس خالد النظاري
-    </footer>
+  <footer>
+    <p>© 2026 MCRN. جميع الحقوق محفوظة. تصميم <a href="#">المهندس خالد النضاري</a>.</p>
+  </footer>
 
-    <script>
-        const videoPlayer = document.getElementById('videoPlayer');
+  <!-- Video.js -->
+  <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
 
-        // تكبير الشاشة
-        function toggleFullscreen() {
-            if (videoPlayer.requestFullscreen) {
-                videoPlayer.requestFullscreen();
-            } else if (videoPlayer.webkitRequestFullscreen) {
-                videoPlayer.webkitRequestFullscreen();
-            }
-        }
+  <!-- سكربتات جافاسكربت -->
+  <script>
+    const player = videojs('video-player');
 
-        // تبديل القناة
-        function switchChannel() {
-            const channels = [
-                'https://www.youtube.com/embed/CjxWtb7jiRk',
-                'https://www.youtube.com/embed/live_stream?channel=UC1oPBUWifc0QOOY8DEKhLuQ'
-            ];
-            const randomChannel = channels[Math.floor(Math.random() * channels.length)];
-            videoPlayer.src = `${randomChannel}?autoplay=1&mute=0&controls=1`;
-        }
+    function rewind() {
+      player.currentTime(player.currentTime() - 10);
+    }
 
-        window.onload = () => {
-            document.getElementById('statusMessage').textContent = 'تم تحميل البث بنجاح!';
-        };
-    </script>
+    function playPause() {
+      player.paused() ? player.play() : player.pause();
+    }
+
+    function forward() {
+      player.currentTime(player.currentTime() + 10);
+    }
+
+    function showContent(sectionId) {
+      // إزالة الحالة النشطة عن كل الأقسام
+      document
+        .querySelectorAll('.content, .rest-content, .about-content, .channels-content')
+        .forEach((section) => {
+          section.classList.remove('active');
+        });
+
+      // إضافة الحالة النشطة للقسم المطلوب
+      document.getElementById(sectionId).classList.add('active');
+
+      // إزالة الحالة النشطة عن الروابط
+      document.querySelectorAll('nav ul li a').forEach((link) => {
+        link.classList.remove('active');
+      });
+      // إضافة الحالة النشطة على الرابط الذي تم النقر عليه
+      event.target.classList.add('active');
+
+      // إغلاق القائمة في الشاشات الصغيرة
+      if (window.innerWidth <= 600) {
+        document.getElementById('nav-list').classList.remove('show');
+      }
+    }
+
+    function toggleMenu() {
+      const navList = document.getElementById('nav-list');
+      navList.classList.toggle('show');
+    }
+  </script>
 </body>
 </html>
