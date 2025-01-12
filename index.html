@@ -17,6 +17,9 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
   />
 
+  <!-- Video.js CSS -->
+  <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
+
   <!-- تنسيقات مخصصة -->
   <style>
     :root {
@@ -139,38 +142,38 @@
       }
     }
 
-    /* صندوق البث المباشر (نستخدم نسبة 16:9 لجعله متجاوبًا) */
+    /*
+     * صندوق الفيديو (Responsive Aspect Ratio)
+     * نستخدم pseudo-element لضبط نسبة الأبعاد 16:9
+     */
     .video-container {
       position: relative;
+      width: 100%;
       max-width: 1200px;
       margin: 20px auto;
       border-radius: 15px;
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
       background: #000;
-      transform: scale(1);
-      transition: transform 0.3s ease;
-
-      /* لضبط نسبة الطول إلى العرض 16:9 */
-      width: 100%;
-      padding-bottom: 56.25%; /* 16 / 9 = 56.25% */
-      height: 0;
     }
-
-    .video-container:hover {
-      transform: scale(1.02);
+    .video-container::before {
+      content: "";
+      display: block;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio => 9/16 * 100 = 56.25% */
     }
-
-    .video-container iframe {
+    .video-container > .video-js {
       position: absolute;
       top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
+      left: 0;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover; /* عند الحاجة لملء الإطار */
+    }
+    .video-container:hover {
+      transform: scale(1.01);
+      transition: transform 0.3s ease;
     }
 
-    /* الأزرار المخصصة تحت مشغل البث */
     .custom-buttons {
       display: flex;
       justify-content: center;
@@ -250,11 +253,11 @@
 
     /* الوسائط (Media Queries) لجعل التصميم متجاوبًا */
     @media (max-width: 992px) {
-      /* يمكن تقليل بعض الأحجام إن أردت */
+      /* يمكننا إضافة تعديلات إن لزم */
     }
 
     @media (max-width: 768px) {
-      .button {
+      .custom-buttons .button {
         padding: 10px 20px;
         font-size: 14px;
       }
@@ -273,21 +276,17 @@
         max-height: 0;
         overflow: hidden;
       }
-
       nav ul li {
         width: 100%;
       }
-
       nav ul li a {
         display: block;
         padding: 10px 18px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
-
       .menu-toggle {
         display: block;
       }
-
       /* عند تفعيل القائمة */
       nav ul.show {
         max-height: 500px; /* قيمة كافية لعرض كل العناصر */
@@ -297,6 +296,7 @@
   </style>
 </head>
 <body>
+  <!-- شريط التنقل -->
   <nav>
     <div class="logo">
       <i class="fas fa-tv"></i>
@@ -318,29 +318,47 @@
   <div id="content" class="content active">
     <h1>مرحبًا بك في منصة MCRN للبث المباشر!</h1>
 
-    <!-- iframe الخاص بالبث -->
+    <!-- صندوق البث المباشر بالفيديو -->
     <div class="video-container">
-      <iframe
-        src="https://www.elahmad.com/tv/radiant.php?id=ssc_news"
-        allowfullscreen
-        allow="autoplay; fullscreen; picture-in-picture; xr-spatial-tracking; encrypted-media"
-      ></iframe>
+      <video
+        id="video-player"
+        class="video-js vjs-big-play-centered"
+        controls
+        preload="auto"
+        muted
+        playsinline
+        poster="https://via.placeholder.com/1200x600/000000/FFFFFF/?text=MCRN+LIVE"
+      >
+        <!-- افتراضيًا، لا نضع المصدر هنا، سيتم تغييره عبر الجافاسكربت -->
+        <source src="" type="video/mp4" />
+        متصفحك لا يدعم تشغيل الفيديو.
+      </video>
     </div>
 
-    <!-- أزرار التحكم + أيقونة الإنجليزية لعرضها -->
+    <!-- أزرار التحكم العامة -->
     <div class="custom-buttons">
-      <button class="button">
+      <button class="button" onclick="rewind()">
         <i class="fas fa-backward"></i> إرجاع 10 ثوانٍ
       </button>
-      <button class="button">
+      <button class="button" onclick="playPause()">
         <i class="fas fa-play"></i> تشغيل/إيقاف
       </button>
-      <button class="button">
+      <button class="button" onclick="forward()">
         <i class="fas fa-forward"></i> تقديم 10 ثوانٍ
       </button>
-      <!-- أيقونة إنجليزية على شكل زر بسيط -->
-      <button class="button">
-        <i class="fas fa-globe"></i> الإنجليزية
+    </div>
+
+    <!-- أزرار تغيير القناة (ستُغيِّر مصدر الفيديو) -->
+    <h2 style="margin-top: 40px;">اختر قناة البث:</h2>
+    <div class="custom-buttons">
+      <button class="button" onclick="changeChannel('https://vjs.zencdn.net/v/oceans.mp4')">
+        القناة 1
+      </button>
+      <button class="button" onclick="changeChannel('https://b.naba24.net/albaplayer/ssc-1/?serv=0')">
+        القناة 2
+      </button>
+      <button class="button" onclick="changeChannel('https://samplelib.com/lib/preview/mp4/sample-5s.mp4')">
+        القناة 3
       </button>
     </div>
   </div>
@@ -349,13 +367,32 @@
   <div id="channels-content" class="channels-content">
     <h1>القنوات المفضلة</h1>
     <div class="channels-grid">
-      <div class="channel-card">
+      <div class="channel-card" onclick="changeChannel('https://vjs.zencdn.net/v/oceans.mp4')">
         <h3>القناة 1</h3>
-        <button class="button" onclick="alert('فتح القناة 1')">مشاهدة</button>
+        <button
+          class="button"
+          onclick="event.stopPropagation(); changeChannel('https://vjs.zencdn.net/v/oceans.mp4')"
+        >
+          مشاهدة
+        </button>
       </div>
-      <div class="channel-card">
+      <div class="channel-card" onclick="changeChannel('https://b.naba24.net/albaplayer/ssc-1/?serv=0')">
         <h3>القناة 2</h3>
-        <button class="button" onclick="alert('فتح القناة 2')">مشاهدة</button>
+        <button
+          class="button"
+          onclick="event.stopPropagation(); changeChannel('https://b.naba24.net/albaplayer/ssc-1/?serv=0')"
+        >
+          مشاهدة
+        </button>
+      </div>
+      <div class="channel-card" onclick="changeChannel('https://samplelib.com/lib/preview/mp4/sample-5s.mp4')">
+        <h3>القناة 3</h3>
+        <button
+          class="button"
+          onclick="event.stopPropagation(); changeChannel('https://samplelib.com/lib/preview/mp4/sample-5s.mp4')"
+        >
+          مشاهدة
+        </button>
       </div>
     </div>
   </div>
@@ -363,7 +400,12 @@
   <!-- صفحة الاستراحة -->
   <div id="rest-content" class="rest-content">
     <h1>استمتع بوقتك في صفحة الاستراحة</h1>
-    <a href="https://www.technomaster.pro/emby/web/index.html" target="_blank">
+    <p>يمكنك زيارة موقع الاستراحة من هنا:</p>
+    <a
+      href="https://www.technomaster.pro/emby/web/index.html"
+      target="_blank"
+      style="color: var(--hover-color); font-weight: bold; text-decoration: underline;"
+    >
       الدخول إلى صفحة الاستراحة
     </a>
   </div>
@@ -375,6 +417,7 @@
     <a href="mailto:developer@example.com">تواصل معنا</a>
   </div>
 
+  <!-- تذييل الصفحة -->
   <footer>
     <p>
       © 2026 MCRN. جميع الحقوق محفوظة. تصميم
@@ -382,11 +425,51 @@
     </p>
   </footer>
 
+  <!-- Video.js -->
+  <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
+
   <!-- سكربتات جافاسكربت -->
   <script>
+    // تهيئة مشغل الفيديو
+    const player = videojs('video-player');
+
+    // تشغيل قناة افتراضية أولى عند فتح الصفحة
+    // يمكن تغيير الرابط الافتراضي هنا للقناة التي تود تشغيلها أولاً
+    window.onload = () => {
+      changeChannel('https://vjs.zencdn.net/v/oceans.mp4');
+    };
+
+    // دوال التحكم (إرجاع - تشغيل/إيقاف - تقديم)
+    function rewind() {
+      player.currentTime(player.currentTime() - 10);
+    }
+
+    function playPause() {
+      player.paused() ? player.play() : player.pause();
+    }
+
+    function forward() {
+      player.currentTime(player.currentTime() + 10);
+    }
+
+    // دالة تغيير قناة البث (تغيير مصدر الفيديو)
+    function changeChannel(sourceURL) {
+      player.pause();
+      player.src({
+        src: sourceURL,
+        type: 'video/mp4',
+      });
+      // تشغيل بعد تغيير المصدر (قد يحتاج لنقرة مستخدم إذا غير مكتوم)
+      player.play().catch(err => {
+        console.warn('حدث خطأ عند محاولة تشغيل الفيديو:', err);
+      });
+    }
+
+    // دالة إظهار الأقسام
     function showContent(sectionId) {
       // إزالة الحالة النشطة عن كل الأقسام
-      document.querySelectorAll('.content, .rest-content, .about-content, .channels-content')
+      document
+        .querySelectorAll('.content, .rest-content, .about-content, .channels-content')
         .forEach((section) => {
           section.classList.remove('active');
         });
@@ -408,6 +491,7 @@
       }
     }
 
+    // دالة إظهار/إخفاء القائمة في الشاشات الصغيرة
     function toggleMenu() {
       const navList = document.getElementById('nav-list');
       navList.classList.toggle('show');
