@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>منصة MCRN - بث مباشر واستراحة</title>
 
   <!-- Google Fonts -->
@@ -16,9 +16,6 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
   />
-
-  <!-- Video.js CSS -->
-  <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
 
   <!-- تنسيقات مخصصة -->
   <style>
@@ -142,12 +139,10 @@
       }
     }
 
-    /* صندوق الفيديو */
+    /* صندوق البث المباشر (نستخدم نسبة 16:9 لجعله متجاوبًا) */
     .video-container {
       position: relative;
-      width: 100%;
       max-width: 1200px;
-      height: 550px;
       margin: 20px auto;
       border-radius: 15px;
       overflow: hidden;
@@ -155,17 +150,27 @@
       background: #000;
       transform: scale(1);
       transition: transform 0.3s ease;
+
+      /* لضبط نسبة الطول إلى العرض 16:9 */
+      width: 100%;
+      padding-bottom: 56.25%; /* 16 / 9 = 56.25% */
+      height: 0;
     }
 
     .video-container:hover {
       transform: scale(1.02);
     }
 
-    .video-js {
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      right: 0;
       width: 100%;
       height: 100%;
+      border: none;
     }
 
+    /* الأزرار المخصصة تحت مشغل البث */
     .custom-buttons {
       display: flex;
       justify-content: center;
@@ -245,25 +250,17 @@
 
     /* الوسائط (Media Queries) لجعل التصميم متجاوبًا */
     @media (max-width: 992px) {
-      .video-container {
-        height: 400px;
-      }
+      /* يمكن تقليل بعض الأحجام إن أردت */
     }
 
     @media (max-width: 768px) {
-      .video-container {
-        height: 300px;
-      }
-      .custom-buttons .button {
+      .button {
         padding: 10px 20px;
         font-size: 14px;
       }
     }
 
     @media (max-width: 600px) {
-      .video-container {
-        height: 220px;
-      }
       nav ul {
         position: absolute;
         top: 60px;
@@ -276,17 +273,21 @@
         max-height: 0;
         overflow: hidden;
       }
+
       nav ul li {
         width: 100%;
       }
+
       nav ul li a {
         display: block;
         padding: 10px 18px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
+
       .menu-toggle {
         display: block;
       }
+
       /* عند تفعيل القائمة */
       nav ul.show {
         max-height: 500px; /* قيمة كافية لعرض كل العناصر */
@@ -316,30 +317,30 @@
   <!-- البث المباشر -->
   <div id="content" class="content active">
     <h1>مرحبًا بك في منصة MCRN للبث المباشر!</h1>
+
+    <!-- iframe الخاص بالبث -->
     <div class="video-container">
-      <video
-        id="video-player"
-        class="video-js vjs-big-play-centered"
-        controls
-        preload="auto"
-        autoplay
-        data-setup="{}"
-        poster="https://via.placeholder.com/1200x600/000000/FFFFFF/?text=MCRN+LIVE"
-      >
-        <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
-        <source src="https://vjs.zencdn.net/v/oceans.webm" type="video/webm" />
-        متصفحك لا يدعم تشغيل الفيديو.
-      </video>
+      <iframe
+        src="https://www.elahmad.com/tv/radiant.php?id=ssc_news"
+        allowfullscreen
+        allow="autoplay; fullscreen; picture-in-picture; xr-spatial-tracking; encrypted-media"
+      ></iframe>
     </div>
+
+    <!-- أزرار التحكم + أيقونة الإنجليزية لعرضها -->
     <div class="custom-buttons">
-      <button class="button" onclick="rewind()">
+      <button class="button">
         <i class="fas fa-backward"></i> إرجاع 10 ثوانٍ
       </button>
-      <button class="button" onclick="playPause()">
+      <button class="button">
         <i class="fas fa-play"></i> تشغيل/إيقاف
       </button>
-      <button class="button" onclick="forward()">
+      <button class="button">
         <i class="fas fa-forward"></i> تقديم 10 ثوانٍ
+      </button>
+      <!-- أيقونة إنجليزية على شكل زر بسيط -->
+      <button class="button">
+        <i class="fas fa-globe"></i> الإنجليزية
       </button>
     </div>
   </div>
@@ -362,9 +363,9 @@
   <!-- صفحة الاستراحة -->
   <div id="rest-content" class="rest-content">
     <h1>استمتع بوقتك في صفحة الاستراحة</h1>
-    <a href="https://www.technomaster.pro/emby/web/index.html" target="_blank"
-      >الدخول إلى صفحة الاستراحة</a
-    >
+    <a href="https://www.technomaster.pro/emby/web/index.html" target="_blank">
+      الدخول إلى صفحة الاستراحة
+    </a>
   </div>
 
   <!-- عن المطور -->
@@ -375,32 +376,17 @@
   </div>
 
   <footer>
-    <p>© 2026 MCRN. جميع الحقوق محفوظة. تصميم <a href="#">المهندس خالد النضاري</a>.</p>
+    <p>
+      © 2026 MCRN. جميع الحقوق محفوظة. تصميم
+      <a href="#">المهندس خالد النضاري</a>.
+    </p>
   </footer>
-
-  <!-- Video.js -->
-  <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
 
   <!-- سكربتات جافاسكربت -->
   <script>
-    const player = videojs('video-player');
-
-    function rewind() {
-      player.currentTime(player.currentTime() - 10);
-    }
-
-    function playPause() {
-      player.paused() ? player.play() : player.pause();
-    }
-
-    function forward() {
-      player.currentTime(player.currentTime() + 10);
-    }
-
     function showContent(sectionId) {
       // إزالة الحالة النشطة عن كل الأقسام
-      document
-        .querySelectorAll('.content, .rest-content, .about-content, .channels-content')
+      document.querySelectorAll('.content, .rest-content, .about-content, .channels-content')
         .forEach((section) => {
           section.classList.remove('active');
         });
@@ -412,6 +398,7 @@
       document.querySelectorAll('nav ul li a').forEach((link) => {
         link.classList.remove('active');
       });
+
       // إضافة الحالة النشطة على الرابط الذي تم النقر عليه
       event.target.classList.add('active');
 
