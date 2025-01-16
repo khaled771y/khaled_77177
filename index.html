@@ -609,18 +609,53 @@
       <button class="button" data-channel="1"><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</button>
       <button class="button" data-channel="2"><i class="fas fa-tv"></i> القناة 2 (ON TV)</button>
       <button class="button" data-channel="3"><i class="fas fa-child"></i> القناة 3 (CN بالعربية)</button>
-      <button class="button" data-channel="6"><i class="fas fa-child"></i> القناة 6 (MBC3)</button>
-      <button class="button" data-channel="4"><i class="fas fa-tv"></i> القناة 4 (MBC 1)</button>
-      <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> القناة 5 (Nat Geo)</button>
+      <button class="button" data-channel="4"><i class="fas fa-tv"></i> MBC 1</button>
+      <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> Nat Geo</button>
+      <button class="button" data-channel="6"><i class="fas fa-child"></i> MBC3</button>
       <button class="button" data-channel="7"><i class="fas fa-film"></i> روتانا أفلام</button>
       <button class="button" data-channel="8"><i class="fas fa-film"></i> روتانا سينما</button>
       <button class="button" data-channel="9"><i class="fas fa-newspaper"></i> يمن شباب</button>
+      <button class="button" data-channel="10"><i class="fas fa-tv"></i> MBC مصر</button>
+      <button class="button" data-channel="11"><i class="fas fa-tv"></i> MBC2</button>
+      <button class="button" data-channel="12"><i class="fas fa-tv"></i> MBC مصر 2</button>
     </div>
   </div>
 
   <!-- قسم القنوات (بتصنيفات منفصلة) -->
   <div id="channelsSection" class="section">
     <h1>القنوات المفضلة</h1>
+
+    <!-- قنوات MBC -->
+    <div class="channels-category">
+      <h2>قنوات MBC</h2>
+      <div class="channels-grid">
+        <!-- MBC 1 (قناة 4) -->
+        <div class="channel-card" data-channel="4">
+          <h3><i class="fas fa-tv"></i> MBC 1</h3>
+          <button class="button watch-btn" data-channel="4">مشاهدة</button>
+        </div>
+        <!-- MBC 2 (قناة 11) -->
+        <div class="channel-card" data-channel="11">
+          <h3><i class="fas fa-tv"></i> MBC 2</h3>
+          <button class="button watch-btn" data-channel="11">مشاهدة</button>
+        </div>
+        <!-- MBC مصر (قناة 10) -->
+        <div class="channel-card" data-channel="10">
+          <h3><i class="fas fa-tv"></i> MBC مصر</h3>
+          <button class="button watch-btn" data-channel="10">مشاهدة</button>
+        </div>
+        <!-- MBC مصر 2 (قناة 12) -->
+        <div class="channel-card" data-channel="12">
+          <h3><i class="fas fa-tv"></i> MBC مصر 2</h3>
+          <button class="button watch-btn" data-channel="12">مشاهدة</button>
+        </div>
+        <!-- MBC3 (قناة 6) -->
+        <div class="channel-card" data-channel="6">
+          <h3><i class="fas fa-child"></i> MBC3</h3>
+          <button class="button watch-btn" data-channel="6">مشاهدة</button>
+        </div>
+      </div>
+    </div>
 
     <!-- قنوات روتانا -->
     <div class="channels-category">
@@ -639,7 +674,7 @@
       </div>
     </div>
 
-    <!-- قنوات الأطفال -->
+    <!-- قنوات الأطفال (بخلاف MBC3) -->
     <div class="channels-category">
       <h2>قنوات الأطفال</h2>
       <div class="channels-grid">
@@ -647,11 +682,6 @@
         <div class="channel-card" data-channel="3">
           <h3><i class="fas fa-child"></i> CN بالعربية</h3>
           <button class="button watch-btn" data-channel="3">مشاهدة</button>
-        </div>
-        <!-- MBC3 (قناة 6) -->
-        <div class="channel-card" data-channel="6">
-          <h3><i class="fas fa-child"></i> MBC3</h3>
-          <button class="button watch-btn" data-channel="6">مشاهدة</button>
         </div>
       </div>
     </div>
@@ -680,19 +710,14 @@
       </div>
     </div>
 
-    <!-- قنوات متنوعة (يشملها فيديو.js + MBC1 + Nat Geo ...) -->
+    <!-- قنوات متنوعة أخرى (مثل Video.js, Nat Geo ...) -->
     <div class="channels-category">
-      <h2>قنوات متنوعة</h2>
+      <h2>قنوات متنوعة أخرى</h2>
       <div class="channels-grid">
         <!-- قناة 1 (Video.js) -->
         <div class="channel-card" data-channel="1">
           <h3><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</h3>
           <button class="button watch-btn" data-channel="1">مشاهدة</button>
-        </div>
-        <!-- MBC 1 (قناة 4) -->
-        <div class="channel-card" data-channel="4">
-          <h3><i class="fas fa-tv"></i> MBC 1</h3>
-          <button class="button watch-btn" data-channel="4">مشاهدة</button>
         </div>
         <!-- Nat Geo (قناة 5) -->
         <div class="channel-card" data-channel="5">
@@ -759,7 +784,7 @@
             </div>
           </div>
         </div>
-        <!-- ... مزيد من المباريات أو نماذج أخرى ... -->
+        <!-- ... يمكنك إضافة المزيد من المباريات ... -->
       </div>
     </div>
     <!--  نهاية كود "مباريات اليوم"  -->
@@ -837,7 +862,7 @@
           loadChannel1();
           break;
         case 2:
-          // قناة ON TV
+          // ON TV
           loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
           break;
         case 3:
@@ -868,8 +893,20 @@
           // يمن شباب
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=yemen_shabab');
           break;
+        case 10:
+          // MBC مصر
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc_masr_usa');
+          break;
+        case 11:
+          // MBC2
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc2_tv_1');
+          break;
+        case 12:
+          // MBC مصر 2
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbcmasr2_tv_1');
+          break;
         default:
-          // افتراضيًا: العودة للقناة 2 (مثال)
+          // افتراضيًا -> قناة ON TV
           loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
           break;
       }
@@ -892,7 +929,7 @@
     });
     playPauseBtn.addEventListener('click', () => {
       if (player.paused()) {
-        player.play().catch(err => console.warn('تعذر التشغيل:', err));
+        player.play().catch(err => console.warn('تعذّر التشغيل:', err));
       } else {
         player.pause();
       }
