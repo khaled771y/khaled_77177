@@ -20,7 +20,7 @@
   <!-- Video.js CSS -->
   <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
 
-  <!-- التنسيقات المخصصة -->
+  <!-- التنسيقات المخصصة للموقع -->
   <style>
     :root {
       --bg-color: #0d1117;
@@ -32,6 +32,7 @@
       --button-color: #1e40af;
     }
 
+    /* تنسيقات الصفحة العامة */
     body {
       margin: 0;
       font-family: var(--font-family);
@@ -67,7 +68,6 @@
       align-items: center;
       gap: 10px;
     }
-    /* أيقونة القائمة للشاشات الصغيرة */
     .menu-toggle {
       display: none;
       font-size: 24px;
@@ -244,24 +244,6 @@
       display: block;
     }
 
-    /* قسم جدول المباريات */
-    .matches-iframe {
-      position: relative;
-      width: 100%;
-      max-width: 1200px;
-      margin: 20px auto;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-      background: #000;
-    }
-    .matches-iframe iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      display: block;
-    }
-
     /* التذييل */
     footer {
       margin-top: auto;
@@ -282,8 +264,7 @@
     /* للشاشات الصغيرة */
     @media (max-width: 768px) {
       .iframe-container iframe,
-      .rest-iframe iframe,
-      .matches-iframe iframe {
+      .rest-iframe iframe {
         height: 400px; 
       }
       .custom-buttons .button {
@@ -320,8 +301,228 @@
         transition: max-height 0.5s ease;
       }
     }
+
+    /********************************************/
+    /*         تنسيقات خاصة بجدول المباريات    */
+    /********************************************/
+
+    /* شريط التمرير */
+    ::-webkit-scrollbar-thumb {background: #002e70;}
+    ::-webkit-scrollbar {width:5px; height:9px; background:#dcdcdc;}
+
+    /* تعطيل هوامش إضافية للصفحة */
+    body {margin: 0;}
+
+    /* تنسيق الجداول والخلايا */
+    td, th {padding: 0;}
+    *, *:before, *:after {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+    @media (min-width: 768px) {
+      .container {width: 750px;}
+    }
+    @media (min-width: 992px) {
+      .container {width: 970px;}
+    }
+    @media (min-width: 1200px) {
+      .container {width: 1170px;}
+    }
+
+    /* محتوى الصفحة */
+    .container-fluid {
+      margin-left: auto;
+      margin-right: auto;
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+
+    .container:before, .container:after,
+    .container-fluid:before, .container-fluid:after {
+      content: " ";
+      display: table;
+    }
+    .container:after, .container-fluid:after {
+      clear: both;
+    }
+
+    /* تداخل في محتوى الويدجت */
+    .contents.widget-content {
+      padding: 15px;
+    }
+
+    /* العنوان العلوي */
+    div#match_today h2 {
+      text-align: center;
+      padding: 10px;
+      background: #532855;
+      color: #fff;
+      margin-top: 0; /* لضبط المسافة للأعلى */
+    }
+
+    /* الكارت الأساسي لكل مباراة */
+    .mnajiri {
+      display: block;
+      height: 157px;
+      position: relative;
+      box-shadow: rgba(0, 0, 0, 0.57) 0px 25px 20px -21px;
+      -webkit-transition: box-shadow .3s; 
+      transition: box-shadow .3s;
+      border-radius: 5px;
+      margin: 12px auto;
+      background: #DCEDC8;
+    }
+
+    .fullink {
+      display: block;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      width: 100%;
+      z-index: 5;
+    }
+
+    .mnajiriin {
+      margin: 0 5px;
+    }
+
+    .mnajiri img {
+      position: relative;
+      display: block;
+      margin: 5px auto;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1),0 2px 5px -1px rgba(0,0,0,0.2);
+      -webkit-transition: box-shadow .3s; 
+      transition: box-shadow .3s;
+    }
+
+    .mpart1 {
+      position: relative;
+      height: 48px;
+      line-height: 48px;
+    }
+
+    .mpart1 strong {
+      color: #fff;
+      height: 36px;
+      margin-right: -30px;
+      position: absolute;
+      right: 50%;
+      text-align: center;
+      width: 60px;
+      z-index: 1;
+      border-radius: 5px;
+      top: 30px; /* لمنتصف البطاقة */
+      line-height: 36px;
+    }
+
+    .mpart1 span {
+      float: right;
+      text-align: center;
+      width: 100%;
+      z-index: 2;
+    }
+
+    .right_match {
+      float: right;
+      padding-left: 20px;
+      width: 50%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .left_match {
+      float: left;
+      padding-right: 20px;
+      width: 50%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .details_match {
+      padding: 0 25px;
+      font-size: 12px;
+    }
+    .details_match i {
+      margin-left: 5px;
+    }
+    .details_match span {
+      background-color: #532855;
+      border-left: 1px solid #fff;
+      color: #fff;
+      float: right;
+      height: 36px;
+      line-height: 36px;
+      position: relative;
+      text-align: center;
+      width: 33.3%;
+    }
+    .details_match .liga_mdw { border: 0 none; }
+
+    .first_match::before, .liga_mdw::before {
+      background-color: #532855;
+      content: "";
+      height: 36px;
+      position: absolute;
+      top: 0;
+      width: 20px;
+    }
+    .first_match::before {
+      transform: skew(-20deg);
+      right: -12px;
+      border-radius: 0 0 8px;
+    }
+    .liga_mdw::before {
+      transform: skew(20deg);
+      left: -12px;
+      border-radius: 0 0 0 8px;
+    }
+
+    @media screen and (max-width:700px) {
+      .liga_mdw { display: none; }
+      .details_match { padding: 0 60px; }
+      .details_match span { width: 50%; }
+      .thany::before {
+        background-color: #532855;
+        content: "";
+        height: 36px;
+        position: absolute;
+        top: 0;
+        width: 20px;
+        transform: skew(20deg);
+        left: -12px;
+        border-radius: 0 0 0 8px;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .gadwal {
+        font-size: 14px;
+        width: 106%;
+        background: #fff;
+      }
+    }
+
+    /* ألوان مختلفة لبعض الحالات (مثال) */
+    .najiri1 { background-color: #532855; } /* لون خلفية للوقت أو النتيجة */
+    .najiri2 { background-color: #E91E63; }
+    .najiri3 { background-color: #4caf50; }
   </style>
 </head>
+
 <body>
   <!-- شريط التنقل -->
   <nav>
@@ -364,7 +565,7 @@
 
     <!-- قناة 2 (iframe) -->
     <div class="iframe-container" id="iframeContainer">
-      <!-- تم تعديل مصدر القناة الثانية ليكون من الرابط الجديد -->
+      <!-- تم تعديل مصدر القناة الثانية ليكون رابط البث الجديد -->
       <iframe 
         src="https://egyliive.online/albaplayer/on-1/?serv=0" 
         scrolling="auto"
@@ -420,25 +621,306 @@
     </div>
   </div>
 
-  <!-- قسم جدول المباريات -->
+  <!-- قسم جدول المباريات (تم إدراج الكود الجديد) -->
   <div id="matchesSection" class="section">
-    <h1>جدول المباريات العالمي</h1>
-    <p>يمكنك الاطّلاع على أحدث المباريات والأوقات من خلال الإطار التالي:</p>
-    <div class="matches-iframe">
-      <!-- ملاحظة: قد تمنع بعض المواقع العرض داخل iframe إذا كانت سياسات X-Frame-Options تمنع ذلك -->
-      <iframe 
-        src="https://www.fifa.com/fifaplus/ar/tournaments/mens/worldcup" 
-        allowfullscreen="true"
-        scrolling="auto"
-      ></iframe>
+    <h1 style="margin-bottom: 20px;">جدول المباريات</h1>
+
+    <!--  بداية كود "مباريات اليوم"  -->
+    <div class="match_today container" id="match_today">
+      <h2>مباريات اليوم</h2>
+      <div class="widget-content contents">
+
+        <!-- المباراة الأولى -->
+        <div class="mnajiri">
+          <a class="fullink" href="#"></a>
+          <div class="mnajiriin">
+            <div class="mpart1">
+              <div class="right_match">
+                <span class="right_tech">
+                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdE9g2MJ59sJG6nADrdhz_E_ucMJUsyoR4t0UuJlo4l3s15ZigYnKRKUxCfGXch4RG9H8mqGNNZVDQkxMDm-xXFNBAlk_LJWObJOzefa_CbbjL2Uv-JSqDlf75WKSgGwzbVgXuXh8KdRg/s1600/a.png">
+                  <div class="fname">برشلونة</div>
+                </span>
+              </div>
+              <strong class="najiri1">19:00</strong>
+              <div class="left_match">
+                <span class="left_tech">
+                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
+                  <div class="fname">ريال مدريد</div>
+                </span>
+              </div>
+            </div>
+            <div class="details_match">
+              <span class="first_match">
+                <i aria-hidden="true" class="fa fa-clock-o"></i>
+                <b>غرينتش</b>
+              </span>
+              <span class="thany">
+                <i aria-hidden="true" class="fa fa-futbol-o"></i>
+                <b>دوري ابطال اوروبا</b>
+              </span>
+              <span class="liga_mdw">
+                <i aria-hidden="true" class="fa fa-desktop"></i>
+                <b>Bein Sport HD1</b>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- المباراة الثانية -->
+        <div class="mnajiri">
+          <a class="fullink" href="#"></a>
+          <div class="mnajiriin">
+            <div class="mpart1">
+              <div class="right_match">
+                <span class="right_tech">
+                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
+                  <div class="fname">ليفربول</div>
+                </span>
+              </div>
+              <strong class="najiri2">شوط 1</strong>
+              <div class="left_match">
+                <span class="left_tech">
+                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh1lRqOJVf30YvHEnAF641db5T6C8FibGLXafSVHvDrOXHx-OBL8q6lCG0HReQmE0_o_IB8VcupFQSilGFowGxnScXbrRltwClWGH7Toe8aaYtQnxf1GnZ5v1BBBoB1vvGzkeenVxlZDHs/s1600/c.png">
+                  <div class="fname">برايتون</div>
+                </span>
+              </div>
+            </div>
+            <div class="details_match">
+              <span class="first_match">
+                <i aria-hidden="true" class="fa fa-clock-o"></i>
+                <b>جارية الأن</b>
+              </span>
+              <span class="thany">
+                <i aria-hidden="true" class="fa fa-futbol-o"></i>
+                <b>الدوري الانجليزي</b>
+              </span>
+              <span class="liga_mdw">
+                <i aria-hidden="true" class="fa fa-desktop"></i>
+                <b>Bein Sport HD1</b>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- المباراة الثالثة -->
+        <div class="mnajiri">
+          <a class="fullink" href="#"></a>
+          <div class="mnajiriin">
+            <div class="mpart1">
+              <div class="right_match">
+                <span class="right_tech">
+                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicd47CQhI-r7UlkzxlkW9hFsu8V9EihQ83q1E5VZWpfdRDG5e72uQUOemh4X75cZ4XwiRzuXueqyqCN28y51dDiqdRijimMEksrFyM_kkODYuS4W2qLILC6lIbsbj8TiAt2BVeLus0ls0/s1600/d.png">
+                  <div class="fname">ليفربول</div>
+                </span>
+              </div>
+              <strong class="najiri3">إستراحة</strong>
+              <div class="left_match">
+                <span class="left_tech">
+                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
+                  <div class="fname">برايتون</div>
+                </span>
+              </div>
+            </div>
+            <div class="details_match">
+              <span class="first_match">
+                <i aria-hidden="true" class="fa fa-clock-o"></i>
+                <b>ستبدأ بعد قليل</b>
+              </span>
+              <span class="thany">
+                <i aria-hidden="true" class="fa fa-futbol-o"></i>
+                <b>الدوري الانجليزي</b>
+              </span>
+              <span class="liga_mdw">
+                <i aria-hidden="true" class="fa fa-desktop"></i>
+                <b>Bein Sport HD1</b>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- المباراة الرابعة -->
+        <div class="mnajiri">
+          <a class="fullink" href="#"></a>
+          <div class="mnajiriin">
+            <div class="mpart1">
+              <div class="right_match">
+                <span class="right_tech">
+                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdE9g2MJ59sJG6nADrdhz_E_ucMJUsyoR4t0UuJlo4l3s15ZigYnKRKUxCfGXch4RG9H8mqGNNZVDQkxMDm-xXFNBAlk_LJWObJOzefa_CbbjL2Uv-JSqDlf75WKSgGwzbVgXuXh8KdRg/s1600/a.png">
+                  <div class="fname">ليفربول</div>
+                </span>
+              </div>
+              <strong class="najiri1">4-0</strong>
+              <div class="left_match">
+                <span class="left_tech">
+                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh1lRqOJVf30YvHEnAF641db5T6C8FibGLXafSVHvDrOXHx-OBL8q6lCG0HReQmE0_o_IB8VcupFQSilGFowGxnScXbrRltwClWGH7Toe8aaYtQnxf1GnZ5v1BBBoB1vvGzkeenVxlZDHs/s1600/c.png">
+                  <div class="fname">برايتون</div>
+                </span>
+              </div>
+            </div>
+            <div class="details_match">
+              <span class="first_match">
+                <i aria-hidden="true" class="fa fa-clock-o"></i>
+                <b>إنتهت</b>
+              </span>
+              <span class="thany">
+                <i aria-hidden="true" class="fa fa-futbol-o"></i>
+                <b>الدوري الانجليزي</b>
+              </span>
+              <span class="liga_mdw">
+                <i aria-hidden="true" class="fa fa-desktop"></i>
+                <b>Bein Sport HD1</b>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /widget-content -->
+    </div><!-- /match_today container -->
+
+
+    <!-- نماذج إضافية لنفس الأسلوب -->
+    <div class="mnajiri">
+      <a class="fullink" href="#"></a>
+      <div class="mnajiriin">
+        <div class="mpart1">
+          <div class="right_match">
+            <span class="right_tech">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdE9g2MJ59sJG6nADrdhz_E_ucMJUsyoR4t0UuJlo4l3s15ZigYnKRKUxCfGXch4RG9H8mqGNNZVDQkxMDm-xXFNBAlk_LJWObJOzefa_CbbjL2Uv-JSqDlf75WKSgGwzbVgXuXh8KdRg/s1600/a.png">
+              <div class="fname">برشلونة</div>
+            </span>
+          </div>
+          <strong class="najiri1">19:00</strong>
+          <div class="left_match">
+            <span class="left_tech">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
+              <div class="fname">ريال مدريد</div>
+            </span>
+          </div>
+        </div>
+        <div class="details_match">
+          <span class="first_match">
+            <i aria-hidden="true" class="fa fa-clock-o"></i>
+            <b>غرينتش</b>
+          </span>
+          <span class="thany">
+            <i aria-hidden="true" class="fa fa-futbol-o"></i>
+            <b>دوري ابطال اوروبا</b>
+          </span>
+          <span class="liga_mdw">
+            <i aria-hidden="true" class="fa fa-desktop"></i>
+            <b>Bein Sport HD1</b>
+          </span>
+        </div>
+      </div>
     </div>
-    <p style="margin-top: 15px;">
-      في حال عدم ظهور المحتوى أعلاه، يمكنك 
-      <button class="button" onclick="window.open('https://www.google.com/search?q=جدول+المباريات','_blank')">
-        النقر هنا لفتح الجدول في صفحة جديدة
-      </button>
-    </p>
-  </div>
+
+    <div class="mnajiri">
+      <a class="fullink" href="#"></a>
+      <div class="mnajiriin">
+        <div class="mpart1">
+          <div class="right_match">
+            <span class="right_tech">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
+              <div class="fname">ليفربول</div>
+            </span>
+          </div>
+          <strong class="najiri2">شوط 1</strong>
+          <div class="left_match">
+            <span class="left_tech">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh1lRqOJVf30YvHEnAF641db5T6C8FibGLXafSVHvDrOXHx-OBL8q6lCG0HReQmE0_o_IB8VcupFQSilGFowGxnScXbrRltwClWGH7Toe8aaYtQnxf1GnZ5v1BBBoB1vvGzkeenVxlZDHs/s1600/c.png">
+              <div class="fname">برايتون</div>
+            </span>
+          </div>
+        </div>
+        <div class="details_match">
+          <span class="first_match">
+            <i aria-hidden="true" class="fa fa-clock-o"></i>
+            <b>جارية الأن</b>
+          </span>
+          <span class="thany">
+            <i aria-hidden="true" class="fa fa-futbol-o"></i>
+            <b>الدوري الانجليزي</b>
+          </span>
+          <span class="liga_mdw">
+            <i aria-hidden="true" class="fa fa-desktop"></i>
+            <b>Bein Sport HD1</b>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mnajiri">
+      <a class="fullink" href="#"></a>
+      <div class="mnajiriin">
+        <div class="mpart1">
+          <div class="right_match">
+            <span class="right_tech">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicd47CQhI-r7UlkzxlkW9hFsu8V9EihQ83q1E5VZWpfdRDG5e72uQUOemh4X75cZ4XwiRzuXueqyqCN28y51dDiqdRijimMEksrFyM_kkODYuS4W2qLILC6lIbsbj8TiAt2BVeLus0ls0/s1600/d.png">
+              <div class="fname">ليفربول</div>
+            </span>
+          </div>
+          <strong class="najiri3">إستراحة</strong>
+          <div class="left_match">
+            <span class="left_tech">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
+              <div class="fname">برايتون</div>
+            </span>
+          </div>
+        </div>
+        <div class="details_match">
+          <span class="first_match">
+            <i aria-hidden="true" class="fa fa-clock-o"></i>
+            <b>ستبدأ بعد قليل</b>
+          </span>
+          <span class="thany">
+            <i aria-hidden="true" class="fa fa-futbol-o"></i>
+            <b>الدوري الانجليزي</b>
+          </span>
+          <span class="liga_mdw">
+            <i aria-hidden="true" class="fa fa-desktop"></i>
+            <b>Bein Sport HD1</b>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mnajiri">
+      <a class="fullink" href="#"></a>
+      <div class="mnajiriin">
+        <div class="mpart1">
+          <div class="right_match">
+            <span class="right_tech">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdE9g2MJ59sJG6nADrdhz_E_ucMJUsyoR4t0UuJlo4l3s15ZigYnKRKUxCfGXch4RG9H8mqGNNZVDQkxMDm-xXFNBAlk_LJWObJOzefa_CbbjL2Uv-JSqDlf75WKSgGwzbVgXuXh8KdRg/s1600/a.png">
+              <div class="fname">ليفربول</div>
+            </span>
+          </div>
+          <strong class="najiri1">4-0</strong>
+          <div class="left_match">
+            <span class="left_tech">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh1lRqOJVf30YvHEnAF641db5T6C8FibGLXafSVHvDrOXHx-OBL8q6lCG0HReQmE0_o_IB8VcupFQSilGFowGxnScXbrRltwClWGH7Toe8aaYtQnxf1GnZ5v1BBBoB1vvGzkeenVxlZDHs/s1600/c.png">
+              <div class="fname">برايتون</div>
+            </span>
+          </div>
+        </div>
+        <div class="details_match">
+          <span class="first_match">
+            <i aria-hidden="true" class="fa fa-clock-o"></i>
+            <b>إنتهت</b>
+          </span>
+          <span class="thany">
+            <i aria-hidden="true" class="fa fa-futbol-o"></i>
+            <b>الدوري الانجليزي</b>
+          </span>
+          <span class="liga_mdw">
+            <i aria-hidden="true" class="fa fa-desktop"></i>
+            <b>Bein Sport HD1</b>
+          </span>
+        </div>
+      </div>
+    </div>
+    <!--  نهاية كود "مباريات اليوم"  -->
+
+  </div> <!-- /#matchesSection -->
 
   <!-- عن المطور -->
   <div id="aboutSection" class="section">
