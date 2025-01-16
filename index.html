@@ -133,7 +133,7 @@
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
       background: #000;
-      display: none; /* افتراضيًا مخفي (القناة 2 هي الافتراضية) */
+      display: none; /* افتراضيًا مخفي (سنُظهره عند اختيار القناة 1) */
     }
     .video-container::before {
       content: "";
@@ -163,7 +163,7 @@
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
       background: #000;
-      display: none; /* إفتراضيًا مخفي */
+      display: none; /* افتراضيًا مخفي (يظهر عند اختيار القناة 2) */
     }
     .iframe-container iframe {
       width: 100%;
@@ -242,8 +242,24 @@
       height: 600px;
       border: none;
       display: block;
-      /* يمكن إضافة السماح للتشغيل التلقائي أو غيره */
-      /* مثل: allow="autoplay; encrypted-media" */
+    }
+
+    /* قسم جدول المباريات */
+    .matches-iframe {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+      background: #000;
+    }
+    .matches-iframe iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      display: block;
     }
 
     /* التذييل */
@@ -266,7 +282,8 @@
     /* للشاشات الصغيرة */
     @media (max-width: 768px) {
       .iframe-container iframe,
-      .rest-iframe iframe {
+      .rest-iframe iframe,
+      .matches-iframe iframe {
         height: 400px; 
       }
       .custom-buttons .button {
@@ -320,6 +337,7 @@
       <li><a href="#" id="linkHome" class="active">البث المباشر</a></li>
       <li><a href="#" id="linkChannels">القنوات</a></li>
       <li><a href="#" id="linkRest">الاستراحة</a></li>
+      <li><a href="#" id="linkMatches">جدول المباريات</a></li>
       <li><a href="#" id="linkAbout">عن المطور</a></li>
     </ul>
   </nav>
@@ -346,14 +364,15 @@
 
     <!-- قناة 2 (iframe) -->
     <div class="iframe-container" id="iframeContainer">
+      <!-- تم تعديل مصدر القناة الثانية ليكون من الرابط الجديد -->
       <iframe 
-        src="https://b.naba24.net/albaplayer/ssc-1/?serv=0" 
+        src="https://egyliive.online/albaplayer/on-1/?serv=0" 
         scrolling="auto"
         allowfullscreen="true"
       ></iframe>
     </div>
 
-    <!-- أزرار التحكم بقناة 1 فقط -->
+    <!-- أزرار التحكم بقناة 1 فقط (ستظهر عند اختيار القناة 1) -->
     <div class="custom-buttons" id="videoControls">
       <button class="button" id="rewindBtn">
         <i class="fas fa-backward"></i> إرجاع 10 ثوانٍ
@@ -401,6 +420,26 @@
     </div>
   </div>
 
+  <!-- قسم جدول المباريات -->
+  <div id="matchesSection" class="section">
+    <h1>جدول المباريات العالمي</h1>
+    <p>يمكنك الاطّلاع على أحدث المباريات والأوقات من خلال الإطار التالي:</p>
+    <div class="matches-iframe">
+      <!-- ملاحظة: قد تمنع بعض المواقع العرض داخل iframe إذا كانت سياسات X-Frame-Options تمنع ذلك -->
+      <iframe 
+        src="https://www.fifa.com/fifaplus/ar/tournaments/mens/worldcup" 
+        allowfullscreen="true"
+        scrolling="auto"
+      ></iframe>
+    </div>
+    <p style="margin-top: 15px;">
+      في حال عدم ظهور المحتوى أعلاه، يمكنك 
+      <button class="button" onclick="window.open('https://www.google.com/search?q=جدول+المباريات','_blank')">
+        النقر هنا لفتح الجدول في صفحة جديدة
+      </button>
+    </p>
+  </div>
+
   <!-- عن المطور -->
   <div id="aboutSection" class="section">
     <h1>عن المطور</h1>
@@ -422,7 +461,7 @@
   <!-- أكواد جافاسكربت -->
   <script>
     //===============================
-    // 1) تهيئة مشغل الفيديو
+    // 1) تهيئة مشغل الفيديو (القناة 1)
     //===============================
     const player = videojs('videoPlayer');
 
@@ -437,7 +476,7 @@
 
       // توقف الفيديو أولًا
       player.pause();
-      // ضبط المصدر
+      // ضبط المصدر (مثال على فيديو تجريبي)
       player.src({
         src: 'https://vjs.zencdn.net/v/oceans.mp4', 
         type: 'video/mp4'
@@ -497,7 +536,7 @@
     document.querySelectorAll('[data-channel]').forEach(elem => {
       elem.addEventListener('click', () => {
         const channelNum = parseInt(elem.getAttribute('data-channel'));
-        // إذا كان ذلك من قسم القنوات -> نعود لقسم البث
+        // إذا كان من قسم القنوات -> نعود لقسم البث
         showSection('homeSection', 'linkHome');
         switchChannel(channelNum);
       });
@@ -513,6 +552,7 @@
       'homeSection': document.getElementById('homeSection'),
       'channelsSection': document.getElementById('channelsSection'),
       'restSection': document.getElementById('restSection'),
+      'matchesSection': document.getElementById('matchesSection'),
       'aboutSection': document.getElementById('aboutSection'),
     };
 
@@ -528,6 +568,10 @@
     document.getElementById('linkRest').addEventListener('click', e => {
       e.preventDefault();
       showSection('restSection', 'linkRest');
+    });
+    document.getElementById('linkMatches').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('matchesSection', 'linkMatches');
     });
     document.getElementById('linkAbout').addEventListener('click', e => {
       e.preventDefault();
