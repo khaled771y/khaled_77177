@@ -203,12 +203,26 @@
       font-size: 20px;
     }
 
+    /* تصنيفات القنوات */
+    .channels-category {
+      margin-bottom: 30px;
+    }
+    .channels-category h2 {
+      font-size: 24px;
+      color: var(--hover-color);
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--hover-color);
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 6px;
+    }
+
     /* القنوات */
     .channels-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
-      padding: 20px;
+      padding: 10px;
     }
     .channel-card {
       background: rgba(31, 111, 235, 0.2);
@@ -217,6 +231,7 @@
       text-align: center;
       transition: all 0.3s ease;
       cursor: pointer;
+      position: relative;
     }
     .channel-card:hover {
       background: rgba(255, 153, 0, 0.8);
@@ -224,6 +239,12 @@
     .channel-card h3 {
       margin: 10px 0;
       color: var(--primary-color);
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     /* الاستراحة */
@@ -270,6 +291,9 @@
       .custom-buttons .button {
         padding: 10px 20px;
         font-size: 14px;
+      }
+      .channels-category h2 {
+        font-size: 20px;
       }
     }
     @media (max-width: 600px) {
@@ -557,7 +581,7 @@
       </video>
     </div>
 
-    <!-- iframe واحد لجميع قنوات الـ iframe -->
+    <!-- iframe واحد لجميع القنوات (2 فأعلى) -->
     <div class="iframe-container" id="iframeContainer">
       <iframe 
         src=""
@@ -582,50 +606,113 @@
     <!-- أزرار اختيار القناة -->
     <h2 style="margin-top: 40px;">اختر قناة البث:</h2>
     <div class="custom-buttons">
-      <button class="button" data-channel="1">القناة 1 (Video.js)</button>
-      <button class="button" data-channel="2">القناة 2 (ON TV)</button>
-      <button class="button" data-channel="3">القناة 3 (CN بالعربية)</button>
-      <button class="button" data-channel="4">القناة 4 (MBC 1)</button>
-      <button class="button" data-channel="5">القناة 5 (Nat Geo)</button>
-      <button class="button" data-channel="6">القناة 6 (MBC3 أطفال)</button>
+      <button class="button" data-channel="1"><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</button>
+      <button class="button" data-channel="2"><i class="fas fa-tv"></i> القناة 2 (ON TV)</button>
+      <button class="button" data-channel="3"><i class="fas fa-child"></i> القناة 3 (CN بالعربية)</button>
+      <button class="button" data-channel="6"><i class="fas fa-child"></i> القناة 6 (MBC3)</button>
+      <button class="button" data-channel="4"><i class="fas fa-tv"></i> القناة 4 (MBC 1)</button>
+      <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> القناة 5 (Nat Geo)</button>
+      <button class="button" data-channel="7"><i class="fas fa-film"></i> روتانا أفلام</button>
+      <button class="button" data-channel="8"><i class="fas fa-film"></i> روتانا سينما</button>
     </div>
   </div>
 
-  <!-- قسم القنوات -->
+  <!-- قسم القنوات (بتصنيفات منفصلة) -->
   <div id="channelsSection" class="section">
     <h1>القنوات المفضلة</h1>
-    <div class="channels-grid">
-      <!-- قناة 1 (Video.js) -->
-      <div class="channel-card" data-channel="1">
-        <h3>القناة 1 (Video.js)</h3>
-        <button class="button watch-btn" data-channel="1">مشاهدة</button>
-      </div>
-      <!-- قناة 2 -->
-      <div class="channel-card" data-channel="2">
-        <h3>القناة 2 (ON TV)</h3>
-        <button class="button watch-btn" data-channel="2">مشاهدة</button>
-      </div>
-      <!-- قناة 3 -->
-      <div class="channel-card" data-channel="3">
-        <h3>القناة 3 (CN بالعربية)</h3>
-        <button class="button watch-btn" data-channel="3">مشاهدة</button>
-      </div>
-      <!-- قناة 4 -->
-      <div class="channel-card" data-channel="4">
-        <h3>القناة 4 (MBC 1)</h3>
-        <button class="button watch-btn" data-channel="4">مشاهدة</button>
-      </div>
-      <!-- قناة 5 -->
-      <div class="channel-card" data-channel="5">
-        <h3>القناة 5 (Nat Geo)</h3>
-        <button class="button watch-btn" data-channel="5">مشاهدة</button>
-      </div>
-      <!-- قناة 6 (MBC3 أطفال) -->
-      <div class="channel-card" data-channel="6">
-        <h3>القناة 6 (MBC3 أطفال)</h3>
-        <button class="button watch-btn" data-channel="6">مشاهدة</button>
+
+    <!-- قنوات روتانا -->
+    <div class="channels-category">
+      <h2>قنوات روتانا</h2>
+      <div class="channels-grid">
+        <!-- روتانا أفلام (قناة 7) -->
+        <div class="channel-card" data-channel="7">
+          <h3><i class="fas fa-film"></i> روتانا أفلام</h3>
+          <button class="button watch-btn" data-channel="7">مشاهدة</button>
+        </div>
+        <!-- روتانا سينما (قناة 8) -->
+        <div class="channel-card" data-channel="8">
+          <h3><i class="fas fa-film"></i> روتانا سينما</h3>
+          <button class="button watch-btn" data-channel="8">مشاهدة</button>
+        </div>
       </div>
     </div>
+
+    <!-- قنوات الأطفال -->
+    <div class="channels-category">
+      <h2>قنوات الأطفال</h2>
+      <div class="channels-grid">
+        <!-- CN بالعربية (قناة 3) -->
+        <div class="channel-card" data-channel="3">
+          <h3><i class="fas fa-child"></i> CN بالعربية</h3>
+          <button class="button watch-btn" data-channel="3">مشاهدة</button>
+        </div>
+        <!-- MBC3 (قناة 6) -->
+        <div class="channel-card" data-channel="6">
+          <h3><i class="fas fa-child"></i> MBC3</h3>
+          <button class="button watch-btn" data-channel="6">مشاهدة</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- القنوات الرياضية -->
+    <div class="channels-category">
+      <h2>القنوات الرياضية</h2>
+      <div class="channels-grid">
+        <!-- ON TV (قناة 2) نفترضها رياضية كمثال -->
+        <div class="channel-card" data-channel="2">
+          <h3><i class="fas fa-futbol"></i> ON TV</h3>
+          <button class="button watch-btn" data-channel="2">مشاهدة</button>
+        </div>
+        <!-- مثال لقناة رياضية أخرى (Placeholder) 
+        <div class="channel-card" data-channel="9">
+          <h3><i class="fas fa-futbol"></i> Bein Sports</h3>
+          <button class="button watch-btn" data-channel="9">مشاهدة</button>
+        </div>
+        -->
+      </div>
+    </div>
+
+    <!-- قنوات الأخبار -->
+    <div class="channels-category">
+      <h2>القنوات الإخبارية</h2>
+      <div class="channels-grid">
+        <!-- مثال لقناة إخبارية (Placeholder)
+        <div class="channel-card" data-channel="10">
+          <h3><i class="fas fa-newspaper"></i> Al Jazeera</h3>
+          <button class="button watch-btn" data-channel="10">مشاهدة</button>
+        </div>
+        <div class="channel-card" data-channel="11">
+          <h3><i class="fas fa-newspaper"></i> Al Arabiya</h3>
+          <button class="button watch-btn" data-channel="11">مشاهدة</button>
+        </div>
+        -->
+        <p>لا توجد حاليًا قنوات إخبارية مضافة.</p>
+      </div>
+    </div>
+
+    <!-- قنوات متنوعة (يشملها فيديو.js + MBC1 + Nat Geo ...) -->
+    <div class="channels-category">
+      <h2>قنوات متنوعة</h2>
+      <div class="channels-grid">
+        <!-- قناة 1 (Video.js) -->
+        <div class="channel-card" data-channel="1">
+          <h3><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</h3>
+          <button class="button watch-btn" data-channel="1">مشاهدة</button>
+        </div>
+        <!-- MBC 1 (قناة 4) -->
+        <div class="channel-card" data-channel="4">
+          <h3><i class="fas fa-tv"></i> MBC 1</h3>
+          <button class="button watch-btn" data-channel="4">مشاهدة</button>
+        </div>
+        <!-- Nat Geo (قناة 5) -->
+        <div class="channel-card" data-channel="5">
+          <h3><i class="fas fa-globe-americas"></i> Nat Geo</h3>
+          <button class="button watch-btn" data-channel="5">مشاهدة</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- الاستراحة -->
@@ -648,8 +735,7 @@
     <div class="match_today container" id="match_today">
       <h2>مباريات اليوم</h2>
       <div class="widget-content contents">
-
-        <!-- المباراة الأولى -->
+        <!-- مثال لمجموعة مباريات -->
         <div class="mnajiri">
           <a class="fullink" href="#"></a>
           <div class="mnajiriin">
@@ -684,155 +770,10 @@
             </div>
           </div>
         </div>
-
-        <!-- المباراة الثانية -->
-        <div class="mnajiri">
-          <a class="fullink" href="#"></a>
-          <div class="mnajiriin">
-            <div class="mpart1">
-              <div class="right_match">
-                <span class="right_tech">
-                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
-                  <div class="fname">ليفربول</div>
-                </span>
-              </div>
-              <strong class="najiri2">شوط 1</strong>
-              <div class="left_match">
-                <span class="left_tech">
-                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh1lRqOJVf30YvHEnAF641db5T6C8FibGLXafSVHvDrOXHx-OBL8q6lCG0HReQmE0_o_IB8VcupFQSilGFowGxnScXbrRltwClWGH7Toe8aaYtQnxf1GnZ5v1BBBoB1vvGzkeenVxlZDHs/s1600/c.png">
-                  <div class="fname">برايتون</div>
-                </span>
-              </div>
-            </div>
-            <div class="details_match">
-              <span class="first_match">
-                <i aria-hidden="true" class="fa fa-clock-o"></i>
-                <b>جارية الآن</b>
-              </span>
-              <span class="thany">
-                <i aria-hidden="true" class="fa fa-futbol-o"></i>
-                <b>الدوري الإنجليزي</b>
-              </span>
-              <span class="liga_mdw">
-                <i aria-hidden="true" class="fa fa-desktop"></i>
-                <b>Bein Sport HD1</b>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- المباراة الثالثة -->
-        <div class="mnajiri">
-          <a class="fullink" href="#"></a>
-          <div class="mnajiriin">
-            <div class="mpart1">
-              <div class="right_match">
-                <span class="right_tech">
-                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicd47CQhI-r7UlkzxlkW9hFsu8V9EihQ83q1E5VZWpfdRDG5e72uQUOemh4X75cZ4XwiRzuXueqyqCN28y51dDiqdRijimMEksrFyM_kkODYuS4W2qLILC6lIbsbj8TiAt2BVeLus0ls0/s1600/d.png">
-                  <div class="fname">ليفربول</div>
-                </span>
-              </div>
-              <strong class="najiri3">إستراحة</strong>
-              <div class="left_match">
-                <span class="left_tech">
-                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
-                  <div class="fname">برايتون</div>
-                </span>
-              </div>
-            </div>
-            <div class="details_match">
-              <span class="first_match">
-                <i aria-hidden="true" class="fa fa-clock-o"></i>
-                <b>ستبدأ بعد قليل</b>
-              </span>
-              <span class="thany">
-                <i aria-hidden="true" class="fa fa-futbol-o"></i>
-                <b>الدوري الإنجليزي</b>
-              </span>
-              <span class="liga_mdw">
-                <i aria-hidden="true" class="fa fa-desktop"></i>
-                <b>Bein Sport HD1</b>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- المباراة الرابعة -->
-        <div class="mnajiri">
-          <a class="fullink" href="#"></a>
-          <div class="mnajiriin">
-            <div class="mpart1">
-              <div class="right_match">
-                <span class="right_tech">
-                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdE9g2MJ59sJG6nADrdhz_E_ucMJUsyoR4t0UuJlo4l3s15ZigYnKRKUxCfGXch4RG9H8mqGNNZVDQkxMDm-xXFNBAlk_LJWObJOzefa_CbbjL2Uv-JSqDlf75WKSgGwzbVgXuXh8KdRg/s1600/a.png">
-                  <div class="fname">ليفربول</div>
-                </span>
-              </div>
-              <strong class="najiri1">4-0</strong>
-              <div class="left_match">
-                <span class="left_tech">
-                  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh1lRqOJVf30YvHEnAF641db5T6C8FibGLXafSVHvDrOXHx-OBL8q6lCG0HReQmE0_o_IB8VcupFQSilGFowGxnScXbrRltwClWGH7Toe8aaYtQnxf1GnZ5v1BBBoB1vvGzkeenVxlZDHs/s1600/c.png">
-                  <div class="fname">برايتون</div>
-                </span>
-              </div>
-            </div>
-            <div class="details_match">
-              <span class="first_match">
-                <i aria-hidden="true" class="fa fa-clock-o"></i>
-                <b>إنتهت</b>
-              </span>
-              <span class="thany">
-                <i aria-hidden="true" class="fa fa-futbol-o"></i>
-                <b>الدوري الإنجليزي</b>
-              </span>
-              <span class="liga_mdw">
-                <i aria-hidden="true" class="fa fa-desktop"></i>
-                <b>Bein Sport HD1</b>
-              </span>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /widget-content -->
-    </div><!-- /match_today container -->
-
-    <!-- نماذج إضافية لنفس الأسلوب (للتكرار) -->
-    <div class="mnajiri">
-      <a class="fullink" href="#"></a>
-      <div class="mnajiriin">
-        <div class="mpart1">
-          <div class="right_match">
-            <span class="right_tech">
-              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdE9g2MJ59sJG6nADrdhz_E_ucMJUsyoR4t0UuJlo4l3s15ZigYnKRKUxCfGXch4RG9H8mqGNNZVDQkxMDm-xXFNBAlk_LJWObJOzefa_CbbjL2Uv-JSqDlf75WKSgGwzbVgXuXh8KdRg/s1600/a.png">
-              <div class="fname">برشلونة</div>
-            </span>
-          </div>
-          <strong class="najiri1">19:00</strong>
-          <div class="left_match">
-            <span class="left_tech">
-              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUECVpmyDHP41Cqo8L0tBx5OYFuLpaLT6kpowkisOFpYSPoxalLPyS0WSvhf1HhHCxvltDms44d3mmaDQaPi8KRiVux6Brfzza7noO384zlbBjRNrHSH19xkrWvflRd-UaHoIJChtCPto/s1600/u.png">
-              <div class="fname">ريال مدريد</div>
-            </span>
-          </div>
-        </div>
-        <div class="details_match">
-          <span class="first_match">
-            <i aria-hidden="true" class="fa fa-clock-o"></i>
-            <b>غرينتش</b>
-          </span>
-          <span class="thany">
-            <i aria-hidden="true" class="fa fa-futbol-o"></i>
-            <b>دوري أبطال أوروبا</b>
-          </span>
-          <span class="liga_mdw">
-            <i aria-hidden="true" class="fa fa-desktop"></i>
-            <b>Bein Sport HD1</b>
-          </span>
-        </div>
+        <!-- ... مزيد من المباريات أو نماذج أخرى ... -->
       </div>
     </div>
-
-    <!-- ... المزيد من المباريات لو لزم ... -->
+    <!--  نهاية كود "مباريات اليوم"  -->
 
   </div> <!-- /#matchesSection -->
 
@@ -861,7 +802,6 @@
     //===============================
     const player = videojs('videoPlayer');
 
-    // دالة تفعيل قناة 1 (Video.js)
     function loadChannel1() {
       // إظهار مشغل الفيديو
       document.getElementById('videoContainer').style.display = 'block';
@@ -870,22 +810,23 @@
       // إظهار أزرار التحكم
       document.getElementById('videoControls').style.display = 'flex';
 
-      // توقيف الفيديو أولًا
+      // إيقاف الفيديو أولًا
       player.pause();
-      // ضبط المصدر (مثال على فيديو تجريبي)
+      // ضبط المصدر (مثال فيديو تجريبي)
       player.src({
-        src: 'https://vjs.zencdn.net/v/oceans.mp4', 
+        src: 'https://vjs.zencdn.net/v/oceans.mp4',
         type: 'video/mp4'
       });
       // محاولة التشغيل
       player.play().catch(err => console.warn('تعذّر تشغيل قناة 1:', err));
     }
 
-    // iframe واحد لجميع القنوات من 2 إلى 6
+    //===============================
+    // 2) iframe واحد لجميع القنوات من 2 فأعلى
+    //===============================
     const iframeContainer = document.getElementById('iframeContainer');
     const iframeElement = iframeContainer.querySelector('iframe');
 
-    // دالة تفعيل القنوات التي تعمل بـ iframe
     function loadIframeChannel(channelSrc) {
       // إخفاء مشغل الفيديو
       document.getElementById('videoContainer').style.display = 'none';
@@ -899,7 +840,7 @@
     }
 
     //===============================
-    // 2) التبديل بين القنوات
+    // 3) التبديل بين القنوات
     //===============================
     function switchChannel(num) {
       switch (num) {
@@ -911,23 +852,38 @@
           loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
           break;
         case 3:
-          // قناة الأطفال CN بالعربية
+          // CN بالعربية
           loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=cnarabia');
           break;
         case 4:
-          // قناة MBC 1 (مثال)
+          // MBC 1
           loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=mbc1');
           break;
         case 5:
-          // قناة National Geographic (مثال)
+          // Nat Geo
           loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=natgeoad');
           break;
         case 6:
-          // قناة MBC3 أطفال
+          // MBC3
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc3_tv_1');
           break;
+        case 7:
+          // روتانا أفلام
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_aflam');
+          break;
+        case 8:
+          // روتانا سينما
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_cinema');
+          break;
+        // مثالات لقنوات أخرى: قنوات رياضية أو إخبارية افتراضية
+        // case 9:
+        //   loadIframeChannel('رابط قناة رياضية أخرى...');
+        //   break;
+        // case 10:
+        //   loadIframeChannel('رابط قناة إخبارية...');
+        //   break;
         default:
-          // افتراضيًا: العودة للقناة 2
+          // افتراضيًا: العودة للقناة 2 (مثال)
           loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
           break;
       }
@@ -939,7 +895,7 @@
     });
 
     //===============================
-    // 3) تحكم في فيديو (قناة 1)
+    // 4) تحكم في فيديو (قناة 1)
     //===============================
     const rewindBtn = document.getElementById('rewindBtn');
     const playPauseBtn = document.getElementById('playPauseBtn');
@@ -960,23 +916,23 @@
     });
 
     //===============================
-    // 4) أزرار اختيار القناة في الصفحة الرئيسية والقنوات
+    // 5) أزرار اختيار القناة في الصفحة الرئيسية والقنوات
     //===============================
     document.querySelectorAll('[data-channel]').forEach(elem => {
       elem.addEventListener('click', () => {
         const channelNum = parseInt(elem.getAttribute('data-channel'));
-        // إذا كنت في قسم "القنوات" -> الذهاب لقسم البث المباشر
+        // الانتقال لقسم البث المباشر إذا كنت في قسم القنوات
         showSection('homeSection', 'linkHome');
         switchChannel(channelNum);
       });
     });
 
     //===============================
-    // 5) التنقل بين الأقسام
+    // 6) التنقل بين الأقسام
     //===============================
     const navList = document.getElementById('navList');
 
-    // أقسام الصفحة
+    // الأقسام في الصفحة
     const sections = {
       'homeSection': document.getElementById('homeSection'),
       'channelsSection': document.getElementById('channelsSection'),
@@ -1026,7 +982,7 @@
     }
 
     //===============================
-    // 6) زر القائمة (الشاشات الصغيرة)
+    // 7) زر القائمة (الشاشات الصغيرة)
     //===============================
     const toggleMenuBtn = document.getElementById('toggleMenuBtn');
     toggleMenuBtn.addEventListener('click', () => {
