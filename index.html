@@ -5,28 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>منصة MCRN - بث مباشر واستراحة</title>
 
-  <!-- تفعيل PWA -->
-  <meta name="mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="theme-color" content="#0d1117"/>
-
-  <!-- Manifest مضمن في كود الصفحة (Base64) -->
-  <link rel="manifest" 
-    href="data:application/json, {
-      &quot;name&quot;: &quot;MCRN App&quot;,
-      &quot;short_name&quot;: &quot;MCRN&quot;,
-      &quot;start_url&quot;: &quot;.&quot;,
-      &quot;display&quot;: &quot;standalone&quot;,
-      &quot;background_color&quot;: &quot;#0d1117&quot;,
-      &quot;theme_color&quot;: &quot;#0d1117&quot;,
-      &quot;icons&quot;: [{
-        &quot;src&quot;: &quot;https://via.placeholder.com/512&quot;,
-        &quot;sizes&quot;: &quot;512x512&quot;,
-        &quot;type&quot;: &quot;image/png&quot;
-      }]
-    }"
-  />
-
   <!-- Google Fonts -->
   <link 
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" 
@@ -42,6 +20,7 @@
   <!-- Video.js CSS -->
   <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
 
+  <!-- التنسيقات المخصصة للموقع -->
   <style>
     :root {
       --bg-color: #0d1117;
@@ -237,17 +216,6 @@
       padding: 5px 10px;
       border-radius: 6px;
     }
-    .ai-suggestions {
-      margin: 20px auto;
-      padding: 20px;
-      background: rgba(31, 111, 235, 0.1);
-      border: 2px dashed var(--hover-color);
-      border-radius: 10px;
-      max-width: 600px;
-    }
-    .ai-suggestions button {
-      margin-top: 15px;
-    }
 
     /* القنوات */
     .channels-grid {
@@ -358,6 +326,10 @@
       }
     }
 
+    /********************************************/
+    /*         تنسيقات خاصة بجدول المباريات    */
+    /********************************************/
+
     /* شريط التمرير */
     ::-webkit-scrollbar-thumb {background: #002e70;}
     ::-webkit-scrollbar {width:5px; height:9px; background:#dcdcdc;}
@@ -365,13 +337,51 @@
     /* تعطيل هوامش إضافية للصفحة */
     body {margin: 0;}
 
+    /* تنسيق الجداول والخلايا */
+    td, th {padding: 0;}
+    *, *:before, *:after {
+      box-sizing: border-box;
+    }
+
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+    @media (min-width: 768px) {
+      .container {width: 750px;}
+    }
+    @media (min-width: 992px) {
+      .container {width: 970px;}
+    }
+    @media (min-width: 1200px) {
+      .container {width: 1170px;}
+    }
+
+    .container-fluid {
+      margin-left: auto;
+      margin-right: auto;
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+
+    .container:before, .container:after,
+    .container-fluid:before, .container-fluid:after {
+      content: " ";
+      display: table;
+    }
+    .container:after, .container-fluid:after {
+      clear: both;
+    }
+
     /* تداخل في محتوى الويدجت */
     .contents.widget-content {
       padding: 15px;
     }
 
     /* العنوان العلوي */
-    #match_today h2 {
+    div#match_today h2 {
       text-align: center;
       padding: 10px;
       background: #532855;
@@ -390,6 +400,7 @@
       margin: 12px auto;
       background: #DCEDC8;
     }
+
     .fullink {
       display: block;
       height: 100%;
@@ -398,9 +409,11 @@
       width: 100%;
       z-index: 5;
     }
+
     .mnajiriin {
       margin: 0 5px;
     }
+
     .mnajiri img {
       position: relative;
       display: block;
@@ -414,11 +427,13 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1),0 2px 5px -1px rgba(0,0,0,0.2);
       transition: box-shadow .3s;
     }
+
     .mpart1 {
       position: relative;
       height: 48px;
       line-height: 48px;
     }
+
     .mpart1 strong {
       color: #fff;
       height: 36px;
@@ -432,12 +447,14 @@
       top: 30px;
       line-height: 36px;
     }
+
     .mpart1 span {
       float: right;
       text-align: center;
       width: 100%;
       z-index: 2;
     }
+
     .right_match {
       float: right;
       padding-left: 20px;
@@ -452,6 +469,7 @@
       position: relative;
       z-index: 2;
     }
+
     .details_match {
       padding: 0 25px;
       font-size: 12px;
@@ -471,6 +489,7 @@
       width: 33.3%;
     }
     .details_match .liga_mdw { border: 0 none; }
+
     .first_match::before, .liga_mdw::before {
       background-color: #532855;
       content: "";
@@ -489,6 +508,7 @@
       left: -12px;
       border-radius: 0 0 0 8px;
     }
+
     @media screen and (max-width:700px) {
       .liga_mdw { display: none; }
       .details_match { padding: 0 60px; }
@@ -505,6 +525,7 @@
         border-radius: 0 0 0 8px;
       }
     }
+
     @media screen and (max-width:500px) {
       .gadwal {
         font-size: 14px;
@@ -512,6 +533,7 @@
         background: #fff;
       }
     }
+
     /* ألوان مختلفة لبعض الحالات */
     .najiri1 { background-color: #532855; }
     .najiri2 { background-color: #E91E63; }
@@ -585,8 +607,8 @@
     <h2 style="margin-top: 40px;">اختر قناة البث:</h2>
     <div class="custom-buttons">
       <button class="button" data-channel="1"><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</button>
-      <button class="button" data-channel="2"><i class="fas fa-tv"></i> ON TV</button>
-      <button class="button" data-channel="3"><i class="fas fa-child"></i> CN بالعربية</button>
+      <button class="button" data-channel="2"><i class="fas fa-tv"></i> القناة 2 (ON TV)</button>
+      <button class="button" data-channel="3"><i class="fas fa-child"></i> القناة 3 (CN بالعربية)</button>
       <button class="button" data-channel="4"><i class="fas fa-tv"></i> MBC 1</button>
       <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> Nat Geo</button>
       <button class="button" data-channel="6"><i class="fas fa-child"></i> MBC3</button>
@@ -602,17 +624,6 @@
   <!-- قسم القنوات (بتصنيفات منفصلة) -->
   <div id="channelsSection" class="section">
     <h1>القنوات المفضلة</h1>
-
-    <!-- قسم اقتراحات الذكاء الاصطناعي -->
-    <div class="ai-suggestions">
-      <h3>اقتراحات الذكاء الاصطناعي</h3>
-      <div id="aiChannelSuggestion" style="font-weight: 600; margin-top: 10px;">
-        <!-- سيظهر هنا اسم القناة المقترحة آليًا -->
-      </div>
-      <button class="button" id="aiSuggestionBtn">
-        <i class="fas fa-robot"></i> اقتراح آخر
-      </button>
-    </div>
 
     <!-- قنوات MBC -->
     <div class="channels-category">
@@ -715,6 +726,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- الاستراحة -->
@@ -733,9 +745,11 @@
   <div id="matchesSection" class="section">
     <h1 style="margin-bottom: 20px;">جدول المباريات</h1>
 
+    <!--  بداية كود "مباريات اليوم"  -->
     <div class="match_today container" id="match_today">
       <h2>مباريات اليوم</h2>
       <div class="widget-content contents">
+        <!-- مثال لمجموعة مباريات -->
         <div class="mnajiri">
           <a class="fullink" href="#"></a>
           <div class="mnajiriin">
@@ -770,15 +784,25 @@
             </div>
           </div>
         </div>
-        <!-- ... المزيد من المباريات ... -->
+        <!-- ... يمكنك إضافة المزيد من المباريات ... -->
       </div>
     </div>
-  </div>
+    <!--  نهاية كود "مباريات اليوم"  -->
+  </div> <!-- /#matchesSection -->
 
   <!-- عن المطور -->
   <div id="aboutSection" class="section">
     <h1>عن المطور</h1>
-    <p>تم تصميم هذه المنصة بواسطة المهندس خالد النضاري.</p>
+    <p>
+      <i class="fa-solid fa-robot" style="color: var(--hover-color);"></i>
+      تم تطوير هذه المنصة باستخدام أحدث تقنيات <strong>متطوره</strong> والترتيب والتنسيق الذكي، 
+      لتحقيق تجربة بث مميزة تلبي احتياجات المشاهدين بأفضل صورة ممكنة.
+    </p>
+    <p>
+      <i class="fa-solid fa-user-graduate" style="color: var(--hover-color);"></i>
+      تم تصميم هذه المنصة بواسطة <strong>المهندس خالد النظاري</strong> 
+      الذي يسعى لإطلاق منصات متطورة وذكية بمواصفات عالية تواكب عصر التكنولوجيا الحديثة.
+    </p>
     <p>جميع الحقوق محفوظة 2026 MCRN.</p>
   </div>
 
@@ -793,17 +817,7 @@
   <!-- Video.js -->
   <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
 
-  <!-- Service Worker (PWA) تسجيل -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('data:application/javascript;base64,dmFyIGNhY2UgPSBzZWxmOyAgLy8gU2VydmljZSB3b3JrIG1vY2sKCg==')
-      .then(function() { 
-        console.log('Service Worker Registered!'); 
-      });
-    }
-  </script>
-
-  <!-- أكواد جافاسكربت الأساسية -->
+  <!-- أكواد جافاسكربت -->
   <script>
     //===============================
     // 1) تهيئة مشغل الفيديو (القناة 1)
@@ -811,29 +825,39 @@
     const player = videojs('videoPlayer');
 
     function loadChannel1() {
+      // إظهار مشغل الفيديو
       document.getElementById('videoContainer').style.display = 'block';
+      // إخفاء iframe
       document.getElementById('iframeContainer').style.display = 'none';
+      // إظهار أزرار التحكم
       document.getElementById('videoControls').style.display = 'flex';
 
+      // إيقاف الفيديو أولًا
       player.pause();
+      // ضبط المصدر (مثال فيديو تجريبي)
       player.src({
         src: 'https://vjs.zencdn.net/v/oceans.mp4',
         type: 'video/mp4'
       });
+      // محاولة التشغيل
       player.play().catch(err => console.warn('تعذّر تشغيل قناة 1:', err));
     }
 
     //===============================
-    // 2) iframe واحد للقنوات 2 فما فوق
+    // 2) iframe واحد لجميع القنوات من 2 فأعلى
     //===============================
     const iframeContainer = document.getElementById('iframeContainer');
     const iframeElement = iframeContainer.querySelector('iframe');
 
     function loadIframeChannel(channelSrc) {
+      // إخفاء مشغل الفيديو
       document.getElementById('videoContainer').style.display = 'none';
+      // إظهار iframe
       document.getElementById('iframeContainer').style.display = 'block';
+      // إخفاء أزرار التحكم الخاصة بالفيديو
       document.getElementById('videoControls').style.display = 'none';
 
+      // تغيير الرابط داخل الـ iframe
       iframeElement.src = channelSrc;
     }
 
@@ -842,32 +866,67 @@
     //===============================
     function switchChannel(num) {
       switch (num) {
-        case 1: loadChannel1(); break;
-        case 2: loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0'); break;
-        case 3: loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=cnarabia'); break;
-        case 4: loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=mbc1'); break;
-        case 5: loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=natgeoad'); break;
-        case 6: loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc3_tv_1'); break;
-        case 7: loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_aflam'); break;
-        case 8: loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_cinema'); break;
-        case 9: loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=yemen_shabab'); break;
-        case 10: loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc_masr_usa'); break;
-        case 11: loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc2_tv_1'); break;
-        case 12: loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbcmasr2_tv_1'); break;
+        case 1:
+          loadChannel1();
+          break;
+        case 2:
+          // ON TV
+          loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
+          break;
+        case 3:
+          // CN بالعربية
+          loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=cnarabia');
+          break;
+        case 4:
+          // MBC 1
+          loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=mbc1');
+          break;
+        case 5:
+          // Nat Geo
+          loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=natgeoad');
+          break;
+        case 6:
+          // MBC3
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc3_tv_1');
+          break;
+        case 7:
+          // روتانا أفلام
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_aflam');
+          break;
+        case 8:
+          // روتانا سينما
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_cinema');
+          break;
+        case 9:
+          // يمن شباب
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=yemen_shabab');
+          break;
+        case 10:
+          // MBC مصر
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc_masr_usa');
+          break;
+        case 11:
+          // MBC2
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc2_tv_1');
+          break;
+        case 12:
+          // MBC مصر 2
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbcmasr2_tv_1');
+          break;
         default:
-          // افتراضيًا -> قناة 2
+          // افتراضيًا -> قناة ON TV
           loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
           break;
       }
     }
 
-    // بشكل افتراضي عند تحميل الصفحة -> القناة 2
+    // عند تحميل الصفحة -> افتراضيًا القناة 2
     window.addEventListener('load', () => {
       switchChannel(2);
     });
 
     //===============================
-    // 4) تحكم في الفيديو (قناة 1)
+    // 4) تحكم في فيديو (قناة 1)
     //===============================
     const rewindBtn = document.getElementById('rewindBtn');
     const playPauseBtn = document.getElementById('playPauseBtn');
@@ -888,7 +947,7 @@
     });
 
     //===============================
-    // 5) أزرار اختيار القناة
+    // 5) أزرار اختيار القناة في الصفحة الرئيسية والقنوات
     //===============================
     document.querySelectorAll('[data-channel]').forEach(elem => {
       elem.addEventListener('click', () => {
@@ -903,6 +962,8 @@
     // 6) التنقل بين الأقسام
     //===============================
     const navList = document.getElementById('navList');
+
+    // الأقسام في الصفحة
     const sections = {
       'homeSection': document.getElementById('homeSection'),
       'channelsSection': document.getElementById('channelsSection'),
@@ -911,6 +972,7 @@
       'aboutSection': document.getElementById('aboutSection'),
     };
 
+    // روابط الشريط
     document.getElementById('linkHome').addEventListener('click', e => {
       e.preventDefault();
       showSection('homeSection', 'linkHome');
@@ -933,14 +995,18 @@
     });
 
     function showSection(sectionId, linkId) {
+      // إخفاء جميع الأقسام
       for (const id in sections) {
         sections[id].classList.remove('active');
       }
+      // إظهار القسم المطلوب
       sections[sectionId].classList.add('active');
 
+      // تفعيل الرابط المطلوب
       document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
       if (linkId) document.getElementById(linkId).classList.add('active');
 
+      // إغلاق القائمة على الشاشات الصغيرة إن كانت مفتوحة
       if (window.innerWidth <= 600) {
         navList.classList.remove('show');
       }
@@ -953,29 +1019,6 @@
     toggleMenuBtn.addEventListener('click', () => {
       navList.classList.toggle('show');
     });
-
-    //===============================
-    // 8) ذكاء اصطناعي مبسّط لاقتراح قناة عشوائية
-    //===============================
-    const aiSuggestionBtn = document.getElementById('aiSuggestionBtn');
-    const aiChannelSuggestion = document.getElementById('aiChannelSuggestion');
-
-    // قائمة عينة من القنوات للاقترح منها
-    const channelNames = [
-      'MBC 1', 'MBC 2', 'MBC مصر', 'MBC مصر 2',
-      'MBC3', 'CN بالعربية', 'Nat Geo',
-      'روتانا أفلام', 'روتانا سينما', 'يمن شباب', 'ON TV', 'قناة Video.js'
-    ];
-
-    function suggestRandomChannel() {
-      const randomIndex = Math.floor(Math.random() * channelNames.length);
-      aiChannelSuggestion.textContent = `قناة مقترحة: ${channelNames[randomIndex]}`;
-    }
-
-    aiSuggestionBtn.addEventListener('click', suggestRandomChannel);
-
-    // عند الدخول لأول مرة، يتم عرض اقتراح مبدئي
-    suggestRandomChannel();
   </script>
 </body>
 </html>
