@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>منصة MCRN - بث مباشر واستراحة</title>
+  <title>منصة MCRN 360 - بث مباشر واستراحة</title>
 
   <!-- Google Fonts -->
   <link 
@@ -19,6 +19,10 @@
 
   <!-- Video.js CSS -->
   <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
+
+  <!-- مكتبة Panolens.js لعرض محتوى 360 -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.140.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js"></script>
 
   <!-- التنسيقات المخصصة للموقع -->
   <style>
@@ -172,6 +176,19 @@
       display: block;
     }
 
+    /* حاوية 360 */
+    .panorama-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto 20px auto;
+      height: 600px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+      background: #000;
+    }
+
     /* أزرار التحكم (للقناة 1 فقط) */
     .custom-buttons {
       display: flex;
@@ -285,7 +302,8 @@
     /* للشاشات الصغيرة */
     @media (max-width: 768px) {
       .iframe-container iframe,
-      .rest-iframe iframe {
+      .rest-iframe iframe,
+      .panorama-container {
         height: 400px; 
       }
       .custom-buttons .button {
@@ -545,8 +563,8 @@
   <!-- شريط التنقل -->
   <nav>
     <div class="logo">
-      <i class="fas fa-tv"></i>
-      MCRN
+      <i class="fas fa-globe"></i>
+      MCRN 360
     </div>
     <!-- زر القائمة للشاشات الصغيرة -->
     <button class="menu-toggle" id="toggleMenuBtn">
@@ -555,6 +573,7 @@
     <ul id="navList">
       <li><a href="#" id="linkHome" class="active">البث المباشر</a></li>
       <li><a href="#" id="linkChannels">القنوات</a></li>
+      <li><a href="#" id="link360">مشاهدة 360</a></li>
       <li><a href="#" id="linkRest">الاستراحة</a></li>
       <li><a href="#" id="linkMatches">جدول المباريات</a></li>
       <li><a href="#" id="linkAbout">عن المطور</a></li>
@@ -563,7 +582,7 @@
 
   <!-- قسم البث المباشر -->
   <div id="homeSection" class="section active">
-    <h1>مرحبًا بك في منصة MCRN للبث المباشر!</h1>
+    <h1>مرحبًا بك في منصة MCRN 360 للبث المباشر!</h1>
 
     <!-- قناة 1 (Video.js) -->
     <div class="video-container" id="videoContainer">
@@ -621,7 +640,7 @@
     </div>
   </div>
 
-  <!-- قسم القنوات (بتصنيفات منفصلة) -->
+  <!-- قسم القنوات -->
   <div id="channelsSection" class="section">
     <h1>القنوات المفضلة</h1>
 
@@ -729,6 +748,13 @@
 
   </div>
 
+  <!-- قسم المشاهدة 360 -->
+  <div id="link360Section" class="section">
+    <h1>استمتع بتقنية العرض بزاوية 360°</h1>
+    <p>منصة MCRN 360 تتيح لك تجربة فريدة تشبه منصة الجزيرة 360، حيث يمكنك التحرك داخل الفيديو أو الصورة البانورامية بسهولة ومرونة.</p>
+    <div class="panorama-container" id="panoramaContainer"></div>
+  </div>
+
   <!-- الاستراحة -->
   <div id="restSection" class="section">
     <h1>استمتع بوقتك في صفحة الاستراحة</h1>
@@ -795,21 +821,22 @@
     <h1>عن المطور</h1>
     <p>
       <i class="fa-solid fa-robot" style="color: var(--hover-color);"></i>
-      تم تطوير هذه المنصة باستخدام أحدث تقنيات <strong>متطوره</strong> والترتيب والتنسيق الذكي، 
-      لتحقيق تجربة بث مميزة تلبي احتياجات المشاهدين بأفضل صورة ممكنة.
+      تم تطوير هذه المنصة باستخدام أحدث تقنيات <strong>الذكاء الاصطناعي</strong> والترتيب والتنسيق الذكي، 
+      لتحقيق تجربة بث مميزة تلبي احتياجات المشاهدين وتمنحهم تجربة 360 فريدة.
     </p>
     <p>
       <i class="fa-solid fa-user-graduate" style="color: var(--hover-color);"></i>
-      تم تصميم هذه المنصة بواسطة <strong>المهندس خالد النظاري</strong> 
-      الذي يسعى لإطلاق منصات متطورة وذكية بمواصفات عالية تواكب عصر التكنولوجيا الحديثة.
+      تم تصميم هذه المنصة بواسطة <strong>المهندس خالد النضاري</strong> 
+      الذي يسعى لإطلاق منصات متطورة وذكية بمواصفات عالية تواكب عصر التكنولوجيا الحديثة، 
+      لتكون شبيهة بمنصة الجزيرة 360 في تقنياتها ومرونتها.
     </p>
-    <p>جميع الحقوق محفوظة 2026 MCRN.</p>
+    <p>جميع الحقوق محفوظة 2026 MCRN 360.</p>
   </div>
 
   <!-- تذييل الصفحة -->
   <footer>
     <p>
-      © 2026 MCRN. جميع الحقوق محفوظة.
+      © 2026 MCRN 360. جميع الحقوق محفوظة.
       <a href="#">المهندس خالد النضاري</a>.
     </p>
   </footer>
@@ -923,6 +950,7 @@
     // عند تحميل الصفحة -> افتراضيًا القناة 2
     window.addEventListener('load', () => {
       switchChannel(2);
+      initPanorama();
     });
 
     //===============================
@@ -952,7 +980,7 @@
     document.querySelectorAll('[data-channel]').forEach(elem => {
       elem.addEventListener('click', () => {
         const channelNum = parseInt(elem.getAttribute('data-channel'));
-        // الانتقال لقسم البث المباشر إذا كنت في قسم القنوات
+        // الانتقال لقسم البث المباشر إذا كنت في قسم آخر
         showSection('homeSection', 'linkHome');
         switchChannel(channelNum);
       });
@@ -967,6 +995,7 @@
     const sections = {
       'homeSection': document.getElementById('homeSection'),
       'channelsSection': document.getElementById('channelsSection'),
+      'link360Section': document.getElementById('link360Section'),
       'restSection': document.getElementById('restSection'),
       'matchesSection': document.getElementById('matchesSection'),
       'aboutSection': document.getElementById('aboutSection'),
@@ -980,6 +1009,10 @@
     document.getElementById('linkChannels').addEventListener('click', e => {
       e.preventDefault();
       showSection('channelsSection', 'linkChannels');
+    });
+    document.getElementById('link360').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('link360Section', 'link360');
     });
     document.getElementById('linkRest').addEventListener('click', e => {
       e.preventDefault();
@@ -1019,6 +1052,21 @@
     toggleMenuBtn.addEventListener('click', () => {
       navList.classList.toggle('show');
     });
+
+    //===============================
+    // 8) تهيئة محتوى 360 باستخدام Panolens.js
+    //===============================
+    let panorama, viewer;
+    function initPanorama() {
+      // نستخدم صورة بانورامية تجريبية من الإنترنت كمثال
+      const container = document.getElementById('panoramaContainer');
+      panorama = new PANOLENS.ImagePanorama('https://raw.githubusercontent.com/pchen66/panolens.js/master/examples/asset/textures/equirectangular.jpg');
+      viewer = new PANOLENS.Viewer({
+        container: container,
+        autoHideInfospot: false
+      });
+      viewer.add(panorama);
+    }
   </script>
 </body>
 </html>
