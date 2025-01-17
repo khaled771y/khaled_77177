@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>منصة MCRN 360 - بث مباشر واستراحة</title>
+  <title>منصة MCRN 360 - بث مباشر وقنوات متنوعة</title>
 
   <!-- Google Fonts -->
   <link 
@@ -220,21 +220,25 @@
       font-size: 20px;
     }
 
-    /* تصنيفات القنوات */
-    .channels-category {
-      margin-bottom: 30px;
+    /* الاستراحة */
+    .rest-iframe {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+      background: #000;
     }
-    .channels-category h2 {
-      font-size: 24px;
-      color: var(--hover-color);
-      margin-bottom: 20px;
-      border-bottom: 2px solid var(--hover-color);
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 6px;
+    .rest-iframe iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      display: block;
     }
 
-    /* القنوات */
+    /* تصنيفات فرعية (مثل: قنوات إخبارية، أطفال، رياضية...) */
     .channels-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -264,24 +268,6 @@
       gap: 8px;
     }
 
-    /* الاستراحة */
-    .rest-iframe {
-      position: relative;
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-      background: #000;
-    }
-    .rest-iframe iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      display: block;
-    }
-
     /* التذييل */
     footer {
       margin-top: auto;
@@ -309,9 +295,6 @@
       .custom-buttons .button {
         padding: 10px 20px;
         font-size: 14px;
-      }
-      .channels-category h2 {
-        font-size: 20px;
       }
     }
     @media (max-width: 600px) {
@@ -571,8 +554,11 @@
       <i class="fas fa-bars"></i>
     </button>
     <ul id="navList">
-      <li><a href="#" id="linkHome" class="active">البث المباشر</a></li>
-      <li><a href="#" id="linkChannels">القنوات</a></li>
+      <li><a href="#" id="linkHome" class="active">الرئيسية</a></li>
+      <li><a href="#" id="linkAllChannels">القنوات العامة</a></li>
+      <li><a href="#" id="linkNewsChannels">القنوات الإخبارية</a></li>
+      <li><a href="#" id="linkSportsChannels">القنوات الرياضية</a></li>
+      <li><a href="#" id="linkChildrenChannels">قنوات الأطفال</a></li>
       <li><a href="#" id="link360">مشاهدة 360</a></li>
       <li><a href="#" id="linkRest">الاستراحة</a></li>
       <li><a href="#" id="linkMatches">جدول المباريات</a></li>
@@ -580,7 +566,7 @@
     </ul>
   </nav>
 
-  <!-- قسم البث المباشر -->
+  <!-- قسم الرئيسية (البث المباشر) -->
   <div id="homeSection" class="section active">
     <h1>مرحبًا بك في منصة MCRN 360 للبث المباشر!</h1>
 
@@ -622,7 +608,7 @@
       </button>
     </div>
 
-    <!-- أزرار اختيار القناة -->
+    <!-- أزرار اختيار القناة (كمثال سريع في الصفحة الرئيسية) -->
     <h2 style="margin-top: 40px;">اختر قناة البث:</h2>
     <div class="custom-buttons">
       <button class="button" data-channel="1"><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</button>
@@ -630,132 +616,103 @@
       <button class="button" data-channel="3"><i class="fas fa-child"></i> القناة 3 (CN بالعربية)</button>
       <button class="button" data-channel="4"><i class="fas fa-tv"></i> MBC 1</button>
       <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> Nat Geo</button>
-      <button class="button" data-channel="6"><i class="fas fa-child"></i> MBC3</button>
-      <button class="button" data-channel="7"><i class="fas fa-film"></i> روتانا أفلام</button>
-      <button class="button" data-channel="8"><i class="fas fa-film"></i> روتانا سينما</button>
-      <button class="button" data-channel="9"><i class="fas fa-newspaper"></i> يمن شباب</button>
-      <button class="button" data-channel="10"><i class="fas fa-tv"></i> MBC مصر</button>
-      <button class="button" data-channel="11"><i class="fas fa-tv"></i> MBC2</button>
-      <button class="button" data-channel="12"><i class="fas fa-tv"></i> MBC مصر 2</button>
     </div>
   </div>
 
-  <!-- قسم القنوات -->
-  <div id="channelsSection" class="section">
-    <h1>القنوات المفضلة</h1>
-
-    <!-- قنوات MBC -->
-    <div class="channels-category">
-      <h2>قنوات MBC</h2>
-      <div class="channels-grid">
-        <!-- MBC 1 (قناة 4) -->
-        <div class="channel-card" data-channel="4">
-          <h3><i class="fas fa-tv"></i> MBC 1</h3>
-          <button class="button watch-btn" data-channel="4">مشاهدة</button>
-        </div>
-        <!-- MBC 2 (قناة 11) -->
-        <div class="channel-card" data-channel="11">
-          <h3><i class="fas fa-tv"></i> MBC 2</h3>
-          <button class="button watch-btn" data-channel="11">مشاهدة</button>
-        </div>
-        <!-- MBC مصر (قناة 10) -->
-        <div class="channel-card" data-channel="10">
-          <h3><i class="fas fa-tv"></i> MBC مصر</h3>
-          <button class="button watch-btn" data-channel="10">مشاهدة</button>
-        </div>
-        <!-- MBC مصر 2 (قناة 12) -->
-        <div class="channel-card" data-channel="12">
-          <h3><i class="fas fa-tv"></i> MBC مصر 2</h3>
-          <button class="button watch-btn" data-channel="12">مشاهدة</button>
-        </div>
-        <!-- MBC3 (قناة 6) -->
-        <div class="channel-card" data-channel="6">
-          <h3><i class="fas fa-child"></i> MBC3</h3>
-          <button class="button watch-btn" data-channel="6">مشاهدة</button>
-        </div>
+  <!-- قسم القنوات العامة -->
+  <div id="allChannelsSection" class="section">
+    <h1>القنوات العامة</h1>
+    <div class="channels-grid">
+      <!-- MBC 1 (قناة 4) -->
+      <div class="channel-card" data-channel="4">
+        <h3><i class="fas fa-tv"></i> MBC 1</h3>
+        <button class="button watch-btn" data-channel="4">مشاهدة</button>
+      </div>
+      <!-- MBC 2 (قناة 11) -->
+      <div class="channel-card" data-channel="11">
+        <h3><i class="fas fa-tv"></i> MBC 2</h3>
+        <button class="button watch-btn" data-channel="11">مشاهدة</button>
+      </div>
+      <!-- MBC مصر (قناة 10) -->
+      <div class="channel-card" data-channel="10">
+        <h3><i class="fas fa-tv"></i> MBC مصر</h3>
+        <button class="button watch-btn" data-channel="10">مشاهدة</button>
+      </div>
+      <!-- MBC مصر 2 (قناة 12) -->
+      <div class="channel-card" data-channel="12">
+        <h3><i class="fas fa-tv"></i> MBC مصر 2</h3>
+        <button class="button watch-btn" data-channel="12">مشاهدة</button>
+      </div>
+      <!-- MBC3 (قناة 6) -->
+      <div class="channel-card" data-channel="6">
+        <h3><i class="fas fa-child"></i> MBC3</h3>
+        <button class="button watch-btn" data-channel="6">مشاهدة</button>
+      </div>
+      <!-- روتانا أفلام (قناة 7) -->
+      <div class="channel-card" data-channel="7">
+        <h3><i class="fas fa-film"></i> روتانا أفلام</h3>
+        <button class="button watch-btn" data-channel="7">مشاهدة</button>
+      </div>
+      <!-- روتانا سينما (قناة 8) -->
+      <div class="channel-card" data-channel="8">
+        <h3><i class="fas fa-film"></i> روتانا سينما</h3>
+        <button class="button watch-btn" data-channel="8">مشاهدة</button>
+      </div>
+      <!-- Nat Geo (قناة 5) -->
+      <div class="channel-card" data-channel="5">
+        <h3><i class="fas fa-globe-americas"></i> Nat Geo</h3>
+        <button class="button watch-btn" data-channel="5">مشاهدة</button>
       </div>
     </div>
+  </div>
 
-    <!-- قنوات روتانا -->
-    <div class="channels-category">
-      <h2>قنوات روتانا</h2>
-      <div class="channels-grid">
-        <!-- روتانا أفلام (قناة 7) -->
-        <div class="channel-card" data-channel="7">
-          <h3><i class="fas fa-film"></i> روتانا أفلام</h3>
-          <button class="button watch-btn" data-channel="7">مشاهدة</button>
-        </div>
-        <!-- روتانا سينما (قناة 8) -->
-        <div class="channel-card" data-channel="8">
-          <h3><i class="fas fa-film"></i> روتانا سينما</h3>
-          <button class="button watch-btn" data-channel="8">مشاهدة</button>
-        </div>
+  <!-- قسم القنوات الإخبارية -->
+  <div id="newsChannelsSection" class="section">
+    <h1>القنوات الإخبارية</h1>
+    <div class="channels-grid">
+      <!-- يمن شباب (قناة 9) -->
+      <div class="channel-card" data-channel="9">
+        <h3><i class="fas fa-newspaper"></i> يمن شباب</h3>
+        <button class="button watch-btn" data-channel="9">مشاهدة</button>
       </div>
+      <!-- (يمكن إضافة قنوات إخبارية أخرى هنا) -->
     </div>
+  </div>
 
-    <!-- قنوات الأطفال (بخلاف MBC3) -->
-    <div class="channels-category">
-      <h2>قنوات الأطفال</h2>
-      <div class="channels-grid">
-        <!-- CN بالعربية (قناة 3) -->
-        <div class="channel-card" data-channel="3">
-          <h3><i class="fas fa-child"></i> CN بالعربية</h3>
-          <button class="button watch-btn" data-channel="3">مشاهدة</button>
-        </div>
+  <!-- قسم القنوات الرياضية -->
+  <div id="sportsChannelsSection" class="section">
+    <h1>القنوات الرياضية</h1>
+    <div class="channels-grid">
+      <!-- ON TV (قناة 2) نفترضها رياضية كمثال -->
+      <div class="channel-card" data-channel="2">
+        <h3><i class="fas fa-futbol"></i> ON TV</h3>
+        <button class="button watch-btn" data-channel="2">مشاهدة</button>
       </div>
+      <!-- (يمكن إضافة قنوات رياضية أخرى هنا) -->
     </div>
+  </div>
 
-    <!-- القنوات الرياضية -->
-    <div class="channels-category">
-      <h2>القنوات الرياضية</h2>
-      <div class="channels-grid">
-        <!-- ON TV (قناة 2) نفترضها رياضية كمثال -->
-        <div class="channel-card" data-channel="2">
-          <h3><i class="fas fa-futbol"></i> ON TV</h3>
-          <button class="button watch-btn" data-channel="2">مشاهدة</button>
-        </div>
+  <!-- قسم قنوات الأطفال -->
+  <div id="childrenChannelsSection" class="section">
+    <h1>قنوات الأطفال</h1>
+    <div class="channels-grid">
+      <!-- CN بالعربية (قناة 3) -->
+      <div class="channel-card" data-channel="3">
+        <h3><i class="fas fa-child"></i> CN بالعربية</h3>
+        <button class="button watch-btn" data-channel="3">مشاهدة</button>
       </div>
+      <!-- MBC3 (قناة 6) يمكن وضعها هنا أيضًا أو إبقاؤها في القنوات العامة -->
     </div>
-
-    <!-- قنوات الأخبار -->
-    <div class="channels-category">
-      <h2>القنوات الإخبارية</h2>
-      <div class="channels-grid">
-        <!-- يمن شباب (قناة 9) -->
-        <div class="channel-card" data-channel="9">
-          <h3><i class="fas fa-newspaper"></i> يمن شباب</h3>
-          <button class="button watch-btn" data-channel="9">مشاهدة</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- قنوات متنوعة أخرى (مثل Video.js, Nat Geo ...) -->
-    <div class="channels-category">
-      <h2>قنوات متنوعة أخرى</h2>
-      <div class="channels-grid">
-        <!-- قناة 1 (Video.js) -->
-        <div class="channel-card" data-channel="1">
-          <h3><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</h3>
-          <button class="button watch-btn" data-channel="1">مشاهدة</button>
-        </div>
-        <!-- Nat Geo (قناة 5) -->
-        <div class="channel-card" data-channel="5">
-          <h3><i class="fas fa-globe-americas"></i> Nat Geo</h3>
-          <button class="button watch-btn" data-channel="5">مشاهدة</button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <!-- قسم المشاهدة 360 -->
   <div id="link360Section" class="section">
     <h1>استمتع بتقنية العرض بزاوية 360°</h1>
-    <p>منصة MCRN 360 تتيح لك تجربة فريدة تشبه منصة الجزيرة 360، حيث يمكنك التحرك داخل الفيديو أو الصورة البانورامية بسهولة ومرونة.</p>
+    <p>منصة MCRN 360 تتيح لك تجربة فريدة تحاكي منصات كبرى مثل الجزيرة 360، حيث يمكنك التحرك داخل الفيديو أو الصورة البانورامية بسهولة ومرونة.</p>
     <div class="panorama-container" id="panoramaContainer"></div>
   </div>
 
-  <!-- الاستراحة -->
+  <!-- قسم الاستراحة -->
   <div id="restSection" class="section">
     <h1>استمتع بوقتك في صفحة الاستراحة</h1>
     <div class="rest-iframe">
@@ -816,7 +773,7 @@
     <!--  نهاية كود "مباريات اليوم"  -->
   </div> <!-- /#matchesSection -->
 
-  <!-- عن المطور -->
+  <!-- قسم عن المطور -->
   <div id="aboutSection" class="section">
     <h1>عن المطور</h1>
     <p>
@@ -828,7 +785,7 @@
       <i class="fa-solid fa-user-graduate" style="color: var(--hover-color);"></i>
       تم تصميم هذه المنصة بواسطة <strong>المهندس خالد النضاري</strong> 
       الذي يسعى لإطلاق منصات متطورة وذكية بمواصفات عالية تواكب عصر التكنولوجيا الحديثة، 
-      لتكون شبيهة بمنصة الجزيرة 360 في تقنياتها ومرونتها.
+      لتكون منافسة في تصميمها لمنصات كبرى مثل الجزيرة 360.
     </p>
     <p>جميع الحقوق محفوظة 2026 MCRN 360.</p>
   </div>
@@ -975,12 +932,12 @@
     });
 
     //===============================
-    // 5) أزرار اختيار القناة في الصفحة الرئيسية والقنوات
+    // 5) أزرار اختيار القناة في الصفحة الرئيسية وباقي الأقسام
     //===============================
     document.querySelectorAll('[data-channel]').forEach(elem => {
       elem.addEventListener('click', () => {
         const channelNum = parseInt(elem.getAttribute('data-channel'));
-        // الانتقال لقسم البث المباشر إذا كنت في قسم آخر
+        // الانتقال لقسم الرئيسية (البث المباشر) لضمان عرض المشغل
         showSection('homeSection', 'linkHome');
         switchChannel(channelNum);
       });
@@ -994,7 +951,10 @@
     // الأقسام في الصفحة
     const sections = {
       'homeSection': document.getElementById('homeSection'),
-      'channelsSection': document.getElementById('channelsSection'),
+      'allChannelsSection': document.getElementById('allChannelsSection'),
+      'newsChannelsSection': document.getElementById('newsChannelsSection'),
+      'sportsChannelsSection': document.getElementById('sportsChannelsSection'),
+      'childrenChannelsSection': document.getElementById('childrenChannelsSection'),
       'link360Section': document.getElementById('link360Section'),
       'restSection': document.getElementById('restSection'),
       'matchesSection': document.getElementById('matchesSection'),
@@ -1006,9 +966,21 @@
       e.preventDefault();
       showSection('homeSection', 'linkHome');
     });
-    document.getElementById('linkChannels').addEventListener('click', e => {
+    document.getElementById('linkAllChannels').addEventListener('click', e => {
       e.preventDefault();
-      showSection('channelsSection', 'linkChannels');
+      showSection('allChannelsSection', 'linkAllChannels');
+    });
+    document.getElementById('linkNewsChannels').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('newsChannelsSection', 'linkNewsChannels');
+    });
+    document.getElementById('linkSportsChannels').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('sportsChannelsSection', 'linkSportsChannels');
+    });
+    document.getElementById('linkChildrenChannels').addEventListener('click', e => {
+      e.preventDefault();
+      showSection('childrenChannelsSection', 'linkChildrenChannels');
     });
     document.getElementById('link360').addEventListener('click', e => {
       e.preventDefault();
@@ -1058,7 +1030,7 @@
     //===============================
     let panorama, viewer;
     function initPanorama() {
-      // نستخدم صورة بانورامية تجريبية من الإنترنت كمثال
+      // صورة بانورامية تجريبية من الإنترنت كمثال
       const container = document.getElementById('panoramaContainer');
       panorama = new PANOLENS.ImagePanorama('https://raw.githubusercontent.com/pchen66/panolens.js/master/examples/asset/textures/equirectangular.jpg');
       viewer = new PANOLENS.Viewer({
