@@ -34,6 +34,7 @@
       --font-family: 'Cairo', sans-serif;
       --button-hover-color: #ff6f00;
       --button-color: #1e40af;
+      --gradient-bg: linear-gradient(135deg, #0d1117 20%, #1f6feb 80%);
     }
 
     /* تنسيقات الصفحة العامة */
@@ -125,6 +126,21 @@
     @keyframes fadeIn {
       0% { opacity: 0; }
       100% { opacity: 1; }
+    }
+
+    /* خلفية رئيسية جذابة للقسم */
+    #homeSection {
+      background: var(--gradient-bg);
+      border-radius: 10px;
+      padding-bottom: 50px;
+      color: #fff;
+    }
+    #homeSection h1 {
+      margin-bottom: 20px;
+      margin-top: 0;
+      padding-top: 20px;
+      font-size: 32px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     /* حاوية الفيديو (القناة 1) */
@@ -295,6 +311,9 @@
       .custom-buttons .button {
         padding: 10px 20px;
         font-size: 14px;
+      }
+      #homeSection h1 {
+        font-size: 24px;
       }
     }
     @media (max-width: 600px) {
@@ -613,7 +632,7 @@
     <div class="custom-buttons">
       <button class="button" data-channel="1"><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</button>
       <button class="button" data-channel="2"><i class="fas fa-tv"></i> القناة 2 (ON TV)</button>
-      <button class="button" data-channel="3"><i class="fas fa-child"></i> القناة 3 (CN بالعربية)</button>
+      <button class="button" data-channel="3"><i class="fas fa-child"></i> CN بالعربية</button>
       <button class="button" data-channel="4"><i class="fas fa-tv"></i> MBC 1</button>
       <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> Nat Geo</button>
     </div>
@@ -701,7 +720,7 @@
         <h3><i class="fas fa-child"></i> CN بالعربية</h3>
         <button class="button watch-btn" data-channel="3">مشاهدة</button>
       </div>
-      <!-- MBC3 (قناة 6) يمكن وضعها هنا أيضًا أو إبقاؤها في القنوات العامة -->
+      <!-- يمكن إضافة قنوات أطفال أخرى هنا -->
     </div>
   </div>
 
@@ -778,7 +797,7 @@
     <h1>عن المطور</h1>
     <p>
       <i class="fa-solid fa-robot" style="color: var(--hover-color);"></i>
-      تم تطوير هذه المنصة باستخدام أحدث تقنيات <strong>الذكية</strong> والترتيب والتنسيق الذكي، 
+      تم تطوير هذه المنصة باستخدام أحدث تقنيات <strong></strong></strong>الذكية</strong> والترتيب والتنسيق الذكي، 
       لتحقيق تجربة بث مميزة تلبي احتياجات المشاهدين وتمنحهم تجربة 360 فريدة.
     </p>
     <p>
@@ -898,15 +917,15 @@
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbcmasr2_tv_1');
           break;
         default:
-          // افتراضيًا -> قناة ON TV
-          loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
+          // افتراضيًا -> قناة 1
+          loadChannel1();
           break;
       }
     }
 
-    // عند تحميل الصفحة -> افتراضيًا القناة 2
+    // عند تحميل الصفحة -> افتراضيًا القناة 1
     window.addEventListener('load', () => {
-      switchChannel(2);
+      switchChannel(1);
       initPanorama();
     });
 
