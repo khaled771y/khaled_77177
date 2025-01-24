@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="منصة MCRN 360 للبث المباشر والقنوات المتنوعة">
+  <meta name="theme-color" content="#0d1117">
   <title>منصة MCRN 360 - بث مباشر وقنوات متنوعة</title>
 
   <!-- Google Fonts -->
@@ -21,8 +23,20 @@
   <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
 
   <!-- مكتبة Panolens.js لعرض محتوى 360 -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.140.2/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.140.2/build/three.min.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js" async></script>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => console.log('Service Worker registered'))
+        .catch(err => console.log('Service Worker registration failed: ', err));
+    }
+  </script>
 
   <!-- التنسيقات المخصصة للموقع -->
   <style>
