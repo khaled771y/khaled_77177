@@ -3,27 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="منصة MCRN 360 للبث المباشر والقنوات المتنوعة">
+  <meta name="theme-color" content="#0d1117">
   <title>منصة MCRN 360 - بث مباشر وقنوات متنوعة</title>
-
   <!-- Google Fonts -->
   <link 
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" 
     rel="stylesheet"
   />
-
   <!-- Font Awesome -->
   <link 
     rel="stylesheet" 
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
   />
-
   <!-- Video.js CSS -->
   <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
-
   <!-- مكتبة Panolens.js لعرض محتوى 360 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.140.2/build/three.min.js" async></script>
   <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js" async></script>
-
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => console.log('Service Worker registered'))
+        .catch(err => console.log('Service Worker registration failed: ', err));
+    }
+  </script>
   <!-- التنسيقات المخصصة للموقع -->
   <style>
     :root {
@@ -560,7 +567,6 @@
     .najiri3 { background-color: #4caf50; }
   </style>
 </head>
-
 <body>
   <!-- شريط التنقل -->
   <nav>
@@ -588,7 +594,6 @@
   <!-- قسم الرئيسية (البث المباشر) -->
   <div id="homeSection" class="section active">
     <h1>مرحبًا بك في منصة MCRN 360 للبث المباشر!</h1>
-
     <!-- قناة 1 (Video.js) -->
     <div class="video-container" id="videoContainer">
       <video
@@ -633,8 +638,9 @@
       <button class="button" data-channel="1"><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</button>
       <button class="button" data-channel="2"><i class="fas fa-tv"></i> القناة 2 (ON TV)</button>
       <button class="button" data-channel="3"><i class="fas fa-child"></i> CN بالعربية</button>
-      <button class="button" data-channel="4"><i class="fas fa-tv"></i> MBC 1</button>
+      <button class="button" data-channel="4"><i class="fas fa-tv"></i> ATV</button>
       <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> Nat Geo</button>
+      <button class="button" data-channel="13"><i class="fas fa-tv"></i> البث الجديد</button> <!-- زر البث الجديد -->
     </div>
   </div>
 
@@ -644,7 +650,7 @@
     <div class="channels-grid">
       <!-- MBC 1 (قناة 4) -->
       <div class="channel-card" data-channel="4">
-        <h3><i class="fas fa-tv"></i> MBC 1</h3>
+        <h3><i class="fas fa-tv"></i> ATV</h3>
         <button class="button watch-btn" data-channel="4">مشاهدة</button>
       </div>
       <!-- MBC 2 (قناة 11) -->
@@ -681,6 +687,11 @@
       <div class="channel-card" data-channel="5">
         <h3><i class="fas fa-globe-americas"></i> Nat Geo</h3>
         <button class="button watch-btn" data-channel="5">مشاهدة</button>
+      </div>
+      <!-- البث الجديد (قناة 13) -->
+      <div class="channel-card" data-channel="13">
+        <h3><i class="fas fa-tv"></i> البث الجديد</h3>
+        <button class="button watch-btn" data-channel="13">مشاهدة</button>
       </div>
     </div>
   </div>
@@ -746,7 +757,6 @@
   <!-- قسم جدول المباريات -->
   <div id="matchesSection" class="section">
     <h1 style="margin-bottom: 20px;">جدول المباريات</h1>
-
     <!--  بداية كود "مباريات اليوم"  -->
     <div class="match_today container" id="match_today">
       <h2>مباريات اليوم</h2>
@@ -839,8 +849,7 @@
       player.pause();
       // ضبط المصدر (مثال فيديو تجريبي)
       player.src({
-        src: 'https://vjs.zencdn.net/v/oceans.mp4',
-        type: 'video/mp4'
+        src: 'https://vjs.zencdn.net/v/oceans.mp4'
       });
       // محاولة التشغيل
       player.play().catch(err => console.warn('تعذّر تشغيل قناة 1:', err));
@@ -878,10 +887,10 @@
           break;
         case 3:
           // CN بالعربية
-          loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=cnarabia');
+          loadIframeChannel('https://www.elahmad.com/tv/gin.php?id=atv-tv');
           break;
         case 4:
-          // MBC 1
+          // ATV
           loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=mbc1');
           break;
         case 5:
@@ -916,6 +925,10 @@
           // MBC مصر 2
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbcmasr2_tv_1');
           break;
+        case 13:
+          // البث المباشر الجديد
+          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=amman_tv');
+          break;
         default:
           // افتراضيًا -> قناة 1
           loadChannel1();
@@ -923,9 +936,9 @@
       }
     }
 
-    // عند تحميل الصفحة -> افتراضيًا القناة 1
+    // عند تحميل الصفحة -> افتراضيًا القناة 13 (البث الجديد)
     window.addEventListener('load', () => {
-      switchChannel(1);
+      switchChannel(13); // تغيير الرقم إلى 13 للبث الجديد
       initPanorama();
     });
 
@@ -1051,7 +1064,7 @@
     function initPanorama() {
       // صورة بانورامية تجريبية من الإنترنت كمثال
       const container = document.getElementById('panoramaContainer');
-      panorama = new PANOLENS.ImagePanorama('https://raw.githubusercontent.com/pchen66/panolens.js/master/examples/asset/textures/equirectangular.jpg');
+      panorama = new PANOLENS.ImagePanorama('https://www.elahmad.com/tv/kanal-turk.php');
       viewer = new PANOLENS.Viewer({
         container: container,
         autoHideInfospot: false
