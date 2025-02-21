@@ -6,24 +6,12 @@
   <meta name="description" content="منصة MCRN 360 للبث المباشر والقنوات المتنوعة">
   <meta name="theme-color" content="#0d1117">
   <title>منصة MCRN 360 - بث مباشر وقنوات متنوعة</title>
-  <!-- Google Fonts -->
-  <link 
-    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" 
-    rel="stylesheet"
-  />
-  <!-- Font Awesome -->
-  <link 
-    rel="stylesheet" 
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-  />
-  <!-- Video.js CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
-  <!-- مكتبة Panolens.js لعرض محتوى 360 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.140.2/build/three.min.js" async></script>
   <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js" async></script>
-  <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json">
-  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
@@ -31,7 +19,6 @@
         .catch(err => console.log('Service Worker registration failed: ', err));
     }
   </script>
-  <!-- التنسيقات المخصصة للموقع -->
   <style>
     :root {
       --bg-color: #0d1117;
@@ -43,8 +30,6 @@
       --button-color: #1e40af;
       --gradient-bg: linear-gradient(135deg, #0d1117 20%, #1f6feb 80%);
     }
-
-    /* تنسيقات الصفحة العامة */
     body {
       margin: 0;
       font-family: var(--font-family);
@@ -55,8 +40,6 @@
       min-height: 100vh;
       transition: background 0.5s;
     }
-
-    /* شريط التنقل */
     nav {
       width: 100%;
       position: fixed;
@@ -115,10 +98,8 @@
       color: var(--bg-color);
       transform: scale(1.1);
     }
-
-    /* الأقسام */
     .section {
-      margin-top: 80px; /* لإفساح مجال تحت شريط التنقل */
+      margin-top: 80px;
       text-align: center;
       padding: 20px;
       display: none;
@@ -134,8 +115,6 @@
       0% { opacity: 0; }
       100% { opacity: 1; }
     }
-
-    /* خلفية رئيسية جذابة للقسم */
     #homeSection {
       background: var(--gradient-bg);
       border-radius: 10px;
@@ -149,8 +128,6 @@
       font-size: 32px;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
-
-    /* حاوية الفيديو (القناة 1) */
     .video-container {
       position: relative;
       width: 100%;
@@ -160,12 +137,12 @@
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
       background: #000;
-      display: none; /* افتراضيًا مخفي (سنُظهره عند اختيار القناة 1) */
+      display: none;
     }
     .video-container::before {
       content: "";
       display: block;
-      padding-top: 56.25%; /* نسبة أبعاد 16:9 */
+      padding-top: 56.25%;
     }
     .video-container > .video-js {
       position: absolute;
@@ -179,8 +156,6 @@
       transform: scale(1.01);
       transition: transform 0.3s ease;
     }
-
-    /* حاوية iframe (تُستخدم للقنوات من 2 فما فوق) */
     .iframe-container {
       position: relative;
       width: 100%;
@@ -198,8 +173,6 @@
       border: 0;
       display: block;
     }
-
-    /* حاوية 360 */
     .panorama-container {
       position: relative;
       width: 100%;
@@ -211,8 +184,6 @@
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
       background: #000;
     }
-
-    /* أزرار التحكم (للقناة 1 فقط) */
     .custom-buttons {
       display: flex;
       justify-content: center;
@@ -242,8 +213,6 @@
     .button i {
       font-size: 20px;
     }
-
-    /* الاستراحة */
     .rest-iframe {
       position: relative;
       width: 100%;
@@ -260,8 +229,6 @@
       border: none;
       display: block;
     }
-
-    /* تصنيفات فرعية (مثل: قنوات إخبارية، أطفال، رياضية...) */
     .channels-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -290,8 +257,6 @@
       justify-content: center;
       gap: 8px;
     }
-
-    /* التذييل */
     footer {
       margin-top: auto;
       text-align: center;
@@ -307,8 +272,6 @@
     footer a:hover {
       text-decoration: underline;
     }
-
-    /* للشاشات الصغيرة */
     @media (max-width: 768px) {
       .iframe-container iframe,
       .rest-iframe iframe,
@@ -352,24 +315,13 @@
         transition: max-height 0.5s ease;
       }
     }
-
-    /********************************************/
-    /*         تنسيقات خاصة بجدول المباريات    */
-    /********************************************/
-
-    /* شريط التمرير */
     ::-webkit-scrollbar-thumb {background: #002e70;}
     ::-webkit-scrollbar {width:5px; height:9px; background:#dcdcdc;}
-
-    /* تعطيل هوامش إضافية للصفحة */
     body {margin: 0;}
-
-    /* تنسيق الجداول والخلايا */
     td, th {padding: 0;}
     *, *:before, *:after {
       box-sizing: border-box;
     }
-
     .container {
       margin-left: auto;
       margin-right: auto;
@@ -385,14 +337,12 @@
     @media (min-width: 1200px) {
       .container {width: 1170px;}
     }
-
     .container-fluid {
       margin-left: auto;
       margin-right: auto;
       padding-right: 15px;
       padding-left: 15px;
     }
-
     .container:before, .container:after,
     .container-fluid:before, .container-fluid:after {
       content: " ";
@@ -401,13 +351,9 @@
     .container:after, .container-fluid:after {
       clear: both;
     }
-
-    /* تداخل في محتوى الويدجت */
     .contents.widget-content {
       padding: 15px;
     }
-
-    /* العنوان العلوي */
     div#match_today h2 {
       text-align: center;
       padding: 10px;
@@ -415,8 +361,6 @@
       color: #fff;
       margin-top: 0;
     }
-
-    /* الكارت الأساسي لكل مباراة */
     .mnajiri {
       display: block;
       height: 157px;
@@ -427,7 +371,6 @@
       margin: 12px auto;
       background: #DCEDC8;
     }
-
     .fullink {
       display: block;
       height: 100%;
@@ -436,11 +379,9 @@
       width: 100%;
       z-index: 5;
     }
-
     .mnajiriin {
       margin: 0 5px;
     }
-
     .mnajiri img {
       position: relative;
       display: block;
@@ -454,13 +395,11 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1),0 2px 5px -1px rgba(0,0,0,0.2);
       transition: box-shadow .3s;
     }
-
     .mpart1 {
       position: relative;
       height: 48px;
       line-height: 48px;
     }
-
     .mpart1 strong {
       color: #fff;
       height: 36px;
@@ -474,14 +413,12 @@
       top: 30px;
       line-height: 36px;
     }
-
     .mpart1 span {
       float: right;
       text-align: center;
       width: 100%;
       z-index: 2;
     }
-
     .right_match {
       float: right;
       padding-left: 20px;
@@ -496,7 +433,6 @@
       position: relative;
       z-index: 2;
     }
-
     .details_match {
       padding: 0 25px;
       font-size: 12px;
@@ -516,7 +452,6 @@
       width: 33.3%;
     }
     .details_match .liga_mdw { border: 0 none; }
-
     .first_match::before, .liga_mdw::before {
       background-color: #532855;
       content: "";
@@ -535,7 +470,6 @@
       left: -12px;
       border-radius: 0 0 0 8px;
     }
-
     @media screen and (max-width:700px) {
       .liga_mdw { display: none; }
       .details_match { padding: 0 60px; }
@@ -552,7 +486,6 @@
         border-radius: 0 0 0 8px;
       }
     }
-
     @media screen and (max-width:500px) {
       .gadwal {
         font-size: 14px;
@@ -560,21 +493,17 @@
         background: #fff;
       }
     }
-
-    /* ألوان مختلفة لبعض الحالات */
     .najiri1 { background-color: #532855; }
     .najiri2 { background-color: #E91E63; }
     .najiri3 { background-color: #4caf50; }
   </style>
 </head>
 <body>
-  <!-- شريط التنقل -->
   <nav>
     <div class="logo">
       <i class="fas fa-globe"></i>
       MCRN 360
     </div>
-    <!-- زر القائمة للشاشات الصغيرة -->
     <button class="menu-toggle" id="toggleMenuBtn">
       <i class="fas fa-bars"></i>
     </button>
@@ -590,11 +519,8 @@
       <li><a href="#" id="linkAbout">عن المطور</a></li>
     </ul>
   </nav>
-
-  <!-- قسم الرئيسية (البث المباشر) -->
   <div id="homeSection" class="section active">
     <h1>مرحبًا بك في منصة MCRN 360 للبث المباشر!</h1>
-    <!-- قناة 1 (Video.js) -->
     <div class="video-container" id="videoContainer">
       <video
         id="videoPlayer"
@@ -609,8 +535,6 @@
         متصفحك لا يدعم تشغيل الفيديو.
       </video>
     </div>
-
-    <!-- iframe واحد لجميع القنوات (2 فأعلى) -->
     <div class="iframe-container" id="iframeContainer">
       <iframe 
         src=""
@@ -618,8 +542,6 @@
         allowfullscreen="true"
       ></iframe>
     </div>
-
-    <!-- أزرار التحكم بقناة 1 فقط (ستظهر عند اختيار القناة 1) -->
     <div class="custom-buttons" id="videoControls">
       <button class="button" id="rewindBtn">
         <i class="fas fa-backward"></i> إرجاع 10 ثوانٍ
@@ -631,8 +553,6 @@
         <i class="fas fa-forward"></i> تقديم 10 ثوانٍ
       </button>
     </div>
-
-    <!-- أزرار اختيار القناة (كمثال سريع في الصفحة الرئيسية) -->
     <h2 style="margin-top: 40px;">اختر قناة البث:</h2>
     <div class="custom-buttons">
       <button class="button" data-channel="1"><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</button>
@@ -640,109 +560,82 @@
       <button class="button" data-channel="3"><i class="fas fa-child"></i> CN بالعربية</button>
       <button class="button" data-channel="4"><i class="fas fa-tv"></i> ATV</button>
       <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> Nat Geo</button>
-      <button class="button" data-channel="13"><i class="fas fa-tv"></i> البث الجديد</button> <!-- زر البث الجديد -->
+      <button class="button" data-channel="13"><i class="fas fa-tv"></i> البث الجديد</button>
     </div>
   </div>
-
-  <!-- قسم القنوات العامة -->
   <div id="allChannelsSection" class="section">
     <h1>القنوات العامة</h1>
     <div class="channels-grid">
-      <!-- MBC 1 (قناة 4) -->
       <div class="channel-card" data-channel="4">
         <h3><i class="fas fa-tv"></i> ATV</h3>
         <button class="button watch-btn" data-channel="4">مشاهدة</button>
       </div>
-      <!-- MBC 2 (قناة 11) -->
       <div class="channel-card" data-channel="11">
         <h3><i class="fas fa-tv"></i> MBC 2</h3>
         <button class="button watch-btn" data-channel="11">مشاهدة</button>
       </div>
-      <!-- MBC مصر (قناة 10) -->
       <div class="channel-card" data-channel="10">
         <h3><i class="fas fa-tv"></i> MBC مصر</h3>
         <button class="button watch-btn" data-channel="10">مشاهدة</button>
       </div>
-      <!-- MBC مصر 2 (قناة 12) -->
       <div class="channel-card" data-channel="12">
         <h3><i class="fas fa-tv"></i> MBC مصر 2</h3>
         <button class="button watch-btn" data-channel="12">مشاهدة</button>
       </div>
-      <!-- MBC3 (قناة 6) -->
       <div class="channel-card" data-channel="6">
         <h3><i class="fas fa-child"></i> MBC3</h3>
         <button class="button watch-btn" data-channel="6">مشاهدة</button>
       </div>
-      <!-- روتانا أفلام (قناة 7) -->
       <div class="channel-card" data-channel="7">
         <h3><i class="fas fa-film"></i> روتانا أفلام</h3>
         <button class="button watch-btn" data-channel="7">مشاهدة</button>
       </div>
-      <!-- روتانا سينما (قناة 8) -->
       <div class="channel-card" data-channel="8">
         <h3><i class="fas fa-film"></i> روتانا سينما</h3>
         <button class="button watch-btn" data-channel="8">مشاهدة</button>
       </div>
-      <!-- Nat Geo (قناة 5) -->
       <div class="channel-card" data-channel="5">
         <h3><i class="fas fa-globe-americas"></i> Nat Geo</h3>
         <button class="button watch-btn" data-channel="5">مشاهدة</button>
       </div>
-      <!-- البث الجديد (قناة 13) -->
       <div class="channel-card" data-channel="13">
         <h3><i class="fas fa-tv"></i> البث الجديد</h3>
         <button class="button watch-btn" data-channel="13">مشاهدة</button>
       </div>
     </div>
   </div>
-
-  <!-- قسم القنوات الإخبارية -->
   <div id="newsChannelsSection" class="section">
     <h1>القنوات الإخبارية</h1>
     <div class="channels-grid">
-      <!-- يمن شباب (قناة 9) -->
       <div class="channel-card" data-channel="9">
         <h3><i class="fas fa-newspaper"></i> يمن شباب</h3>
         <button class="button watch-btn" data-channel="9">مشاهدة</button>
       </div>
-      <!-- (يمكن إضافة قنوات إخبارية أخرى هنا) -->
     </div>
   </div>
-
-  <!-- قسم القنوات الرياضية -->
   <div id="sportsChannelsSection" class="section">
     <h1>القنوات الرياضية</h1>
     <div class="channels-grid">
-      <!-- ON TV (قناة 2) نفترضها رياضية كمثال -->
       <div class="channel-card" data-channel="2">
         <h3><i class="fas fa-futbol"></i> ON TV</h3>
         <button class="button watch-btn" data-channel="2">مشاهدة</button>
       </div>
-      <!-- (يمكن إضافة قنوات رياضية أخرى هنا) -->
     </div>
   </div>
-
-  <!-- قسم قنوات الأطفال -->
   <div id="childrenChannelsSection" class="section">
     <h1>قنوات الأطفال</h1>
     <div class="channels-grid">
-      <!-- CN بالعربية (قناة 3) -->
       <div class="channel-card" data-channel="3">
         <h3><i class="fas fa-child"></i> CN بالعربية</h3>
         <button class="button watch-btn" data-channel="3">مشاهدة</button>
       </div>
-      <!-- يمكن إضافة قنوات أطفال أخرى هنا -->
     </div>
   </div>
-
-  <!-- قسم المشاهدة 360 -->
   <div id="link360Section" class="section">
     <h1>استمتع بتقنية العرض بزاوية 360°</h1>
     <p>منصة MCRN 360 تتيح لك تجربة فريدة تحاكي منصات كبرى مثل الجزيرة 360، حيث يمكنك التحرك داخل الفيديو أو الصورة البانورامية بسهولة ومرونة.</p>
     <div class="panorama-container" id="panoramaContainer"></div>
   </div>
-
-  <!-- قسم الاستراحة -->
   <div id="restSection" class="section">
     <h1>استمتع بوقتك في صفحة الاستراحة</h1>
     <div class="rest-iframe">
@@ -753,15 +646,11 @@
       ></iframe>
     </div>
   </div>
-
-  <!-- قسم جدول المباريات -->
   <div id="matchesSection" class="section">
     <h1 style="margin-bottom: 20px;">جدول المباريات</h1>
-    <!--  بداية كود "مباريات اليوم"  -->
     <div class="match_today container" id="match_today">
       <h2>مباريات اليوم</h2>
       <div class="widget-content contents">
-        <!-- مثال لمجموعة مباريات -->
         <div class="mnajiri">
           <a class="fullink" href="#"></a>
           <div class="mnajiriin">
@@ -796,13 +685,9 @@
             </div>
           </div>
         </div>
-        <!-- ... يمكنك إضافة المزيد من المباريات ... -->
       </div>
     </div>
-    <!--  نهاية كود "مباريات اليوم"  -->
-  </div> <!-- /#matchesSection -->
-
-  <!-- قسم عن المطور -->
+  </div>
   <div id="aboutSection" class="section">
     <h1>عن المطور</h1>
     <p>
@@ -818,137 +703,86 @@
     </p>
     <p>جميع الحقوق محفوظة 2026 MCRN 360.</p>
   </div>
-
-  <!-- تذييل الصفحة -->
   <footer>
     <p>
       © 2026 MCRN 360. جميع الحقوق محفوظة.
       <a href="#">المهندس خالد النظاري</a>.
     </p>
   </footer>
-
-  <!-- Video.js -->
   <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
-
-  <!-- أكواد جافاسكربت -->
   <script>
-    //===============================
-    // 1) تهيئة مشغل الفيديو (القناة 1)
-    //===============================
     const player = videojs('videoPlayer');
-
     function loadChannel1() {
-      // إظهار مشغل الفيديو
       document.getElementById('videoContainer').style.display = 'block';
-      // إخفاء iframe
       document.getElementById('iframeContainer').style.display = 'none';
-      // إظهار أزرار التحكم
       document.getElementById('videoControls').style.display = 'flex';
-
-      // إيقاف الفيديو أولًا
       player.pause();
-      // ضبط المصدر (مثال فيديو تجريبي)
       player.src({
         src: 'https://vjs.zencdn.net/v/oceans.mp4'
       });
-      // محاولة التشغيل
       player.play().catch(err => console.warn('تعذّر تشغيل قناة 1:', err));
     }
-
-    //===============================
-    // 2) iframe واحد لجميع القنوات من 2 فأعلى
-    //===============================
     const iframeContainer = document.getElementById('iframeContainer');
     const iframeElement = iframeContainer.querySelector('iframe');
-
     function loadIframeChannel(channelSrc) {
-      // إخفاء مشغل الفيديو
       document.getElementById('videoContainer').style.display = 'none';
-      // إظهار iframe
       document.getElementById('iframeContainer').style.display = 'block';
-      // إخفاء أزرار التحكم الخاصة بالفيديو
       document.getElementById('videoControls').style.display = 'none';
-
-      // تغيير الرابط داخل الـ iframe
       iframeElement.src = channelSrc;
     }
-
-    //===============================
-    // 3) التبديل بين القنوات
-    //===============================
     function switchChannel(num) {
       switch (num) {
         case 1:
           loadChannel1();
           break;
         case 2:
-          // ON TV
           loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
           break;
         case 3:
-          // CN بالعربية
           loadIframeChannel('https://www.elahmad.com/tv/gin.php?id=atv-tv');
           break;
         case 4:
-          // ATV
           loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=mbc1');
           break;
         case 5:
-          // Nat Geo
           loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=natgeoad');
           break;
         case 6:
-          // MBC3
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc3_tv_1');
           break;
         case 7:
-          // روتانا أفلام
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_aflam');
           break;
         case 8:
-          // روتانا سينما
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_cinema');
           break;
         case 9:
-          // يمن شباب
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=yemen_shabab');
           break;
         case 10:
-          // MBC مصر
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc_masr_usa');
           break;
         case 11:
-          // MBC2
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc2_tv_1');
           break;
         case 12:
-          // MBC مصر 2
           loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbcmasr2_tv_1');
           break;
         case 13:
-          // البث المباشر الجديد
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=amman_tv');
+          loadIframeChannel('https://vk.com/video_ext.php?oid=772742295&id=456246430&hash=22de25bec2083f2f&autoplay=1');
           break;
         default:
-          // افتراضيًا -> قناة 1
           loadChannel1();
           break;
       }
     }
-
-    // عند تحميل الصفحة -> افتراضيًا القناة 13 (البث الجديد)
     window.addEventListener('load', () => {
-      switchChannel(13); // تغيير الرقم إلى 13 للبث الجديد
+      switchChannel(13);
       initPanorama();
     });
-
-    //===============================
-    // 4) تحكم في فيديو (قناة 1)
-    //===============================
     const rewindBtn = document.getElementById('rewindBtn');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const forwardBtn = document.getElementById('forwardBtn');
-
     rewindBtn.addEventListener('click', () => {
       player.currentTime(Math.max(player.currentTime() - 10, 0));
     });
@@ -962,25 +796,14 @@
     forwardBtn.addEventListener('click', () => {
       player.currentTime(player.currentTime() + 10);
     });
-
-    //===============================
-    // 5) أزرار اختيار القناة في الصفحة الرئيسية وباقي الأقسام
-    //===============================
     document.querySelectorAll('[data-channel]').forEach(elem => {
       elem.addEventListener('click', () => {
         const channelNum = parseInt(elem.getAttribute('data-channel'));
-        // الانتقال لقسم الرئيسية (البث المباشر) لضمان عرض المشغل
         showSection('homeSection', 'linkHome');
         switchChannel(channelNum);
       });
     });
-
-    //===============================
-    // 6) التنقل بين الأقسام
-    //===============================
     const navList = document.getElementById('navList');
-
-    // الأقسام في الصفحة
     const sections = {
       'homeSection': document.getElementById('homeSection'),
       'allChannelsSection': document.getElementById('allChannelsSection'),
@@ -992,8 +815,6 @@
       'matchesSection': document.getElementById('matchesSection'),
       'aboutSection': document.getElementById('aboutSection'),
     };
-
-    // روابط الشريط
     document.getElementById('linkHome').addEventListener('click', e => {
       e.preventDefault();
       showSection('homeSection', 'linkHome');
@@ -1030,39 +851,23 @@
       e.preventDefault();
       showSection('aboutSection', 'linkAbout');
     });
-
     function showSection(sectionId, linkId) {
-      // إخفاء جميع الأقسام
       for (const id in sections) {
         sections[id].classList.remove('active');
       }
-      // إظهار القسم المطلوب
       sections[sectionId].classList.add('active');
-
-      // تفعيل الرابط المطلوب
       document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
       if (linkId) document.getElementById(linkId).classList.add('active');
-
-      // إغلاق القائمة على الشاشات الصغيرة إن كانت مفتوحة
       if (window.innerWidth <= 600) {
         navList.classList.remove('show');
       }
     }
-
-    //===============================
-    // 7) زر القائمة (الشاشات الصغيرة)
-    //===============================
     const toggleMenuBtn = document.getElementById('toggleMenuBtn');
     toggleMenuBtn.addEventListener('click', () => {
       navList.classList.toggle('show');
     });
-
-    //===============================
-    // 8) تهيئة محتوى 360 باستخدام Panolens.js
-    //===============================
     let panorama, viewer;
     function initPanorama() {
-      // صورة بانورامية تجريبية من الإنترنت كمثال
       const container = document.getElementById('panoramaContainer');
       panorama = new PANOLENS.ImagePanorama('https://www.elahmad.com/tv/kanal-turk.php');
       viewer = new PANOLENS.Viewer({
