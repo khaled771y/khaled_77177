@@ -561,6 +561,7 @@
       <button class="button" data-channel="4"><i class="fas fa-tv"></i> ATV</button>
       <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> Nat Geo</button>
       <button class="button" data-channel="13"><i class="fas fa-tv"></i> البث الجديد</button>
+      <button class="button" data-channel="14"><i class="fas fa-newspaper"></i> المهريه</button>
     </div>
   </div>
   <div id="allChannelsSection" class="section">
@@ -611,6 +612,10 @@
         <h3><i class="fas fa-newspaper"></i> يمن شباب</h3>
         <button class="button watch-btn" data-channel="9">مشاهدة</button>
       </div>
+      <div class="channel-card" data-channel="14">
+  <h3><i class="fas fa-newspaper"></i> المهريه</h3>
+  <button class="button watch-btn" data-channel="14">مشاهدة</button>
+</div>
     </div>
   </div>
   <div id="sportsChannelsSection" class="section">
@@ -774,6 +779,9 @@
         default:
           loadChannel1();
           break;
+          case 14:
+  loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=almahriah_tv');
+  break;
       }
     }
     window.addEventListener('load', () => {
