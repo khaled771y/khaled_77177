@@ -281,17 +281,45 @@
     #adminSection h1 {
       color: var(--primary-color);
     }
-    #adminSection input, #adminSection select, #adminSection button {
-      margin: 10px;
+    .admin-section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .admin-section h2 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    #channelList .channel-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+    }
+    #channelList .channel-card button {
+      margin-left: 10px;
+    }
+    #channelSearch, #filterCategory {
+      width: 48%;
+      padding: 10px;
+      margin: 10px 1%;
+      border-radius: 5px;
+      border: none;
+    }
+    #adminLogin {
+      text-align: center;
+      padding: 20px;
+    }
+    #adminLogin input, #adminControls input, #adminControls select {
+      width: 45%;
+      margin: 10px 2.5%;
       padding: 10px;
       border-radius: 5px;
       border: none;
-      font-family: var(--font-family);
     }
-    #adminSection .control-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    #adminControls button {
+      margin: 10px auto;
     }
     @media (max-width: 768px) {
       .iframe-container iframe,
@@ -669,38 +697,76 @@
   <div id="adminSection" class="section">
     <h1>لوحة التحكم الإدارية</h1>
     <div class="control-panel">
-      <h2>إضافة قناة جديدة</h2>
-      <input type="text" id="channelName" placeholder="اسم القناة">
-      <input type="text" id="channelSrc" placeholder="رابط البث">
-      <select id="channelType">
-        <option value="video">فيديو (Video.js)</option>
-        <option value="iframe">إطار (Iframe)</option>
-      </select>
-      <select id="channelCategory">
-        <option value="general">عام</option>
-        <option value="news">إخباري</option>
-        <option value="sports">رياضي</option>
-        <option value="children">أطفال</option>
-        <option value="documentary">وثائقي</option>
-      </select>
-      <button class="button" id="addChannelBtn"><i class="fas fa-plus"></i> إضافة القناة</button>
+      <!-- تسجيل الدخول -->
+      <div id="adminLogin" style="display: none;">
+        <input type="password" id="adminPassword" placeholder="أدخل كلمة المرور">
+        <label><input type="checkbox" id="rememberMe"> تذكرني</label>
+        <button class="button" id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+      </div>
 
-      <h2>إدارة الأقسام</h2>
-      <select id="sectionControl">
-        <option value="homeSection">الرئيسية</option>
-        <option value="allChannelsSection">القنوات العامة</option>
-        <option value="newsChannelsSection">القنوات الإخبارية</option>
-        <option value="sportsChannelsSection">القنوات الرياضية</option>
-        <option value="childrenChannelsSection">قنوات الأطفال</option>
-        <option value="link360Section">مشاهدة 360</option>
-        <option value="restSection">الاستراحة</option>
-        <option value="matchesSection">جدول المباريات</option>
-        <option value="aboutSection">عن المطور</option>
-      </select>
-      <button class="button" id="toggleSectionBtn"><i class="fas fa-eye-slash"></i> إخفاء/إظهار القسم</button>
+      <!-- لوحة الإدارة الرئيسية -->
+      <div id="adminControls" style="display: none;">
+        <!-- إضافة قناة -->
+        <div class="admin-section">
+          <h2>إضافة قناة جديدة</h2>
+          <input type="text" id="channelName" placeholder="اسم القناة" required>
+          <input type="url" id="channelSrc" placeholder="رابط البث (URL)" required>
+          <select id="channelType">
+            <option value="video">فيديو (Video.js)</option>
+            <option value="iframe">إطار (Iframe)</option>
+          </select>
+          <select id="channelCategory">
+            <option value="general">عام</option>
+            <option value="news">إخباري</option>
+            <option value="sports">رياضي</option>
+            <option value="children">أطفال</option>
+            <option value="documentary">وثائقي</option>
+          </select>
+          <button class="button" id="addChannelBtn"><i class="fas fa-plus"></i> إضافة القناة</button>
+        </div>
 
-      <h2>القنوات الحالية</h2>
-      <div id="channelList"></div>
+        <!-- إدارة القنوات -->
+        <div class="admin-section">
+          <h2>إدارة القنوات الحالية</h2>
+          <input type="text" id="channelSearch" placeholder="ابحث عن قناة...">
+          <select id="filterCategory">
+            <option value="">جميع الفئات</option>
+            <option value="general">عام</option>
+            <option value="news">إخباري</option>
+            <option value="sports">رياضي</option>
+            <option value="children">أطفال</option>
+            <option value="documentary">وثائقي</option>
+          </select>
+          <div id="channelList" class="channels-grid"></div>
+        </div>
+
+        <!-- إدارة الأقسام -->
+        <div class="admin-section">
+          <h2>إدارة الأقسام</h2>
+          <select id="sectionControl">
+            <option value="homeSection">الرئيسية</option>
+            <option value="allChannelsSection">القنوات العامة</option>
+            <option value="newsChannelsSection">القنوات الإخبارية</option>
+            <option value="sportsChannelsSection">القنوات الرياضية</option>
+            <option value="childrenChannelsSection">قنوات الأطفال</option>
+            <option value="link360Section">مشاهدة 360</option>
+            <option value="restSection">الاستراحة</option>
+            <option value="matchesSection">جدول المباريات</option>
+            <option value="aboutSection">عن المطور</option>
+          </select>
+          <button class="button" id="toggleSectionBtn"><i class="fas fa-eye-slash"></i> إخفاء/إظهار</button>
+        </div>
+
+        <!-- إحصائيات سريعة -->
+        <div class="admin-section">
+          <h2>إحصائيات سريعة</h2>
+          <p id="totalChannels">إجمالي القنوات: 0</p>
+          <p id="mostWatched">القناة الأكثر مشاهدة: غير متوفر</p>
+        </div>
+
+        <!-- تسجيل الخروج -->
+        <button class="button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+      </div>
     </div>
   </div>
   <footer>
@@ -762,6 +828,10 @@
       'aboutSection': document.getElementById('aboutSection'),
       'adminSection': document.getElementById('adminSection'),
     };
+
+    // إعدادات لوحة التحكم
+    const adminPassword = '77177';
+    let isAdminLoggedIn = localStorage.getItem('adminSession') === 'active';
 
     // تحميل القناة
     function loadChannel(channelNum) {
@@ -891,13 +961,8 @@
       document.getElementById(id).addEventListener('click', (e) => {
         e.preventDefault();
         if (id === 'linkAdmin') {
-          const password = prompt('أدخل كلمة السر للوصول إلى لوحة التحكم:');
-          if (password === '77177') {
-            showSection('adminSection', 'linkAdmin');
-            renderAdminPanel();
-          } else {
-            alert('كلمة السر غير صحيحة!');
-          }
+          showSection('adminSection', 'linkAdmin');
+          if (isAdminLoggedIn) renderAdminPanel();
         } else {
           showSection(id.replace('link', '').toLowerCase() + 'Section', id);
         }
@@ -918,61 +983,195 @@
       viewer.add(panorama);
     }
 
-    // لوحة التحكم الإدارية
-    function renderAdminPanel() {
-      const channelList = document.getElementById('channelList');
-      channelList.innerHTML = '';
-      Object.keys(channelsData).forEach(num => {
-        const div = document.createElement('div');
-        div.innerHTML = `
-          <p>${channelsData[num].name} (${channelsData[num].category}) - ${channelsData[num].src}
-          <button class="button" onclick="deleteChannel(${num})"><i class="fas fa-trash"></i> حذف</button></p>
-        `;
-        channelList.appendChild(div);
-      });
-    }
-
-    document.getElementById('addChannelBtn').addEventListener('click', () => {
-      const name = document.getElementById('channelName').value;
-      const src = document.getElementById('channelSrc').value;
-      const type = document.getElementById('channelType').value;
-      const category = document.getElementById('channelCategory').value;
-      if (name && src) {
-        const newChannelNum = Math.max(...Object.keys(channelsData).map(Number)) + 1;
-        channelsData[newChannelNum] = { type, src, category, name };
-        localStorage.setItem('channelsData', JSON.stringify(channelsData));
-        renderChannels();
-        renderAdminPanel();
-        alert('تم إضافة القناة بنجاح!');
-        document.getElementById('channelName').value = '';
-        document.getElementById('channelSrc').value = '';
-      } else {
-        alert('يرجى إدخال جميع الحقول!');
-      }
-    });
-
-    document.getElementById('toggleSectionBtn').addEventListener('click', () => {
-      const sectionId = document.getElementById('sectionControl').value;
-      sections[sectionId].style.display = sections[sectionId].style.display === 'none' ? 'block' : 'none';
-      alert(`تم ${sections[sectionId].style.display === 'none' ? 'إخفاء' : 'إظهار'} القسم: ${sectionId}`);
-    });
-
-    window.deleteChannel = function(channelNum) {
-      if (confirm(`هل تريد حذف القناة ${channelsData[channelNum].name}؟`)) {
-        delete channelsData[channelNum];
-        localStorage.setItem('channelsData', JSON.stringify(channelsData));
-        renderChannels();
-        renderAdminPanel();
-      }
-    };
-
-    // التحميل الافتراضي
+    // التحقق من تسجيل الدخول عند التحميل
     window.addEventListener('load', () => {
+      const adminLogin = document.getElementById('adminLogin');
+      const adminControls = document.getElementById('adminControls');
+      if (isAdminLoggedIn) {
+        adminLogin.style.display = 'none';
+        adminControls.style.display = 'block';
+        renderAdminPanel();
+      } else {
+        adminLogin.style.display = 'block';
+        adminControls.style.display = 'none';
+      }
       const now = new Date().getHours();
       const defaultChannel = now >= 18 ? 2 : userPrefs.favoriteChannel;
       loadChannel(defaultChannel);
       renderChannels();
       initPanorama();
+    });
+
+    // تسجيل الدخول
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const password = document.getElementById('adminPassword').value;
+      const rememberMe = document.getElementById('rememberMe').checked;
+      if (password === adminPassword) {
+        isAdminLoggedIn = true;
+        if (rememberMe) localStorage.setItem('adminSession', 'active');
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminControls').style.display = 'block';
+        renderAdminPanel();
+      } else {
+        alert('كلمة المرور غير صحيحة!');
+      }
+    });
+
+    // تسجيل الخروج
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      isAdminLoggedIn = false;
+      localStorage.removeItem('adminSession');
+      document.getElementById('adminLogin').style.display = 'block';
+      document.getElementById('adminControls').style.display = 'none';
+    });
+
+    // عرض لوحة التحكم
+    function renderAdminPanel() {
+      const channelList = document.getElementById('channelList');
+      channelList.innerHTML = '';
+      Object.keys(channelsData).forEach(num => {
+        const channel = channelsData[num];
+        const card = document.createElement('div');
+        card.className = 'channel-card';
+        card.innerHTML = `
+          <span>${channel.name} (${channel.category}) - ${channel.src}</span>
+          <div>
+            <button class="button" onclick="editChannel(${num})"><i class="fas fa-edit"></i> تعديل</button>
+            <button class="button" onclick="deleteChannel(${num})"><i class="fas fa-trash"></i> حذف</button>
+          </div>
+        `;
+        channelList.appendChild(card);
+      });
+      updateStats();
+    }
+
+    // تحديث الإحصائيات
+    function updateStats() {
+      const total = Object.keys(channelsData).length;
+      document.getElementById('totalChannels').textContent = `إجمالي القنوات: ${total}`;
+      const lastWatched = channelsData[localStorage.getItem('lastWatched')];
+      document.getElementById('mostWatched').textContent = `القناة الأكثر مشاهدة: ${lastWatched ? lastWatched.name : 'غير متوفر'}`;
+    }
+
+    // إضافة قناة جديدة
+    document.getElementById('addChannelBtn').addEventListener('click', () => {
+      const name = document.getElementById('channelName').value.trim();
+      const src = document.getElementById('channelSrc').value.trim();
+      const type = document.getElementById('channelType').value;
+      const category = document.getElementById('channelCategory').value;
+
+      if (!name || !src) {
+        alert('يرجى ملء جميع الحقول!');
+        return;
+      }
+      if (!isValidUrl(src)) {
+        alert('رابط البث غير صالح! يرجى إدخال رابط URL صحيح.');
+        return;
+      }
+
+      const newChannelNum = Math.max(...Object.keys(channelsData).map(Number)) + 1;
+      channelsData[newChannelNum] = { type, src, category, name };
+      localStorage.setItem('channelsData', JSON.stringify(channelsData));
+      renderChannels();
+      renderAdminPanel();
+      alert(`تم إضافة القناة "${name}" بنجاح!`);
+      document.getElementById('channelName').value = '';
+      document.getElementById('channelSrc').value = '';
+    });
+
+    // التحقق من صلاحية URL
+    function isValidUrl(string) {
+      try {
+        new URL(string);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    // تعديل قناة
+    window.editChannel = function(channelNum) {
+      const channel = channelsData[channelNum];
+      const newName = prompt('أدخل الاسم الجديد للقناة:', channel.name);
+      const newSrc = prompt('أدخل رابط البث الجديد:', channel.src);
+      const newType = prompt('أدخل نوع البث (video/iframe):', channel.type);
+      const newCategory = prompt('أدخل الفئة (general/news/sports/children/documentary):', channel.category);
+
+      if (newName && newSrc && newType && newCategory) {
+        if (!isValidUrl(newSrc)) {
+          alert('رابط البث غير صالح!');
+          return;
+        }
+        if (!['video', 'iframe'].includes(newType)) {
+          alert('نوع البث يجب أن يكون "video" أو "iframe"!');
+          return;
+        }
+        if (!['general', 'news', 'sports', 'children', 'documentary'].includes(newCategory)) {
+          alert('فئة غير صالحة!');
+          return;
+        }
+
+        channelsData[channelNum] = {
+          name: newName,
+          src: newSrc,
+          type: newType,
+          category: newCategory
+        };
+        localStorage.setItem('channelsData', JSON.stringify(channelsData));
+        renderChannels();
+        renderAdminPanel();
+        alert('تم تعديل القناة بنجاح!');
+      }
+    };
+
+    // حذف قناة
+    window.deleteChannel = function(channelNum) {
+      if (confirm(`هل تريد حذف القناة "${channelsData[channelNum].name}"؟`)) {
+        delete channelsData[channelNum];
+        localStorage.setItem('channelsData', JSON.stringify(channelsData));
+        renderChannels();
+        renderAdminPanel();
+        alert('تم حذف القناة بنجاح!');
+      }
+    };
+
+    // البحث والتصفية
+    document.getElementById('channelSearch').addEventListener('input', filterChannels);
+    document.getElementById('filterCategory').addEventListener('change', filterChannels);
+
+    function filterChannels() {
+      const searchTerm = document.getElementById('channelSearch').value.toLowerCase();
+      const categoryFilter = document.getElementById('filterCategory').value;
+      const channelList = document.getElementById('channelList');
+      channelList.innerHTML = '';
+
+      Object.keys(channelsData).forEach(num => {
+        const channel = channelsData[num];
+        const matchesSearch = channel.name.toLowerCase().includes(searchTerm) || channel.src.toLowerCase().includes(searchTerm);
+        const matchesCategory = !categoryFilter || channel.category === categoryFilter;
+
+        if (matchesSearch && matchesCategory) {
+          const card = document.createElement('div');
+          card.className = 'channel-card';
+          card.innerHTML = `
+            <span>${channel.name} (${channel.category}) - ${channel.src}</span>
+            <div>
+              <button class="button" onclick="editChannel(${num})"><i class="fas fa-edit"></i> تعديل</button>
+              <button class="button" onclick="deleteChannel(${num})"><i class="fas fa-trash"></i> حذف</button>
+            </div>
+          `;
+          channelList.appendChild(card);
+        }
+      });
+    }
+
+    // إدارة الأقسام
+    document.getElementById('toggleSectionBtn').addEventListener('click', () => {
+      const sectionId = document.getElementById('sectionControl').value;
+      const section = sections[sectionId];
+      const isHidden = section.style.display === 'none';
+      section.style.display = isHidden ? 'block' : 'none';
+      alert(`تم ${isHidden ? 'إظهار' : 'إخفاء'} القسم: ${sectionId}`);
     });
   </script>
 </body>
