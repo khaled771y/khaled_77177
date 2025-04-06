@@ -273,6 +273,26 @@
     footer a:hover {
       text-decoration: underline;
     }
+    #adminSection {
+      background: #1a1a1a;
+      padding: 40px;
+      border-radius: 10px;
+    }
+    #adminSection h1 {
+      color: var(--primary-color);
+    }
+    #adminSection input, #adminSection select, #adminSection button {
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-family: var(--font-family);
+    }
+    #adminSection .control-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
     @media (max-width: 768px) {
       .iframe-container iframe,
       .rest-iframe iframe,
@@ -518,6 +538,7 @@
       <li><a href="#" id="linkRest">الاستراحة</a></li>
       <li><a href="#" id="linkMatches">جدول المباريات</a></li>
       <li><a href="#" id="linkAbout">عن المطور</a></li>
+      <li><a href="#" id="linkAdmin">لوحة التحكم</a></li>
     </ul>
   </nav>
   <div id="homeSection" class="section active">
@@ -555,92 +576,23 @@
       </button>
     </div>
     <h2 style="margin-top: 40px;">اختر قناة البث:</h2>
-    <div class="custom-buttons">
-      <button class="button" data-channel="1"><i class="fas fa-play-circle"></i> القناة 1 (Video.js)</button>
-      <button class="button" data-channel="2"><i class="fas fa-tv"></i> القناة 2 (ON TV)</button>
-      <button class="button" data-channel="3"><i class="fas fa-child"></i> CN بالعربية</button>
-      <button class="button" data-channel="4"><i class="fas fa-tv"></i> ATV</button>
-      <button class="button" data-channel="5"><i class="fas fa-globe-americas"></i> Nat Geo</button>
-      <button class="button" data-channel="13"><i class="fas fa-tv"></i> البث الجديد</button>
-      <button class="button" data-channel="14"><i class="fas fa-newspaper"></i> المهريه</button>
-      <button class="button" data-channel="16"><i class="fas fa-tv"></i> بلقيس</button>
-    </div>
+    <div class="custom-buttons" id="channelButtons"></div>
   </div>
   <div id="allChannelsSection" class="section">
     <h1>القنوات العامة</h1>
-    <div class="channels-grid">
-      <div class="channel-card" data-channel="4">
-        <h3><i class="fas fa-tv"></i> ATV</h3>
-        <button class="button watch-btn" data-channel="4">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="11">
-        <h3><i class="fas fa-tv"></i> MBC 2</h3>
-        <button class="button watch-btn" data-channel="11">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="10">
-        <h3><i class="fas fa-tv"></i> MBC مصر</h3>
-        <button class="button watch-btn" data-channel="10">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="12">
-        <h3><i class="fas fa-tv"></i> MBC مصر 2</h3>
-        <button class="button watch-btn" data-channel="12">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="6">
-        <h3><i class="fas fa-child"></i> MBC3</h3>
-        <button class="button watch-btn" data-channel="6">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="7">
-        <h3><i class="fas fa-film"></i> روتانا أفلام</h3>
-        <button class="button watch-btn" data-channel="7">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="8">
-        <h3><i class="fas fa-film"></i> روتانا سينما</h3>
-        <button class="button watch-btn" data-channel="8">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="5">
-        <h3><i class="fas fa-globe-americas"></i> Nat Geo</h3>
-        <button class="button watch-btn" data-channel="5">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="13">
-        <h3><i class="fas fa-tv"></i> البث الجديد</h3>
-        <button class="button watch-btn" data-channel="13">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="16">
-        <h3><i class="fas fa-tv"></i> بلقيس</h3>
-        <button class="button watch-btn" data-channel="16">مشاهدة</button>
-      </div>
-    </div>
+    <div class="channels-grid" id="allChannelsGrid"></div>
   </div>
   <div id="newsChannelsSection" class="section">
     <h1>القنوات الإخبارية</h1>
-    <div class="channels-grid">
-      <div class="channel-card" data-channel="9">
-        <h3><i class="fas fa-newspaper"></i> يمن شباب</h3>
-        <button class="button watch-btn" data-channel="9">مشاهدة</button>
-      </div>
-      <div class="channel-card" data-channel="14">
-        <h3><i class="fas fa-newspaper"></i> المهريه</h3>
-        <button class="button watch-btn" data-channel="14">مشاهدة</button>
-      </div>
-    </div>
+    <div class="channels-grid" id="newsChannelsGrid"></div>
   </div>
   <div id="sportsChannelsSection" class="section">
     <h1>القنوات الرياضية</h1>
-    <div class="channels-grid">
-      <div class="channel-card" data-channel="2">
-        <h3><i class="fas fa-futbol"></i> ON TV</h3>
-        <button class="button watch-btn" data-channel="2">مشاهدة</button>
-      </div>
-    </div>
+    <div class="channels-grid" id="sportsChannelsGrid"></div>
   </div>
   <div id="childrenChannelsSection" class="section">
     <h1>قنوات الأطفال</h1>
-    <div class="channels-grid">
-      <div class="channel-card" data-channel="3">
-        <h3><i class="fas fa-child"></i> CN بالعربية</h3>
-        <button class="button watch-btn" data-channel="3">مشاهدة</button>
-      </div>
-    </div>
+    <div class="channels-grid" id="childrenChannelsGrid"></div>
   </div>
   <div id="link360Section" class="section">
     <h1>استمتع بتقنية العرض بزاوية 360°</h1>
@@ -714,6 +666,43 @@
     </p>
     <p>جميع الحقوق محفوظة 2026 MCRN 360.</p>
   </div>
+  <div id="adminSection" class="section">
+    <h1>لوحة التحكم الإدارية</h1>
+    <div class="control-panel">
+      <h2>إضافة قناة جديدة</h2>
+      <input type="text" id="channelName" placeholder="اسم القناة">
+      <input type="text" id="channelSrc" placeholder="رابط البث">
+      <select id="channelType">
+        <option value="video">فيديو (Video.js)</option>
+        <option value="iframe">إطار (Iframe)</option>
+      </select>
+      <select id="channelCategory">
+        <option value="general">عام</option>
+        <option value="news">إخباري</option>
+        <option value="sports">رياضي</option>
+        <option value="children">أطفال</option>
+        <option value="documentary">وثائقي</option>
+      </select>
+      <button class="button" id="addChannelBtn"><i class="fas fa-plus"></i> إضافة القناة</button>
+
+      <h2>إدارة الأقسام</h2>
+      <select id="sectionControl">
+        <option value="homeSection">الرئيسية</option>
+        <option value="allChannelsSection">القنوات العامة</option>
+        <option value="newsChannelsSection">القنوات الإخبارية</option>
+        <option value="sportsChannelsSection">القنوات الرياضية</option>
+        <option value="childrenChannelsSection">قنوات الأطفال</option>
+        <option value="link360Section">مشاهدة 360</option>
+        <option value="restSection">الاستراحة</option>
+        <option value="matchesSection">جدول المباريات</option>
+        <option value="aboutSection">عن المطور</option>
+      </select>
+      <button class="button" id="toggleSectionBtn"><i class="fas fa-eye-slash"></i> إخفاء/إظهار القسم</button>
+
+      <h2>القنوات الحالية</h2>
+      <div id="channelList"></div>
+    </div>
+  </div>
   <footer>
     <p>
       © 2026 MCRN 360. جميع الحقوق محفوظة.
@@ -722,108 +711,45 @@
   </footer>
   <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
   <script>
-    const player = videojs('videoPlayer');
-    function loadChannel1() {
-      document.getElementById('videoContainer').style.display = 'block';
-      document.getElementById('iframeContainer').style.display = 'none';
-      document.getElementById('videoControls').style.display = 'flex';
-      player.pause();
-      player.src({
-        src: 'https://vjs.zencdn.net/v/oceans.mp4'
-      });
-      player.play().catch(err => console.warn('تعذّر تشغيل قناة 1:', err));
-    }
+    // تهيئة مشغل الفيديو
+    const player = videojs('videoPlayer', {
+      fluid: true,
+      responsive: true,
+      playbackRates: [0.5, 1, 1.5, 2],
+    });
+
+    // تخزين تفضيلات المستخدم
+    const userPrefs = {
+      favoriteChannel: localStorage.getItem('favoriteChannel') || 15,
+      lastWatched: localStorage.getItem('lastWatched') || null,
+    };
+
+    // قائمة القنوات مع بيانات إضافية
+    let channelsData = JSON.parse(localStorage.getItem('channelsData')) || {
+      1: { type: 'video', src: 'https://vjs.zencdn.net/v/oceans.mp4', category: 'general', name: 'القناة 1' },
+      2: { type: 'iframe', src: 'https://egyliive.online/albaplayer/on-1/?serv=0', category: 'sports', name: 'ON TV' },
+      3: { type: 'iframe', src: 'https://www.elahmad.com/tv/gin.php?id=atv-tv', category: 'children', name: 'CN بالعربية' },
+      4: { type: 'iframe', src: 'https://www.elahmad.com/tv/live/shahid_shaka.php?id=mbc1', category: 'general', name: 'ATV' },
+      5: { type: 'iframe', src: 'https://www.elahmad.com/tv/live/shahid_shaka.php?id=natgeoad', category: 'documentary', name: 'Nat Geo' },
+      6: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc3_tv_1', category: 'children', name: 'MBC3' },
+      7: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_aflam', category: 'general', name: 'روتانا أفلام' },
+      8: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_cinema', category: 'general', name: 'روتانا سينما' },
+      9: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=yemen_shabab', category: 'news', name: 'يمن شباب' },
+      10: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc_masr_usa', category: 'general', name: 'MBC مصر' },
+      11: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc2_tv_1', category: 'general', name: 'MBC 2' },
+      12: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbcmasr2_tv_1', category: 'general', name: 'MBC مصر 2' },
+      13: { type: 'iframe', src: 'https://vk.com/video_ext.php?oid=772742295&id=456246865&autoplay=1', category: 'general', name: 'البث الجديد' },
+      14: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=almahriah_tv', category: 'news', name: 'المهريه' },
+      15: { type: 'iframe', src: 'https://www.elahmad.com/tv/radiant.php?id=alsaeedahtv', category: 'general', name: 'السعيدة' },
+      16: { type: 'iframe', src: 'https://www.elahmad.com/tv/mobiletv/glarb.php?id=belqees_tv', category: 'general', name: 'بلقيس' },
+    };
+
+    // عناصر DOM
+    const videoContainer = document.getElementById('videoContainer');
     const iframeContainer = document.getElementById('iframeContainer');
     const iframeElement = iframeContainer.querySelector('iframe');
-    function loadIframeChannel(channelSrc) {
-      document.getElementById('videoContainer').style.display = 'none';
-      document.getElementById('iframeContainer').style.display = 'block';
-      document.getElementById('videoControls').style.display = 'none';
-      iframeElement.src = channelSrc;
-    }
-    function switchChannel(num) {
-      switch (num) {
-        case 1:
-          loadChannel1();
-          break;
-        case 2:
-          loadIframeChannel('https://egyliive.online/albaplayer/on-1/?serv=0');
-          break;
-        case 3:
-          loadIframeChannel('https://www.elahmad.com/tv/gin.php?id=atv-tv');
-          break;
-        case 4:
-          loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=mbc1');
-          break;
-        case 5:
-          loadIframeChannel('https://www.elahmad.com/tv/live/shahid_shaka.php?id=natgeoad');
-          break;
-        case 6:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc3_tv_1');
-          break;
-        case 7:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_aflam');
-          break;
-        case 8:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=rotana_cinema');
-          break;
-        case 9:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=yemen_shabab');
-          break;
-        case 10:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc_masr_usa');
-          break;
-        case 11:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbc2_tv_1');
-          break;
-        case 12:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=mbcmasr2_tv_1');
-          break;
-        case 13:
-          loadIframeChannel('https://vk.com/video_ext.php?oid=772742295&id=456246865&autoplay=1');
-          break;
-        case 14:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=almahriah_tv');
-          break;
-        case 15:
-          loadIframeChannel('https://www.elahmad.com/tv/radiant.php?id=alsaeedahtv');
-          break;
-        case 16:
-          loadIframeChannel('https://www.elahmad.com/tv/mobiletv/glarb.php?id=belqees_tv');
-          break;
-        default:
-          loadChannel1();
-          break;
-      }
-    }
-    window.addEventListener('load', () => {
-      switchChannel(15); // البث الافتراضي الحالي (يمكن تغييره حسب الحاجة)
-      initPanorama();
-    });
-    const rewindBtn = document.getElementById('rewindBtn');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const forwardBtn = document.getElementById('forwardBtn');
-    rewindBtn.addEventListener('click', () => {
-      player.currentTime(Math.max(player.currentTime() - 10, 0));
-    });
-    playPauseBtn.addEventListener('click', () => {
-      if (player.paused()) {
-        player.play().catch(err => console.warn('تعذّر التشغيل:', err));
-      } else {
-        player.pause();
-      }
-    });
-    forwardBtn.addEventListener('click', () => {
-      player.currentTime(player.currentTime() + 10);
-    });
-    document.querySelectorAll('[data-channel]').forEach(elem => {
-      elem.addEventListener('click', () => {
-        const channelNum = parseInt(elem.getAttribute('data-channel'));
-        showSection('homeSection', 'linkHome');
-        switchChannel(channelNum);
-      });
-    });
-    const navList = document.getElementById('navList');
+    const videoControls = document.getElementById('videoControls');
+    const channelButtons = document.getElementById('channelButtons');
     const sections = {
       'homeSection': document.getElementById('homeSection'),
       'allChannelsSection': document.getElementById('allChannelsSection'),
@@ -834,68 +760,220 @@
       'restSection': document.getElementById('restSection'),
       'matchesSection': document.getElementById('matchesSection'),
       'aboutSection': document.getElementById('aboutSection'),
+      'adminSection': document.getElementById('adminSection'),
     };
-    document.getElementById('linkHome').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('homeSection', 'linkHome');
-    });
-    document.getElementById('linkAllChannels').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('allChannelsSection', 'linkAllChannels');
-    });
-    document.getElementById('linkNewsChannels').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('newsChannelsSection', 'linkNewsChannels');
-    });
-    document.getElementById('linkSportsChannels').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('sportsChannelsSection', 'linkSportsChannels');
-    });
-    document.getElementById('linkChildrenChannels').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('childrenChannelsSection', 'linkChildrenChannels');
-    });
-    document.getElementById('link360').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('link360Section', 'link360');
-    });
-    document.getElementById('linkRest').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('restSection', 'linkRest');
-    });
-    document.getElementById('linkMatches').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('matchesSection', 'linkMatches');
-    });
-    document.getElementById('linkAbout').addEventListener('click', e => {
-      e.preventDefault();
-      showSection('aboutSection', 'linkAbout');
-    });
-    function showSection(sectionId, linkId) {
-      for (const id in sections) {
-        sections[id].classList.remove('active');
+
+    // تحميل القناة
+    function loadChannel(channelNum) {
+      const channel = channelsData[channelNum] || channelsData[1];
+      if (channel.type === 'video') {
+        videoContainer.style.display = 'block';
+        iframeContainer.style.display = 'none';
+        videoControls.style.display = 'flex';
+        player.src({ src: channel.src, type: 'video/mp4' });
+        player.play().catch(err => handleError(err, channelNum));
+      } else {
+        videoContainer.style.display = 'none';
+        iframeContainer.style.display = 'block';
+        videoControls.style.display = 'none';
+        iframeElement.src = channel.src;
       }
+      localStorage.setItem('lastWatched', channelNum);
+      recommendChannels(channel.category);
+    }
+
+    // التعامل مع الأخطاء
+    function handleError(err, channelNum) {
+      console.warn(`خطأ في تشغيل القناة ${channelNum}:`, err);
+      alert('حدث خطأ في تحميل البث، جاري المحاولة مع قناة أخرى...');
+      loadChannel(1);
+    }
+
+    // التوصيات الذكية
+    function recommendChannels(category) {
+      const recommended = Object.keys(channelsData)
+        .filter(num => channelsData[num].category === category && num != localStorage.getItem('lastWatched'))
+        .slice(0, 3);
+      console.log(`قنوات مقترحة (${category}):`, recommended.map(num => channelsData[num].name));
+    }
+
+    // عرض القنوات ديناميكيًا
+    function renderChannels() {
+      channelButtons.innerHTML = '';
+      Object.keys(channelsData).forEach(num => {
+        const btn = document.createElement('button');
+        btn.className = 'button';
+        btn.setAttribute('data-channel', num);
+        btn.innerHTML = `<i class="fas fa-${channelsData[num].category === 'sports' ? 'futbol' : 'tv'}"></i> ${channelsData[num].name}`;
+        channelButtons.appendChild(btn);
+      });
+
+      ['allChannelsGrid', 'newsChannelsGrid', 'sportsChannelsGrid', 'childrenChannelsGrid'].forEach(gridId => {
+        const grid = document.getElementById(gridId);
+        grid.innerHTML = '';
+        const category = gridId === 'allChannelsGrid' ? 'general' : gridId === 'newsChannelsGrid' ? 'news' : gridId === 'sportsChannelsGrid' ? 'sports' : 'children';
+        Object.keys(channelsData).forEach(num => {
+          if (channelsData[num].category === category) {
+            const card = document.createElement('div');
+            card.className = 'channel-card';
+            card.setAttribute('data-channel', num);
+            card.innerHTML = `
+              <h3><i class="fas fa-${category === 'sports' ? 'futbol' : 'tv'}"></i> ${channelsData[num].name}</h3>
+              <button class="button watch-btn" data-channel="${num}">مشاهدة</button>
+            `;
+            grid.appendChild(card);
+          }
+        });
+      });
+    }
+
+    // التحكم في الفيديو
+    document.getElementById('rewindBtn').addEventListener('click', () => {
+      player.currentTime(Math.max(player.currentTime() - 10, 0));
+    });
+    document.getElementById('playPauseBtn').addEventListener('click', () => {
+      if (player.paused()) player.play().catch(err => console.warn('تعذر التشغيل:', err));
+      else player.pause();
+    });
+    document.getElementById('forwardBtn').addEventListener('click', () => {
+      player.currentTime(player.currentTime() + 10);
+    });
+
+    // التحكم الصوتي
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'ar';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const command = event.results[0][0].transcript.toLowerCase();
+        console.log('الأمر الصوتي:', command);
+        if (command.includes('الرئيسية')) showSection('homeSection', 'linkHome');
+        else if (command.includes('رياضة')) showSection('sportsChannelsSection', 'linkSportsChannels');
+        else if (command.includes('أطفال')) showSection('childrenChannelsSection', 'linkChildrenChannels');
+        else if (command.includes('تشغيل')) player.play();
+        else if (command.includes('إيقاف')) player.pause();
+        else if (command.match(/قناة (\d+)/)) {
+          const channelNum = parseInt(command.match(/قناة (\d+)/)[1]);
+          if (channelsData[channelNum]) {
+            showSection('homeSection', 'linkHome');
+            loadChannel(channelNum);
+          }
+        }
+      };
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'v') recognition.start();
+      });
+    }
+
+    // تبديل القنوات عند النقر
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('[data-channel]') || e.target.closest('[data-channel]')) {
+        const channelNum = parseInt(e.target.getAttribute('data-channel') || e.target.closest('[data-channel]').getAttribute('data-channel'));
+        showSection('homeSection', 'linkHome');
+        loadChannel(channelNum);
+      }
+    });
+
+    // إدارة الأقسام
+    function showSection(sectionId, linkId) {
+      Object.values(sections).forEach(section => section.classList.remove('active'));
       sections[sectionId].classList.add('active');
       document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
       if (linkId) document.getElementById(linkId).classList.add('active');
-      if (window.innerWidth <= 600) {
-        navList.classList.remove('show');
-      }
+      if (window.innerWidth <= 600) document.getElementById('navList').classList.remove('show');
     }
-    const toggleMenuBtn = document.getElementById('toggleMenuBtn');
-    toggleMenuBtn.addEventListener('click', () => {
-      navList.classList.toggle('show');
+
+    // ربط الروابط بالأقسام
+    ['linkHome', 'linkAllChannels', 'linkNewsChannels', 'linkSportsChannels', 'linkChildrenChannels', 'link360', 'linkRest', 'linkMatches', 'linkAbout', 'linkAdmin'].forEach(id => {
+      document.getElementById(id).addEventListener('click', (e) => {
+        e.preventDefault();
+        if (id === 'linkAdmin') {
+          const password = prompt('أدخل كلمة السر للوصول إلى لوحة التحكم:');
+          if (password === '77177') {
+            showSection('adminSection', 'linkAdmin');
+            renderAdminPanel();
+          } else {
+            alert('كلمة السر غير صحيحة!');
+          }
+        } else {
+          showSection(id.replace('link', '').toLowerCase() + 'Section', id);
+        }
+      });
     });
+
+    // قائمة التنقل في الجوال
+    document.getElementById('toggleMenuBtn').addEventListener('click', () => {
+      document.getElementById('navList').classList.toggle('show');
+    });
+
+    // تهيئة العرض البانورامي
     let panorama, viewer;
     function initPanorama() {
       const container = document.getElementById('panoramaContainer');
       panorama = new PANOLENS.ImagePanorama('https://www.elahmad.com/tv/kanal-turk.php');
-      viewer = new PANOLENS.Viewer({
-        container: container,
-        autoHideInfospot: false
-      });
+      viewer = new PANOLENS.Viewer({ container, autoHideInfospot: false });
       viewer.add(panorama);
     }
+
+    // لوحة التحكم الإدارية
+    function renderAdminPanel() {
+      const channelList = document.getElementById('channelList');
+      channelList.innerHTML = '';
+      Object.keys(channelsData).forEach(num => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <p>${channelsData[num].name} (${channelsData[num].category}) - ${channelsData[num].src}
+          <button class="button" onclick="deleteChannel(${num})"><i class="fas fa-trash"></i> حذف</button></p>
+        `;
+        channelList.appendChild(div);
+      });
+    }
+
+    document.getElementById('addChannelBtn').addEventListener('click', () => {
+      const name = document.getElementById('channelName').value;
+      const src = document.getElementById('channelSrc').value;
+      const type = document.getElementById('channelType').value;
+      const category = document.getElementById('channelCategory').value;
+      if (name && src) {
+        const newChannelNum = Math.max(...Object.keys(channelsData).map(Number)) + 1;
+        channelsData[newChannelNum] = { type, src, category, name };
+        localStorage.setItem('channelsData', JSON.stringify(channelsData));
+        renderChannels();
+        renderAdminPanel();
+        alert('تم إضافة القناة بنجاح!');
+        document.getElementById('channelName').value = '';
+        document.getElementById('channelSrc').value = '';
+      } else {
+        alert('يرجى إدخال جميع الحقول!');
+      }
+    });
+
+    document.getElementById('toggleSectionBtn').addEventListener('click', () => {
+      const sectionId = document.getElementById('sectionControl').value;
+      sections[sectionId].style.display = sections[sectionId].style.display === 'none' ? 'block' : 'none';
+      alert(`تم ${sections[sectionId].style.display === 'none' ? 'إخفاء' : 'إظهار'} القسم: ${sectionId}`);
+    });
+
+    window.deleteChannel = function(channelNum) {
+      if (confirm(`هل تريد حذف القناة ${channelsData[channelNum].name}؟`)) {
+        delete channelsData[channelNum];
+        localStorage.setItem('channelsData', JSON.stringify(channelsData));
+        renderChannels();
+        renderAdminPanel();
+      }
+    };
+
+    // التحميل الافتراضي
+    window.addEventListener('load', () => {
+      const now = new Date().getHours();
+      const defaultChannel = now >= 18 ? 2 : userPrefs.favoriteChannel;
+      loadChannel(defaultChannel);
+      renderChannels();
+      initPanorama();
+    });
   </script>
 </body>
 </html>
