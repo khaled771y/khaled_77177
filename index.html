@@ -45,7 +45,7 @@
       perspective: 1000px;
     }
 
-    /* شريط التنقل الذكي */
+    /* شر��ط التنقل الذكي */
     nav {
       position: fixed;
       top: 0;
@@ -689,7 +689,7 @@
     <div id="adminLogin">
       <input type="password" id="adminPassword" placeholder="🔒 أدخل كلمة المرور">
       <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 12px 0;">
-        <label style="cursor: pointer;"><input type="checkbox" id="rememberMe"> تذكرني</label>
+        <label style="cursor: pointer;"><input type="checkbox" id="rememberMe"> تذ��رني</label>
         <button class="button" id="faceLoginBtn"><i class="fas fa-user-check"></i> التعرف على الوجه</button>
       </div>
       <button class="button" id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
@@ -885,7 +885,7 @@
       }
     }
 
-    // تحميل القناة الذكية
+    // تحميل القناة الذكية مع إصلاح مشاكل التشغيل
     function loadChannel(channelNum) {
       showProgressBar();
       const channel = channelsData[channelNum] || channelsData[1];
@@ -898,20 +898,41 @@
         videoElement.style.display = 'block';
         player.src({ src: channel.src, type: 'video/mp4' });
         player.poster(channel.thumb || '');
-        player.play().catch(err => {
-          console.error('خطأ في تشغيل الفيديو:', err);
-          hideProgressBar();
-          Swal.fire({
-            icon: 'error',
-            title: 'خطأ في التشغيل',
-            text: 'تعذر تشغيل الفيديو، يرجى التحقق من الاتصال بالإنترنت أو تجربة قناة أخرى.',
-            confirmButtonColor: '#3b82f6'
+        
+        // إضافة مستمعات للأحداث لمعالجة الأخطاء
+        player.ready(() => {
+          player.play().catch(err => {
+            console.error('خطأ في تشغيل الفيديو:', err);
+            handlePlaybackError(channel);
           });
+        });
+        
+        player.on('error', () => {
+          handlePlaybackError(channel);
         });
       } else {
         iframeElement.style.display = 'block';
+        
+        // إضافة مستمع للأخطاء للعناصر iframe
+        iframeElement.onerror = () => {
+          handlePlaybackError(channel);
+        };
+        
+        iframeElement.onload = () => {
+          // التحقق مما إذا كان الإطار قد تم تحميله بنجاح
+          try {
+            if (iframeElement.contentDocument && iframeElement.contentDocument.title) {
+              hideProgressBar();
+            } else {
+              handlePlaybackError(channel);
+            }
+          } catch (e) {
+            // في حالة وجود سياسة أمان تمنع الوصول إلى contentDocument
+            hideProgressBar();
+          }
+        };
+        
         iframeElement.src = channel.src;
-        iframeElement.onload = hideProgressBar;
       }
       
       localStorage.setItem('lastWatched', channelNum);
@@ -938,6 +959,45 @@
       analyzeViewingHabits(channelNum);
     }
 
+    // معالجة أخطاء التشغيل
+    function handlePlaybackError(channel) {
+      hideProgressBar();
+      console.error(`خطأ في تشغيل القناة: ${channel.name}`);
+      
+      // البحث عن قناة بديلة في نفس الفئة
+      const alternativeChannel = findAlternativeChannel(channel);
+      
+      if (alternativeChannel) {
+        Swal.fire({
+          title: 'خطأ في التشغيل',
+          html: `تعذر تشغيل القناة <strong>${channel.name}</strong>. جارٍ تحويلك إلى قناة بديلة.`,
+          icon: 'warning',
+          confirmButtonText: 'حسنًا',
+          confirmButtonColor: '#f59e0b'
+        }).then(() => {
+          loadChannel(alternativeChannel);
+        });
+      } else {
+        Swal.fire({
+          title: 'خطأ في التشغيل',
+          text: `تعذر تشغيل القناة ${channel.name}. يرجى التحقق من الاتصال بالإنترنت أو تجربة قناة أخرى.`,
+          icon: 'error',
+          confirmButtonText: 'حسنًا',
+          confirmButtonColor: '#ef4444'
+        });
+      }
+    }
+
+    // البحث عن قناة بديلة
+    function findAlternativeChannel(currentChannel) {
+      for (const [num, channel] of Object.entries(channelsData)) {
+        if (channel.category === currentChannel.category && num !== currentChannel.num && channel.src !== currentChannel.src) {
+          return num;
+        }
+      }
+      return null;
+    }
+
     // تحليل عادات المشاهدة
     function analyzeViewingHabits(channelNum) {
       const channel = channelsData[channelNum];
@@ -946,14 +1006,12 @@
       // هنا يمكن إضافة تحليلات الذكاء الاصطناعي
       console.log(`تحليل المشاهدة: ${channel.name} (${channel.category})`);
       
-      // مثال: زيادة عداد المشاهدات
+      // زيادة عداد المشاهدات
       channel.views = (channel.views || 0) + 1;
       localStorage.setItem('channelsData', JSON.stringify(channelsData));
       
-      // يمكن إضافة المزيد من التحليلات مثل:
-      // - تفضيلات الوقت
-      // - تفضيلات الفئة
-      // - توصيات مخصصة
+      // تحديث واجهة المستخدم لعكس التغييرات
+      renderChannels();
     }
 
     // عرض القنوات الذكية
