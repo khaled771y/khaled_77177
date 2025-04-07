@@ -383,7 +383,7 @@
     @media (min-width: 992px) {
       .container {width: 970px;}
     }
-    @media (min-width: 1200px) {
+    @ pamedia (min-width: 1200px) {
       .container {width: 1170px;}
     }
     .container-fluid {
@@ -698,7 +698,7 @@
     <h1>لوحة التحكم الإدارية</h1>
     <div class="control-panel">
       <!-- تسجيل الدخول -->
-      <div id="adminLogin" style="display: none;">
+      <div id="adminLogin">
         <input type="password" id="adminPassword" placeholder="أدخل كلمة المرور">
         <label><input type="checkbox" id="rememberMe"> تذكرني</label>
         <button class="button" id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
@@ -954,18 +954,28 @@
       document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
       if (linkId) document.getElementById(linkId).classList.add('active');
       if (window.innerWidth <= 600) document.getElementById('navList').classList.remove('show');
+      
+      // التحقق من حالة لوحة التحكم
+      if (sectionId === 'adminSection') {
+        const adminLogin = document.getElementById('adminLogin');
+        const adminControls = document.getElementById('adminControls');
+        if (isAdminLoggedIn) {
+          adminLogin.style.display = 'none';
+          adminControls.style.display = 'block';
+          renderAdminPanel();
+        } else {
+          adminLogin.style.display = 'block';
+          adminControls.style.display = 'none';
+        }
+      }
     }
 
     // ربط الروابط بالأقسام
     ['linkHome', 'linkAllChannels', 'linkNewsChannels', 'linkSportsChannels', 'linkChildrenChannels', 'link360', 'linkRest', 'linkMatches', 'linkAbout', 'linkAdmin'].forEach(id => {
       document.getElementById(id).addEventListener('click', (e) => {
         e.preventDefault();
-        if (id === 'linkAdmin') {
-          showSection('adminSection', 'linkAdmin');
-          if (isAdminLoggedIn) renderAdminPanel();
-        } else {
-          showSection(id.replace('link', '').toLowerCase() + 'Section', id);
-        }
+        const sectionId = id === 'linkAdmin' ? 'adminSection' : id.replace('link', '').toLowerCase() + 'Section';
+        showSection(sectionId, id);
       });
     });
 
@@ -985,21 +995,12 @@
 
     // التحقق من تسجيل الدخول عند التحميل
     window.addEventListener('load', () => {
-      const adminLogin = document.getElementById('adminLogin');
-      const adminControls = document.getElementById('adminControls');
-      if (isAdminLoggedIn) {
-        adminLogin.style.display = 'none';
-        adminControls.style.display = 'block';
-        renderAdminPanel();
-      } else {
-        adminLogin.style.display = 'block';
-        adminControls.style.display = 'none';
-      }
       const now = new Date().getHours();
       const defaultChannel = now >= 18 ? 2 : userPrefs.favoriteChannel;
       loadChannel(defaultChannel);
       renderChannels();
       initPanorama();
+      showSection('homeSection', 'linkHome'); // عرض الصفحة الرئيسية افتراضيًا
     });
 
     // تسجيل الدخول
