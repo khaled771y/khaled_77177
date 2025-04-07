@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="منصة MCRN 360 الذكية للبث المباشر بتقنية 4K والتحكم الصوتي">
+  <meta name="description" content="منصة MCRN 360 الذكية للبث المباشر والإعلانات المميزة">
   <meta name="theme-color" content="#0f172a">
   <title>MCRN 360 PRO - البث الذكي</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
@@ -24,6 +24,8 @@
       --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
       --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --ad-primary: #4f46e5;
+      --ad-secondary: #10b981;
     }
 
     * {
@@ -45,7 +47,7 @@
       perspective: 1000px;
     }
 
-    /* شر��ط التنقل الذكي */
+    /* شريط التنقل الذكي */
     nav {
       position: fixed;
       top: 0;
@@ -221,6 +223,88 @@
       height: 100%;
       border: none;
       border-radius: 20px;
+    }
+
+    /* نظام الإعلانات */
+    .ad-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      display: none;
+      position: relative;
+    }
+
+    .ad-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--ad-primary), var(--ad-secondary));
+      color: white;
+    }
+
+    .ad-image {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .ad-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .ad-description {
+      font-size: 1rem;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .ad-close {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .ad-nav {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+      gap: 10px;
+    }
+
+    .ad-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .ad-dot.active {
+      background: white;
+      transform: scale(1.2);
     }
 
     /* التحكم الذكي */
@@ -431,7 +515,7 @@
       min-height: auto;
     }
 
-    #adminLogin input, #adminControls input, #adminControls select {
+    #adminLogin input, #adminControls input, #adminControls select, #adminControls textarea {
       width: 100%;
       max-width: 400px;
       margin: 12px auto;
@@ -446,14 +530,14 @@
       transition: var(--transition);
     }
 
-    #adminLogin input:focus, #adminControls input:focus, #adminControls select:focus {
+    #adminLogin input:focus, #adminControls input:focus, #adminControls select:focus, #adminControls textarea:focus {
       outline: none;
       border-color: var(--hover-color);
       box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
       background: rgba(255, 255, 255, 0.15);
     }
 
-    #channelSearch, #filterCategory {
+    #channelSearch, #filterCategory, #adSearch, #filterAdType {
       width: 48%;
       padding: 12px 16px;
       margin: 12px 1%;
@@ -506,6 +590,10 @@
       .channels-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       }
+      
+      .ad-container {
+        max-width: 900px;
+      }
     }
 
     @media (max-width: 992px) {
@@ -515,6 +603,10 @@
       
       .smart-controls {
         gap: 12px;
+      }
+      
+      .ad-image {
+        max-height: 250px;
       }
     }
 
@@ -536,9 +628,17 @@
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       }
       
-      #channelSearch, #filterCategory {
+      #channelSearch, #filterCategory, #adSearch, #filterAdType {
         width: 100%;
         margin: 8px 0;
+      }
+      
+      .ad-title {
+        font-size: 1.3rem;
+      }
+      
+      .ad-description {
+        font-size: 0.9rem;
       }
     }
 
@@ -582,6 +682,14 @@
         bottom: 20px;
         left: 20px;
       }
+      
+      .ad-image {
+        max-height: 200px;
+      }
+      
+      .ad-title {
+        font-size: 1.1rem;
+      }
     }
 
     /* تأثيرات خاصة */
@@ -616,6 +724,55 @@
       width: 0%;
       transition: width 0.3s ease;
     }
+
+    /* إشعار الترحيب */
+    .welcome-notification {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--ad-primary), var(--ad-secondary));
+      color: white;
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 350px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .welcome-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .welcome-notification .close-welcome {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-right: -5px;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .welcome-notification {
+        bottom: 80px;
+        right: 15px;
+        left: 15px;
+        max-width: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -645,6 +802,18 @@
   <!-- الصفحة الرئيسية الذكية -->
   <div id="homeSection" class="section active">
     <h1 class="glow">مرحبًا بك في <span>MCRN 360 PRO</span></h1>
+    
+    <!-- حاوية الإعلان -->
+    <div class="ad-container" id="adContainer">
+      <button class="ad-close" id="adCloseBtn"><i class="fas fa-times"></i></button>
+      <div class="ad-content" id="adContent">
+        <img class="ad-image" id="adImage" src="" alt="إعلان">
+        <h3 class="ad-title" id="adTitle"></h3>
+        <p class="ad-description" id="adDescription"></p>
+        <div class="ad-nav" id="adNav"></div>
+      </div>
+    </div>
+    
     <div class="stream-container" id="streamContainer">
       <video id="videoPlayer" class="video-js vjs-big-play-centered vjs-16-9" controls preload="auto" muted playsinline>
         <source src="" type="video/mp4" />
@@ -689,7 +858,7 @@
     <div id="adminLogin">
       <input type="password" id="adminPassword" placeholder="🔒 أدخل كلمة المرور">
       <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 12px 0;">
-        <label style="cursor: pointer;"><input type="checkbox" id="rememberMe"> تذ��رني</label>
+        <label style="cursor: pointer;"><input type="checkbox" id="rememberMe"> تذكرني</label>
         <button class="button" id="faceLoginBtn"><i class="fas fa-user-check"></i> التعرف على الوجه</button>
       </div>
       <button class="button" id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
@@ -725,6 +894,54 @@
         </div>
         <div id="channelList" class="channels-grid"></div>
       </div>
+      
+      <!-- قسم إدارة الإعلانات -->
+      <div class="admin-section">
+        <h2><i class="fas fa-ad"></i> إدارة الإعلانات</h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+          <input type="text" id="adSearch" placeholder="🔍 ابحث عن إعلان...">
+          <select id="filterAdType">
+            <option value="">📂 جميع الأنواع</option>
+            <option value="image">🖼️ صورة</option>
+            <option value="video">🎥 فيديو</option>
+            <option value="text">📝 نصي</option>
+          </select>
+        </div>
+        <div id="adList" class="channels-grid"></div>
+      </div>
+      
+      <div class="admin-section">
+        <h2><i class="fas fa-plus-circle"></i> إضافة إعلان جديد</h2>
+        <input type="text" id="adTitleInput" placeholder="📌 عنوان الإعلان" required>
+        <textarea id="adDescriptionInput" placeholder="📝 وصف الإعلان" rows="3"></textarea>
+        <input type="url" id="adImageInput" placeholder="🖼️ رابط الصورة (اختياري)">
+        <input type="url" id="adVideoInput" placeholder="🎥 رابط الفيديو (اختياري)">
+        <input type="url" id="adLinkInput" placeholder="🔗 رابط الإعلان (اختياري)">
+        <select id="adType">
+          <option value="image">🖼️ إعلان صوري</option>
+          <option value="video">🎥 إعلان فيديو</option>
+          <option value="text">📝 إعلان نصي</option>
+        </select>
+        <button class="button" id="addAdBtn"><i class="fas fa-plus"></i> إضافة إعلان</button>
+      </div>
+      
+      <!-- قسم إدارة الإشعارات -->
+      <div class="admin-section">
+        <h2><i class="fas fa-bell"></i> إدارة الإشعارات</h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 15px;">
+          <input type="text" id="notificationTitle" placeholder="📌 عنوان الإشعار" style="flex: 1;">
+          <textarea id="notificationMessage" placeholder="📝 محتوى الإشعار" rows="2" style="width: 100%;"></textarea>
+          <select id="notificationType" style="flex: 1;">
+            <option value="info">ℹ️ معلوماتي</option>
+            <option value="success">✅ نجاح</option>
+            <option value="warning">⚠️ تحذير</option>
+            <option value="error">❌ خطأ</option>
+          </select>
+        </div>
+        <button class="button" id="sendNotificationBtn"><i class="fas fa-paper-plane"></i> إرسال إشعار</button>
+        <button class="button" id="toggleWelcomeBtn"><i class="fas fa-comment"></i> تبديل إشعار الترحيب</button>
+      </div>
+      
       <button class="button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
     </div>
   </div>
@@ -736,6 +953,16 @@
 
   <!-- جسيمات الخلفية -->
   <div class="particles" id="particles"></div>
+
+  <!-- إشعار الترحيب -->
+  <div class="welcome-notification" id="welcomeNotification">
+    <i class="fas fa-hand-wave"></i>
+    <div>
+      <strong>مرحبًا بك في MCRN 360 PRO!</strong>
+      <p>استمتع بتجربة مشاهدة فريدة مع أحدث القنوات والميزات الذكية.</p>
+    </div>
+    <button class="close-welcome" id="closeWelcomeBtn"><i class="fas fa-times"></i></button>
+  </div>
 
   <!-- الفوتر الذكي -->
   <footer>
@@ -783,56 +1010,36 @@
         category: 'general', 
         name: 'MBC 2',
         thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MBC2'
-      },
-      4: { 
-        type: 'iframe', 
-        src: 'https://www.elahmad.com/tv/live/shaka.php?id=mbc3', 
-        category: 'general', 
-        name: 'MBC 3',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MBC3'
-      },
-      5: { 
-        type: 'iframe', 
-        src: 'https://www.elahmad.com/tv/live/shaka.php?id=mbc4', 
-        category: 'general', 
-        name: 'MBC 4',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MBC4'
-      },
-      6: { 
-        type: 'iframe', 
-        src: 'https://www.elahmad.com/tv/live/shaka.php?id=mbcaction', 
-        category: 'sports', 
-        name: 'MBC أكشن',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MBC+Action'
-      },
-      7: { 
-        type: 'iframe', 
-        src: 'https://www.elahmad.com/tv/live/shaka.php?id=mbcmax', 
-        category: 'sports', 
-        name: 'MBC ماكس',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MBC+Max'
-      },
-      8: { 
-        type: 'iframe', 
-        src: 'https://www.elahmad.com/tv/live/shaka.php?id=aljazeera', 
-        category: 'news', 
-        name: 'الجزيرة',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=Aljazeera'
-      },
-      9: { 
-        type: 'iframe', 
-        src: 'https://www.elahmad.com/tv/live/shaka.php?id=alarabiya', 
-        category: 'news', 
-        name: 'العربية',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=Alarabiya'
-      },
-      10: { 
-        type: 'iframe', 
-        src: 'https://www.elahmad.com/tv/live/shaka.php?id=spacetoon', 
-        category: 'children', 
-        name: 'سبيس تون',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=Spacetoon'
       }
+    };
+
+    // بيانات الإعلانات
+    let adsData = JSON.parse(localStorage.getItem('adsData')) || [
+      {
+        id: 1,
+        title: "عرض خاص!",
+        description: "احصل على خصم 30% على جميع الاشتراكات هذا الأسبوع فقط",
+        image: "https://via.placeholder.com/600x300/4f46e5/ffffff?text=Special+Offer",
+        link: "#",
+        type: "image",
+        active: true
+      },
+      {
+        id: 2,
+        title: "تطبيقنا الجديد",
+        description: "حمل تطبيق MCRN 360 الآن واحصل على شهر مجاني",
+        image: "https://via.placeholder.com/600x300/10b981/ffffff?text=New+App",
+        link: "#",
+        type: "image",
+        active: true
+      }
+    ];
+
+    // إعدادات النظام
+    let systemSettings = JSON.parse(localStorage.getItem('systemSettings')) || {
+      showWelcomeNotification: true,
+      adsInterval: 30, // دقائق بين كل إعلان
+      lastAdShownTime: 0
     };
 
     // عناصر DOM المتطورة
@@ -853,12 +1060,23 @@
     const progressContainer = document.getElementById('progressContainer');
     const progressBar = document.getElementById('progressBar');
     const particlesContainer = document.getElementById('particles');
+    const adContainer = document.getElementById('adContainer');
+    const adCloseBtn = document.getElementById('adCloseBtn');
+    const adContent = document.getElementById('adContent');
+    const adImage = document.getElementById('adImage');
+    const adTitle = document.getElementById('adTitle');
+    const adDescription = document.getElementById('adDescription');
+    const adNav = document.getElementById('adNav');
+    const welcomeNotification = document.getElementById('welcomeNotification');
+    const closeWelcomeBtn = document.getElementById('closeWelcomeBtn');
 
     // إعدادات لوحة التحكم الذكية
     const adminPassword = '77177';
     let isAdminLoggedIn = localStorage.getItem('adminSession') === 'active';
     let isVoiceControlActive = false;
     let recognition = null;
+    let currentAdIndex = 0;
+    let adInterval;
 
     // إنشاء جسيمات الخلفية
     function createParticles() {
@@ -893,6 +1111,7 @@
       // إخفاء جميع عناصر البث أولاً
       videoElement.style.display = 'none';
       iframeElement.style.display = 'none';
+      adContainer.style.display = 'none';
       
       if (channel.type === 'video') {
         videoElement.style.display = 'block';
@@ -957,6 +1176,9 @@
       
       // تحليل المشاهدة باستخدام الذكاء الاصطناعي
       analyzeViewingHabits(channelNum);
+      
+      // بدء عرض الإعلانات بعد تحميل القناة
+      startAdCycle();
     }
 
     // معالجة أخطاء التشغيل
@@ -997,6 +1219,74 @@
       }
       return null;
     }
+
+    // بدء دورة عرض الإعلانات
+    function startAdCycle() {
+      // إلغاء أي فاصل زمني سابق
+      if (adInterval) clearInterval(adInterval);
+      
+      // تصفية الإعلانات النشطة فقط
+      const activeAds = adsData.filter(ad => ad.active);
+      if (activeAds.length === 0) return;
+      
+      // عرض أول إعلان
+      showAd(currentAdIndex);
+      
+      // تعيين الفاصل الزمني لعرض الإعلانات
+      adInterval = setInterval(() => {
+        currentAdIndex = (currentAdIndex + 1) % activeAds.length;
+        showAd(currentAdIndex);
+      }, systemSettings.adsInterval * 60 * 1000);
+    }
+
+    // عرض إعلان معين
+    function showAd(index) {
+      const activeAds = adsData.filter(ad => ad.active);
+      if (index >= activeAds.length) return;
+      
+      const ad = activeAds[index];
+      
+      adTitle.textContent = ad.title;
+      adDescription.textContent = ad.description;
+      
+      if (ad.image) {
+        adImage.src = ad.image;
+        adImage.style.display = 'block';
+      } else {
+        adImage.style.display = 'none';
+      }
+      
+      // تحديث نقاط التنقل
+      updateAdNav(activeAds.length, index);
+      
+      // عرض حاوية الإعلان
+      adContainer.style.display = 'block';
+      
+      // تسجيل وقت عرض الإعلان الأخير
+      systemSettings.lastAdShownTime = Date.now();
+      localStorage.setItem('systemSettings', JSON.stringify(systemSettings));
+    }
+
+    // تحديث نقاط تنقل الإعلانات
+    function updateAdNav(totalAds, currentIndex) {
+      adNav.innerHTML = '';
+      
+      for (let i = 0; i < totalAds; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('ad-dot');
+        if (i === currentIndex) dot.classList.add('active');
+        dot.addEventListener('click', () => {
+          currentAdIndex = i;
+          showAd(currentAdIndex);
+        });
+        adNav.appendChild(dot);
+      }
+    }
+
+    // إغلاق الإعلان
+    adCloseBtn.addEventListener('click', () => {
+      adContainer.style.display = 'none';
+    });
 
     // تحليل عادات المشاهدة
     function analyzeViewingHabits(channelNum) {
@@ -1069,6 +1359,151 @@
         });
       });
     }
+
+    // عرض الإعلانات في لوحة التحكم
+    function renderAdsPanel() {
+      const adList = document.getElementById('adList');
+      adList.innerHTML = '';
+      
+      adsData.forEach(ad => {
+        const card = document.createElement('div');
+        card.className = 'channel-card';
+        card.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="checkbox" ${ad.active ? 'checked' : ''} onchange="toggleAdActive(${ad.id}, this.checked)">
+            <span>${ad.title} (${ad.type})</span>
+          </div>
+          <div>
+            <button class="button" onclick="editAd(${ad.id})"><i class="fas fa-edit"></i></button>
+            <button class="button" onclick="deleteAd(${ad.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        `;
+        adList.appendChild(card);
+      });
+    }
+
+    // تبديل حالة الإعلان (نشط/غير نشط)
+    window.toggleAdActive = function(id, isActive) {
+      const adIndex = adsData.findIndex(ad => ad.id === id);
+      if (adIndex !== -1) {
+        adsData[adIndex].active = isActive;
+        localStorage.setItem('adsData', JSON.stringify(adsData));
+        
+        // إذا كان الإعلان الحالي معروضًا وتم تعطيله، نخفي الإعلان
+        const activeAds = adsData.filter(ad => ad.active);
+        if (activeAds.length === 0) {
+          adContainer.style.display = 'none';
+        } else if (currentAdIndex >= activeAds.length) {
+          currentAdIndex = 0;
+          showAd(currentAdIndex);
+        }
+      }
+    };
+
+    // تحرير إعلان
+    window.editAd = function(id) {
+      const ad = adsData.find(ad => ad.id === id);
+      if (!ad) return;
+      
+      Swal.fire({
+        title: `تعديل الإعلان: ${ad.title}`,
+        html: `
+          <input id="swal-ad-title" class="swal2-input" placeholder="عنوان الإعلان" value="${ad.title}">
+          <textarea id="swal-ad-desc" class="swal2-input" placeholder="وصف الإعلان" style="height: 100px;">${ad.description}</textarea>
+          <input id="swal-ad-image" class="swal2-input" placeholder="رابط الصورة" value="${ad.image || ''}">
+          <input id="swal-ad-link" class="swal2-input" placeholder="رابط الإعلان" value="${ad.link || ''}">
+          <select id="swal-ad-type" class="swal2-input">
+            <option value="image" ${ad.type === 'image' ? 'selected' : ''}>إعلان صوري</option>
+            <option value="video" ${ad.type === 'video' ? 'selected' : ''}>إعلان فيديو</option>
+            <option value="text" ${ad.type === 'text' ? 'selected' : ''}>إعلان نصي</option>
+          </select>
+          <label style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <input type="checkbox" id="swal-ad-active" ${ad.active ? 'checked' : ''}>
+            نشط
+          </label>
+        `,
+        focusConfirm: false,
+        preConfirm: () => {
+          return {
+            title: document.getElementById('swal-ad-title').value,
+            description: document.getElementById('swal-ad-desc').value,
+            image: document.getElementById('swal-ad-image').value,
+            link: document.getElementById('swal-ad-link').value,
+            type: document.getElementById('swal-ad-type').value,
+            active: document.getElementById('swal-ad-active').checked
+          };
+        },
+        confirmButtonText: 'حفظ التعديلات',
+        cancelButtonText: 'إلغاء',
+        showCancelButton: true,
+        confirmButtonColor: '#3b82f6',
+        background: 'var(--bg-color)',
+        color: 'var(--text-color)'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const { title, description, image, link, type, active } = result.value;
+          
+          if (!title) {
+            Swal.fire({
+              title: 'خطأ!',
+              text: 'عنوان الإعلان مطلوب',
+              icon: 'error',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#ef4444'
+            });
+            return;
+          }
+          
+          ad.title = title;
+          ad.description = description;
+          ad.image = image;
+          ad.link = link;
+          ad.type = type;
+          ad.active = active;
+          
+          localStorage.setItem('adsData', JSON.stringify(adsData));
+          renderAdsPanel();
+          
+          Swal.fire({
+            title: 'تم التعديل!',
+            text: 'تم تحديث الإعلان بنجاح.',
+            icon: 'success',
+            confirmButtonText: 'حسنًا',
+            confirmButtonColor: '#10b981'
+          });
+        }
+      });
+    };
+
+    // حذف إعلان
+    window.deleteAd = function(id) {
+      Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: 'سيتم حذف هذا الإعلان بشكل دائم!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'نعم، احذف!',
+        cancelButtonText: 'إلغاء',
+        background: 'var(--bg-color)',
+        color: 'var(--text-color)'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          adsData = adsData.filter(ad => ad.id !== id);
+          localStorage.setItem('adsData', JSON.stringify(adsData));
+          renderAdsPanel();
+          
+          Swal.fire({
+            title: 'تم الحذف!',
+            text: 'تم حذف الإعلان بنجاح.',
+            icon: 'success',
+            confirmButtonText: 'حسنًا',
+            confirmButtonColor: '#10b981'
+          });
+        }
+      });
+    };
 
     // الحصول على اسم الفئة
     function getCategoryName(category) {
@@ -1162,7 +1597,10 @@
         const adminControls = document.getElementById('adminControls');
         adminLogin.style.display = isAdminLoggedIn ? 'none' : 'block';
         adminControls.style.display = isAdminLoggedIn ? 'block' : 'none';
-        if (isAdminLoggedIn) renderAdminPanel();
+        if (isAdminLoggedIn) {
+          renderAdminPanel();
+          renderAdsPanel();
+        }
       }
       
       // إضافة تأثيرات للقسم النشط
@@ -1207,6 +1645,19 @@
       }, 300);
     }
 
+    // إدارة إشعار الترحيب
+    function manageWelcomeNotification() {
+      if (systemSettings.showWelcomeNotification) {
+        setTimeout(() => {
+          welcomeNotification.classList.add('show');
+        }, 3000);
+      }
+    }
+
+    closeWelcomeBtn.addEventListener('click', () => {
+      welcomeNotification.classList.remove('show');
+    });
+
     // تهيئة الصفحة
     window.addEventListener('load', async () => {
       createParticles();
@@ -1229,18 +1680,8 @@
         }
       }
       
-      // إظهار رسالة ترحيبية ذكية
-      setTimeout(() => {
-        Swal.fire({
-          title: 'مرحبًا بك في MCRN 360 PRO',
-          text: 'يمكنك استخدام الأوامر الصوتية للتحكم في المنصة. اضغط على زر الميكروفون في الزاوية لبدء الاستماع.',
-          icon: 'info',
-          confirmButtonText: 'حسنًا',
-          confirmButtonColor: '#3b82f6',
-          background: 'var(--bg-color)',
-          color: 'var(--text-color)'
-        });
-      }, 3000);
+      // إدارة إشعار الترحيب
+      manageWelcomeNotification();
     });
 
     // تسجيل الدخول الذكي
@@ -1442,6 +1883,120 @@
       });
     });
 
+    // إضافة إعلان جديد
+    document.getElementById('addAdBtn').addEventListener('click', () => {
+      const title = document.getElementById('adTitleInput').value.trim();
+      const description = document.getElementById('adDescriptionInput').value.trim();
+      const image = document.getElementById('adImageInput').value.trim();
+      const video = document.getElementById('adVideoInput').value.trim();
+      const link = document.getElementById('adLinkInput').value.trim();
+      const type = document.getElementById('adType').value;
+
+      if (!title) {
+        Swal.fire({
+          title: 'حقل مطلوب!',
+          text: 'عنوان الإعلان مطلوب.',
+          icon: 'warning',
+          confirmButtonText: 'حسنًا',
+          confirmButtonColor: '#f59e0b'
+        });
+        return;
+      }
+      
+      if (type === 'image' && !image) {
+        Swal.fire({
+          title: 'حقل مطلوب!',
+          text: 'رابط الصورة مطلوب للإعلان الصوري.',
+          icon: 'warning',
+          confirmButtonText: 'حسنًا',
+          confirmButtonColor: '#f59e0b'
+        });
+        return;
+      }
+      
+      if (type === 'video' && !video) {
+        Swal.fire({
+          title: 'حقل مطلوب!',
+          text: 'رابط الفيديو مطلوب للإعلان الفيديوي.',
+          icon: 'warning',
+          confirmButtonText: 'حسنًا',
+          confirmButtonColor: '#f59e0b'
+        });
+        return;
+      }
+
+      const newAd = {
+        id: Date.now(),
+        title,
+        description,
+        image: type === 'image' ? image : '',
+        video: type === 'video' ? video : '',
+        link,
+        type,
+        active: true
+      };
+      
+      adsData.push(newAd);
+      localStorage.setItem('adsData', JSON.stringify(adsData));
+      renderAdsPanel();
+      
+      document.getElementById('adTitleInput').value = '';
+      document.getElementById('adDescriptionInput').value = '';
+      document.getElementById('adImageInput').value = '';
+      document.getElementById('adVideoInput').value = '';
+      document.getElementById('adLinkInput').value = '';
+      
+      Swal.fire({
+        title: 'تمت الإضافة!',
+        text: 'تمت إضافة الإعلان بنجاح.',
+        icon: 'success',
+        confirmButtonText: 'حسنًا',
+        confirmButtonColor: '#10b981'
+      });
+    });
+
+    // إرسال إشعار
+    document.getElementById('sendNotificationBtn').addEventListener('click', () => {
+      const title = document.getElementById('notificationTitle').value.trim();
+      const message = document.getElementById('notificationMessage').value.trim();
+      const type = document.getElementById('notificationType').value;
+      
+      if (!title || !message) {
+        Swal.fire({
+          title: 'حقول مطلوبة!',
+          text: 'يرجى ملء جميع الحقول المطلوبة.',
+          icon: 'warning',
+          confirmButtonText: 'حسنًا',
+          confirmButtonColor: '#f59e0b'
+        });
+        return;
+      }
+      
+      Swal.fire({
+        title: title,
+        text: message,
+        icon: type,
+        confirmButtonText: 'حسنًا',
+        confirmButtonColor: '#3b82f6',
+        background: 'var(--bg-color)',
+        color: 'var(--text-color)'
+      });
+    });
+
+    // تبديل إشعار الترحيب
+    document.getElementById('toggleWelcomeBtn').addEventListener('click', () => {
+      systemSettings.showWelcomeNotification = !systemSettings.showWelcomeNotification;
+      localStorage.setItem('systemSettings', JSON.stringify(systemSettings));
+      
+      Swal.fire({
+        title: 'تم التحديث!',
+        text: `تم ${systemSettings.showWelcomeNotification ? 'تمكين' : 'تعطيل'} إشعار الترحيب.`,
+        icon: 'success',
+        confirmButtonText: 'حسنًا',
+        confirmButtonColor: '#10b981'
+      });
+    });
+
     // التحقق من صحة الرابط
     function isValidUrl(string) {
       try {
@@ -1549,6 +2104,8 @@
     // البحث والتصفية الذكية
     document.getElementById('channelSearch').addEventListener('input', filterChannels);
     document.getElementById('filterCategory').addEventListener('change', filterChannels);
+    document.getElementById('adSearch').addEventListener('input', filterAds);
+    document.getElementById('filterAdType').addEventListener('change', filterAds);
 
     function filterChannels() {
       const searchTerm = document.getElementById('channelSearch').value.toLowerCase();
@@ -1572,6 +2129,35 @@
             </div>
           `;
           channelList.appendChild(card);
+        }
+      });
+    }
+
+    function filterAds() {
+      const searchTerm = document.getElementById('adSearch').value.toLowerCase();
+      const typeFilter = document.getElementById('filterAdType').value;
+      const adList = document.getElementById('adList');
+      adList.innerHTML = '';
+      
+      adsData.forEach(ad => {
+        const matchesSearch = ad.title.toLowerCase().includes(searchTerm) || 
+                            ad.description.toLowerCase().includes(searchTerm);
+        const matchesType = !typeFilter || ad.type === typeFilter;
+        
+        if (matchesSearch && matchesType) {
+          const card = document.createElement('div');
+          card.className = 'channel-card';
+          card.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" ${ad.active ? 'checked' : ''} onchange="toggleAdActive(${ad.id}, this.checked)">
+              <span>${ad.title} (${ad.type})</span>
+            </div>
+            <div>
+              <button class="button" onclick="editAd(${ad.id})"><i class="fas fa-edit"></i></button>
+              <button class="button" onclick="deleteAd(${ad.id})"><i class="fas fa-trash"></i></button>
+            </div>
+          `;
+          adList.appendChild(card);
         }
       });
     }
@@ -1734,6 +2320,17 @@
         showFeedback('لوحة التحكم');
       }
       
+      // أوامر الإعلانات
+      else if (command.includes('إعلان') || command.includes('إعلانات')) {
+        if (adContainer.style.display === 'none') {
+          showAd(currentAdIndex);
+          showFeedback('عرض الإعلان');
+        } else {
+          adContainer.style.display = 'none';
+          showFeedback('إخفاء الإعلان');
+        }
+      }
+      
       // مساعدة
       else if (command.includes('مساعدة') || command.includes('الأوامر')) {
         Swal.fire({
@@ -1743,6 +2340,7 @@
               <p><strong>التشغيل:</strong> "شغل قناة إم بي سي 1"</p>
               <p><strong>التحكم:</strong> "ايقاف"، "استمر"، "صوت"، "شاشة كاملة"</p>
               <p><strong>التنقل:</strong> "الرئيسية"، "الرياضية"، "الأخبار"، "أطفال"، "لوحة التحكم"</p>
+              <p><strong>الإعلانات:</strong> "إعلان"، "إخفاء إعلان"</p>
             </div>
           `,
           icon: 'info',
