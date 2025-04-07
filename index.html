@@ -26,6 +26,7 @@
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       --ad-primary: #4f46e5;
       --ad-secondary: #10b981;
+      --error-color: #ef4444;
     }
 
     * {
@@ -223,6 +224,29 @@
       height: 100%;
       border: none;
       border-radius: 20px;
+    }
+
+    /* رسالة خطأ البث */
+    .stream-error-message {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      left: 20px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 100;
+      animation: slideIn 0.3s ease-out;
+      transition: opacity 0.5s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     /* نظام الإعلانات */
@@ -773,6 +797,59 @@
         max-width: none;
       }
     }
+
+    /* رسالة التعرف على الوجه */
+    .face-recognition-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 0 auto;
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .face-recognition-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .face-recognition-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .face-recognition-message {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: white;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    /* تأثيرات الوجه */
+    .face-landmark {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #3b82f6;
+      border-radius: 50%;
+      transform: translate(-2px, -2px);
+    }
+
+    .face-box {
+      position: absolute;
+      border: 2px solid #f59e0b;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -1039,7 +1116,9 @@
     let systemSettings = JSON.parse(localStorage.getItem('systemSettings')) || {
       showWelcomeNotification: true,
       adsInterval: 30, // دقائق بين كل إعلان
-      lastAdShownTime: 0
+      lastAdShownTime: 0,
+      faceRecognitionEnabled: true,
+      adminFaces: []
     };
 
     // عناصر DOM المتطورة
@@ -1077,6 +1156,7 @@
     let recognition = null;
     let currentAdIndex = 0;
     let adInterval;
+    let faceRecognitionInterval;
 
     // إنشاء جسيمات الخلفية
     function createParticles() {
@@ -1112,6 +1192,9 @@
       videoElement.style.display = 'none';
       iframeElement.style.display = 'none';
       adContainer.style.display = 'none';
+      
+      // إزالة أي رسائل خطأ سابقة
+      document.querySelectorAll('.stream-error-message').forEach(el => el.remove());
       
       if (channel.type === 'video') {
         videoElement.style.display = 'block';
@@ -1160,20 +1243,6 @@
       document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
       document.getElementById(`channelBtn-${channelNum}`)?.classList.add('active');
       
-      // إظهار إشعار ذكي
-      if (channelNum !== localStorage.getItem('lastNotifiedChannel')) {
-        Swal.fire({
-          position: 'top-end',
-          title: `جاري تشغيل ${channel.name}`,
-          icon: 'info',
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-          toast: true
-        });
-        localStorage.setItem('lastNotifiedChannel', channelNum);
-      }
-      
       // تحليل المشاهدة باستخدام الذكاء الاصطناعي
       analyzeViewingHabits(channelNum);
       
@@ -1181,7 +1250,7 @@
       startAdCycle();
     }
 
-    // معالجة أخطاء التشغيل
+    // معالجة أخطاء التشغيل بشكل احترافي
     function handlePlaybackError(channel) {
       hideProgressBar();
       console.error(`خطأ في تشغيل القناة: ${channel.name}`);
@@ -1190,23 +1259,40 @@
       const alternativeChannel = findAlternativeChannel(channel);
       
       if (alternativeChannel) {
-        Swal.fire({
-          title: 'خطأ في التشغيل',
-          html: `تعذر تشغيل القناة <strong>${channel.name}</strong>. جارٍ تحويلك إلى قناة بديلة.`,
-          icon: 'warning',
-          confirmButtonText: 'حسنًا',
-          confirmButtonColor: '#f59e0b'
-        }).then(() => {
-          loadChannel(alternativeChannel);
-        });
+        // عرض رسالة خطأ في واجهة المستخدم
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'stream-error-message';
+        errorMessage.innerHTML = `
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>جاري تحويلك إلى قناة بديلة بسبب مشكلة تقنية</span>
+        `;
+        streamContainer.prepend(errorMessage);
+        
+        // إخفاء الرسالة بعد 5 ثواني
+        setTimeout(() => {
+          errorMessage.style.opacity = '0';
+          setTimeout(() => errorMessage.remove(), 500);
+        }, 5000);
+        
+        loadChannel(alternativeChannel);
       } else {
-        Swal.fire({
-          title: 'خطأ في التشغيل',
-          text: `تعذر تشغيل القناة ${channel.name}. يرجى التحقق من الاتصال بالإنترنت أو تجربة قناة أخرى.`,
-          icon: 'error',
-          confirmButtonText: 'حسنًا',
-          confirmButtonColor: '#ef4444'
-        });
+        // عرض حالة الخطأ في واجهة المشغل
+        player.poster('https://via.placeholder.com/800x450/1e293b/ffffff?text=خطأ+في+الاتصال');
+        player.createModal(`
+          <div style="text-align:center;padding:20px;">
+            <i class="fas fa-exclamation-triangle" style="font-size:3em;color:#f59e0b;"></i>
+            <h3 style="margin-top:15px;">تعذر الاتصال بالقناة</h3>
+            <p style="margin:15px 0;">يرجى التحقق من اتصال الإنترنت أو تجربة قناة أخرى</p>
+            <button onclick="window.location.reload()" style="
+              background: #3b82f6;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 8px;
+              cursor: pointer;
+            ">إعادة المحاولة</button>
+          </div>
+        `);
       }
     }
 
@@ -1715,79 +1801,225 @@
     // تسجيل الدخول بالتعرف على الوجه
     async function initFaceRecognition() {
       try {
+        // تحميل نماذج التعرف على الوجه
         await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
         await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
         await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+        await faceapi.nets.faceExpressionNet.loadFromUri('/models');
+        
+        // تحميل الوجوه المسجلة من localStorage إن وجدت
+        if (localStorage.getItem('adminFaces')) {
+          systemSettings.adminFaces = JSON.parse(localStorage.getItem('adminFaces'));
+        }
         
         document.getElementById('faceLoginBtn').addEventListener('click', async () => {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          const video = document.createElement('video');
-          video.srcObject = stream;
-          await video.play();
-          
-          Swal.fire({
-            title: 'التعرف على الوجه',
-            html: `
-              <div style="position: relative; width: 300px; height: 300px; margin: 0 auto;">
-                <video id="faceVideo" width="300" height="300" autoplay style="border-radius: 8px;"></video>
-                <canvas id="faceCanvas" width="300" height="300" style="position: absolute; top: 0; left: 0;"></canvas>
-              </div>
-              <p style="margin-top: 10px;">يرجى الوقوف أمام الكاميرا...</p>
-            `,
-            showConfirmButton: false,
-            showCancelButton: true,
-            cancelButtonText: 'إلغاء',
-            background: 'var(--bg-color)',
-            color: 'var(--text-color)'
-          });
-          
-          const faceVideo = document.getElementById('faceVideo');
-          faceVideo.srcObject = stream;
-          
-          const faceCanvas = document.getElementById('faceCanvas');
-          const displaySize = { width: 300, height: 300 };
-          faceapi.matchDimensions(faceCanvas, displaySize);
-          
-          const interval = setInterval(async () => {
-            const detections = await faceapi.detectAllFaces(faceVideo, new faceapi.TinyFaceDetectorOptions())
-              .withFaceLandmarks()
-              .withFaceDescriptors();
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            await video.play();
             
-            if (detections.length > 0) {
-              clearInterval(interval);
+            const { value: formValues } = await Swal.fire({
+              title: 'التعرف على الوجه',
+              html: `
+                <div class="face-recognition-container">
+                  <video id="faceVideo" class="face-recognition-video" autoplay muted playsinline></video>
+                  <canvas id="faceCanvas" class="face-recognition-canvas"></canvas>
+                  <div class="face-recognition-message">يرجى الوقوف أمام الكاميرا...</div>
+                </div>
+                <div style="margin-top: 15px;">
+                  <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="registerNewFace">
+                    تسجيل وجه جديد كمسؤول
+                  </label>
+                </div>
+              `,
+              focusConfirm: false,
+              showConfirmButton: true,
+              showCancelButton: true,
+              confirmButtonText: 'تم التعرف',
+              cancelButtonText: 'إلغاء',
+              confirmButtonColor: '#10b981',
+              cancelButtonColor: '#ef4444',
+              background: 'var(--bg-color)',
+              color: 'var(--text-color)',
+              width: 350,
+              didOpen: () => {
+                const faceVideo = document.getElementById('faceVideo');
+                faceVideo.srcObject = stream;
+                
+                const faceCanvas = document.getElementById('faceCanvas');
+                const displaySize = { width: 300, height: 300 };
+                faceapi.matchDimensions(faceCanvas, displaySize);
+                
+                // بدء التعرف على الوجه
+                faceRecognitionInterval = setInterval(async () => {
+                  const detections = await faceapi.detectAllFaces(
+                    faceVideo, 
+                    new faceapi.TinyFaceDetectorOptions()
+                  )
+                  .withFaceLandmarks()
+                  .withFaceDescriptors()
+                  .withFaceExpressions();
+                  
+                  // رسم الملامح على canvas
+                  const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                  faceCanvas.getContext('2d').clearRect(0, 0, faceCanvas.width, faceCanvas.height);
+                  
+                  // رسم مربع حول الوجه
+                  resizedDetections.forEach(detection => {
+                    const box = detection.detection.box;
+                    const drawBox = new faceapi.draw.DrawBox(box, {
+                      label: 'وجه مكتشف',
+                      boxColor: '#f59e0b'
+                    });
+                    drawBox.draw(faceCanvas);
+                    
+                    // رسم ملامح الوجه
+                    faceapi.draw.drawFaceLandmarks(faceCanvas, detection.landmarks);
+                    
+                    // عرض المشاعر
+                    const expressions = detection.expressions;
+                    const dominantExpression = Object.entries(expressions).sort((a, b) => b[1] - a[1])[0];
+                    const expressionText = `${dominantExpression[0]} (${Math.round(dominantExpression[1] * 100)}%)`;
+                    
+                    const expressionBox = new faceapi.draw.DrawTextField(
+                      [expressionText],
+                      box.bottomLeft
+                    );
+                    expressionBox.draw(faceCanvas);
+                  });
+                }, 500);
+              },
+              preConfirm: () => {
+                const registerNewFace = document.getElementById('registerNewFace').checked;
+                return { registerNewFace };
+              }
+            });
+            
+            if (formValues) {
+              const { registerNewFace } = formValues;
+              clearInterval(faceRecognitionInterval);
               stream.getTracks().forEach(track => track.stop());
               
-              // هنا يمكنك إضافة المنطق الخاص بمطابقة الوجه مع قاعدة البيانات
-              // هذا مثال فقط للتوضيح
-              const isAdminFace = Math.random() > 0.5; // في الواقع يجب مقارنة مع وجوه معروفة
-              
-              if (isAdminFace) {
-                isAdminLoggedIn = true;
-                localStorage.setItem('adminSession', 'active');
-                Swal.fire({
-                  title: 'تم التعرف عليك!',
-                  text: 'تم تسجيل الدخول بنجاح باستخدام التعرف على الوجه.',
-                  icon: 'success',
-                  confirmButtonText: 'حسنًا',
-                  confirmButtonColor: '#10b981'
-                });
-                showSection('admin', 'linkAdmin');
+              if (registerNewFace) {
+                // تسجيل وجه جديد
+                const faceVideo = document.getElementById('faceVideo');
+                const detections = await faceapi.detectAllFaces(
+                  faceVideo,
+                  new faceapi.TinyFaceDetectorOptions()
+                ).withFaceLandmarks().withFaceDescriptors();
+                
+                if (detections.length > 0) {
+                  const faceDescriptor = detections[0].descriptor;
+                  const faceName = await Swal.fire({
+                    title: 'أدخل اسم المسؤول',
+                    input: 'text',
+                    inputPlaceholder: 'اسم المسؤول',
+                    showCancelButton: true,
+                    confirmButtonText: 'حفظ',
+                    cancelButtonText: 'إلغاء',
+                    background: 'var(--bg-color)',
+                    color: 'var(--text-color)'
+                  });
+                  
+                  if (faceName.value) {
+                    systemSettings.adminFaces.push({
+                      name: faceName.value,
+                      descriptor: Array.from(faceDescriptor)
+                    });
+                    localStorage.setItem('adminFaces', JSON.stringify(systemSettings.adminFaces));
+                    
+                    Swal.fire({
+                      title: 'تم التسجيل!',
+                      text: `تم تسجيل وجه ${faceName.value} بنجاح كمسؤول للنظام.`,
+                      icon: 'success',
+                      confirmButtonText: 'حسنًا',
+                      confirmButtonColor: '#10b981'
+                    });
+                  }
+                } else {
+                  Swal.fire({
+                    title: 'لم يتم اكتشاف وجه!',
+                    text: 'يرجى المحاولة مرة أخرى مع ضمان وجود إضاءة جيدة.',
+                    icon: 'error',
+                    confirmButtonText: 'حسنًا',
+                    confirmButtonColor: '#ef4444'
+                  });
+                }
               } else {
-                Swal.fire({
-                  title: 'غير مصرح لك!',
-                  text: 'لم يتم التعرف عليك كمسؤول للنظام.',
-                  icon: 'error',
-                  confirmButtonText: 'حسنًا',
-                  confirmButtonColor: '#ef4444'
-                });
+                // محاولة التعرف على الوجه
+                const faceVideo = document.getElementById('faceVideo');
+                const detections = await faceapi.detectAllFaces(
+                  faceVideo,
+                  new faceapi.TinyFaceDetectorOptions()
+                ).withFaceLandmarks().withFaceDescriptors();
+                
+                if (detections.length > 0 && systemSettings.adminFaces.length > 0) {
+                  const faceMatcher = new faceapi.FaceMatcher(
+                    systemSettings.adminFaces.map(face => (
+                      new faceapi.LabeledFaceDescriptors(
+                        face.name,
+                        [new Float32Array(face.descriptor)]
+                      )
+                    )),
+                    0.6
+                  );
+                  
+                  const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
+                  
+                  if (bestMatch.label !== 'unknown') {
+                    isAdminLoggedIn = true;
+                    localStorage.setItem('adminSession', 'active');
+                    Swal.fire({
+                      title: 'تم التعرف عليك!',
+                      html: `مرحبًا <strong>${bestMatch.label}</strong>، تم تسجيل الدخول بنجاح.`,
+                      icon: 'success',
+                      confirmButtonText: 'حسنًا',
+                      confirmButtonColor: '#10b981'
+                    });
+                    showSection('admin', 'linkAdmin');
+                  } else {
+                    Swal.fire({
+                      title: 'غير مصرح لك!',
+                      text: 'لم يتم التعرف عليك كمسؤول للنظام.',
+                      icon: 'error',
+                      confirmButtonText: 'حسنًا',
+                      confirmButtonColor: '#ef4444'
+                    });
+                  }
+                } else if (systemSettings.adminFaces.length === 0) {
+                  Swal.fire({
+                    title: 'لا توجد وجوه مسجلة!',
+                    text: 'يرجى تسجيل وجه مسؤول أولاً.',
+                    icon: 'warning',
+                    confirmButtonText: 'حسنًا',
+                    confirmButtonColor: '#f59e0b'
+                  });
+                } else {
+                  Swal.fire({
+                    title: 'لم يتم اكتشاف وجه!',
+                    text: 'يرجى المحاولة مرة أخرى مع ضمان وجود إضاءة جيدة.',
+                    icon: 'error',
+                    confirmButtonText: 'حسنًا',
+                    confirmButtonColor: '#ef4444'
+                  });
+                }
               }
+            } else {
+              clearInterval(faceRecognitionInterval);
+              stream.getTracks().forEach(track => track.stop());
             }
-          }, 500);
-          
-          Swal.getCancelButton().addEventListener('click', () => {
-            clearInterval(interval);
-            stream.getTracks().forEach(track => track.stop());
-          });
+          } catch (error) {
+            console.error('خطأ في التعرف على الوجه:', error);
+            Swal.fire({
+              title: 'خطأ في الكاميرا!',
+              text: 'تعذر الوصول إلى الكاميرا. يرجى التحقق من الأذونات.',
+              icon: 'error',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#ef4444'
+            });
+          }
         });
       } catch (error) {
         console.error('خطأ في تحميل نماذج التعرف على الوجه:', error);
