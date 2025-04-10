@@ -1097,7 +1097,9 @@
   <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
   
   <script>
+    // =============================================
     // تهيئة المشغل مع دعم HLS و DASH
+    // =============================================
     const player = videojs('videoPlayer', {
       fluid: true,
       responsive: true,
@@ -1117,147 +1119,1496 @@
       }
     });
 
-    // إضافة دعم HLS و DASH
-    if (videojs.getTech('Html5')) {
-      const html5Tech = videojs.getTech('Html5');
-      html5Tech.registerSourceHandler({
-        canPlaySource: function(source) {
-          const type = source.type.toLowerCase();
-          if (type === 'application/x-mpegurl' || type === 'application/vnd.apple.mpegurl') {
-            return 'probably';
+    // =============================================
+    // إدارة البيانات والتخزين
+    // =============================================
+    class DataManager {
+      constructor() {
+        this.loadData();
+      }
+      
+      loadData() {
+        this.channelsData = JSON.parse(localStorage.getItem('channelsData')) || this.getDefaultChannels();
+        this.adsData = JSON.parse(localStorage.getItem('adsData')) || this.getDefaultAds();
+        this.systemSettings = JSON.parse(localStorage.getItem('systemSettings')) || this.getDefaultSettings();
+      }
+      
+      saveData() {
+        localStorage.setItem('channelsData', JSON.stringify(this.channelsData));
+        localStorage.setItem('adsData', JSON.stringify(this.adsData));
+        localStorage.setItem('systemSettings', JSON.stringify(this.systemSettings));
+      }
+      
+      getDefaultChannels() {
+        return {
+          1: { 
+            type: 'video', 
+            src: 'https://vjs.zencdn.net/v/oceans.mp4', 
+            category: 'general', 
+            name: 'القناة التجريبية',
+            thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MCRN+Demo'
+          },
+          2: { 
+            type: 'ahmad', 
+            src: 'mbc1', 
+            category: 'general', 
+            name: 'MBC 1',
+            thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MBC1'
+          },
+          3: { 
+            type: 'youtube', 
+            src: 'UCYJdpnjuSWVOLgGT9fIzL0g', 
+            category: 'general', 
+            name: 'قناة يوتيوب',
+            thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=YouTube'
+          },
+          4: { 
+            type: 'm3u8', 
+            src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', 
+            category: 'general', 
+            name: 'قناة M3U8',
+            thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=M3U8'
+          },
+          5: { 
+            type: 'vk', 
+            src: '791768803_456255634', 
+            category: 'general', 
+            name: 'قناة VK',
+            thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=VK'
           }
-          if (type === 'application/dash+xml') {
-            return 'probably';
+        };
+      }
+      
+      getDefaultAds() {
+        return [
+          {
+            id: 1,
+            title: "عرض خاص!",
+            description: "احصل على خصم 30% على جميع الاشتراكات هذا الأسبوع فقط",
+            image: "https://via.placeholder.com/600x300/4f46e5/ffffff?text=Special+Offer",
+            link: "#",
+            type: "image",
+            active: true
+          },
+          {
+            id: 2,
+            title: "تطبيقنا الجديد",
+            description: "حمل تطبيق MCRN 360 الآن واحصل على شهر مجاني",
+            image: "https://via.placeholder.com/600x300/10b981/ffffff?text=New+App",
+            link: "#",
+            type: "image",
+            active: true
           }
-          return '';
-        },
-        handleSource: function(source, tech) {
-          if (Hls.isSupported() && (source.type === 'application/x-mpegurl' || source.type === 'application/vnd.apple.mpegurl')) {
-            const hls = new Hls();
-            hls.loadSource(source.src);
-            hls.attachMedia(tech.el());
-            return hls;
-          } else if (source.type === 'application/dash+xml') {
-            const dash = dashjs.MediaPlayer().create();
-            dash.initialize(tech.el(), source.src, true);
-            return dash;
-          }
-          return null;
-        }
-      });
+        ];
+      }
+      
+      getDefaultSettings() {
+        return {
+          showWelcomeNotification: true,
+          adsInterval: 30,
+          lastAdShownTime: 0,
+          faceRecognitionEnabled: true,
+          adminFaces: [],
+          adminPassword: '77177'
+        };
+      }
     }
 
-    // بيانات القنوات مع دعم متعدد للسيرفرات
-    let channelsData = JSON.parse(localStorage.getItem('channelsData')) || {
-      1: { 
-        type: 'video', 
-        src: 'https://vjs.zencdn.net/v/oceans.mp4', 
-        category: 'general', 
-        name: 'القناة التجريبية',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MCRN+Demo'
-      },
-      2: { 
-        type: 'ahmad', 
-        src: 'mbc1', 
-        category: 'general', 
-        name: 'MBC 1',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=MBC1'
-      },
-      3: { 
-        type: 'youtube', 
-        src: 'https://www.youtube.com/embed/live_stream?channel=UCYJdpnjuSWVOLgGT9fIzL0g', 
-        category: 'general', 
-        name: 'قناة يوتيوب',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=YouTube'
-      },
-      4: { 
-        type: 'm3u8', 
-        src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', 
-        category: 'general', 
-        name: 'قناة M3U8',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=M3U8'
-      },
-      5: { 
-        type: 'vk', 
-        src: 'https://vk.com/video-73154028_456239128', 
-        category: 'general', 
-        name: 'قناة VK',
-        thumb: 'https://via.placeholder.com/300x170/1e3a8a/ffffff?text=VK'
+    // =============================================
+    // إدارة القنوات والبث
+    // =============================================
+    class StreamManager {
+      constructor(dataManager) {
+        this.dataManager = dataManager;
+        this.currentHls = null;
+        this.currentDash = null;
+        this.currentAdIndex = 0;
+        this.adInterval = null;
+        
+        this.initElements();
+        this.initEventListeners();
       }
-    };
-
-    // بيانات الإعلانات
-    let adsData = JSON.parse(localStorage.getItem('adsData')) || [
-      {
-        id: 1,
-        title: "عرض خاص!",
-        description: "احصل على خصم 30% على جميع الاشتراكات هذا الأسبوع فقط",
-        image: "https://via.placeholder.com/600x300/4f46e5/ffffff?text=Special+Offer",
-        link: "#",
-        type: "image",
-        active: true
-      },
-      {
-        id: 2,
-        title: "تطبيقنا الجديد",
-        description: "حمل تطبيق MCRN 360 الآن واحصل على شهر مجاني",
-        image: "https://via.placeholder.com/600x300/10b981/ffffff?text=New+App",
-        link: "#",
-        type: "image",
-        active: true
+      
+      initElements() {
+        this.streamContainer = document.getElementById('streamContainer');
+        this.videoElement = document.getElementById('videoPlayer');
+        this.iframeElement = document.getElementById('streamIframe');
+        this.progressContainer = document.getElementById('progressContainer');
+        this.progressBar = document.getElementById('progressBar');
+        this.adContainer = document.getElementById('adContainer');
+        this.adCloseBtn = document.getElementById('adCloseBtn');
+        this.adContent = document.getElementById('adContent');
+        this.adImage = document.getElementById('adImage');
+        this.adTitle = document.getElementById('adTitle');
+        this.adDescription = document.getElementById('adDescription');
+        this.adNav = document.getElementById('adNav');
       }
-    ];
+      
+      initEventListeners() {
+        this.adCloseBtn.addEventListener('click', () => {
+          this.adContainer.style.display = 'none';
+        });
+        
+        document.getElementById('rewindBtn').addEventListener('click', () => {
+          player.currentTime(player.currentTime() - 10);
+          this.showFeedback('رجوع 10 ثواني');
+        });
+        
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+          if (player.paused()) {
+            player.play();
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> إيقاف';
+            this.showFeedback('تشغيل');
+          } else {
+            player.pause();
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i> تشغيل';
+            this.showFeedback('إيقاف');
+          }
+        });
+        
+        document.getElementById('forwardBtn').addEventListener('click', () => {
+          player.currentTime(player.currentTime() + 10);
+          this.showFeedback('تقدم 10 ثواني');
+        });
+        
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+          if (player.isFullscreen()) {
+            player.exitFullscreen();
+            this.showFeedback('خروج من ملء الشاشة');
+          } else {
+            player.requestFullscreen();
+            this.showFeedback('ملء الشاشة');
+          }
+        });
+        
+        document.getElementById('volumeBtn').addEventListener('click', () => {
+          if (player.muted()) {
+            player.muted(false);
+            document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-up"></i> كتم';
+            this.showFeedback('إعادة الصوت');
+          } else {
+            player.muted(true);
+            document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-mute"></i> فك الكتم';
+            this.showFeedback('كتم الصوت');
+          }
+        });
+      }
+      
+      loadChannel(channelNum) {
+        this.showProgressBar();
+        const channel = this.dataManager.channelsData[channelNum] || this.dataManager.channelsData[1];
+        
+        this.videoElement.style.display = 'none';
+        this.iframeElement.style.display = 'none';
+        this.adContainer.style.display = 'none';
+        
+        document.querySelectorAll('.stream-error-message').forEach(el => el.remove());
+        
+        // تنظيف مشغلات HLS/DASH السابقة
+        if (this.currentHls) {
+          this.currentHls.destroy();
+          this.currentHls = null;
+        }
+        if (this.currentDash) {
+          this.currentDash.reset();
+          this.currentDash = null;
+        }
+        
+        try {
+          if (channel.type === 'video') {
+            this.videoElement.style.display = 'block';
+            player.src({ src: channel.src, type: 'video/mp4' });
+            player.poster(channel.thumb || '');
+            
+            player.ready(() => {
+              player.play().catch(err => {
+                console.error('خطأ في تشغيل الفيديو:', err);
+                this.handlePlaybackError(channel);
+              });
+            });
+            
+            player.on('error', () => {
+              this.handlePlaybackError(channel);
+            });
+          } 
+          else if (channel.type === 'iframe') {
+            this.iframeElement.style.display = 'block';
+            this.iframeElement.src = channel.src;
+            
+            this.iframeElement.onerror = () => {
+              this.handlePlaybackError(channel);
+            };
+            
+            this.iframeElement.onload = () => {
+              try {
+                if (this.iframeElement.contentDocument && this.iframeElement.contentDocument.title) {
+                  this.hideProgressBar();
+                } else {
+                  this.handlePlaybackError(channel);
+                }
+              } catch (e) {
+                this.hideProgressBar();
+              }
+            };
+          }
+          else if (channel.type === 'youtube') {
+            this.iframeElement.style.display = 'block';
+            const youtubeSrc = `https://www.youtube.com/embed/live_stream?channel=${channel.src}`;
+            this.iframeElement.src = youtubeSrc;
+            
+            this.iframeElement.onerror = () => {
+              this.handlePlaybackError(channel);
+            };
+            
+            this.iframeElement.onload = () => {
+              this.hideProgressBar();
+            };
+          }
+          else if (channel.type === 'm3u8') {
+            this.videoElement.style.display = 'block';
+            if (Hls.isSupported()) {
+              this.currentHls = new Hls();
+              this.currentHls.loadSource(channel.src);
+              this.currentHls.attachMedia(this.videoElement);
+              this.currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                player.play().catch(err => {
+                  console.error('خطأ في تشغيل HLS:', err);
+                  this.handlePlaybackError(channel);
+                });
+              });
+              this.currentHls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                  this.handlePlaybackError(channel);
+                }
+              });
+            } else if (this.videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+              this.videoElement.src = channel.src;
+              this.videoElement.addEventListener('loadedmetadata', () => {
+                this.videoElement.play().catch(err => {
+                  console.error('خطأ في تشغيل HLS:', err);
+                  this.handlePlaybackError(channel);
+                });
+              });
+            } else {
+              this.handlePlaybackError(channel);
+            }
+          }
+          else if (channel.type === 'ahmad') {
+            this.iframeElement.style.display = 'block';
+            const ahmadSrc = `https://www.elahmad.com/tv/live/shaka.php?id=${channel.src}`;
+            this.iframeElement.src = ahmadSrc;
+            
+            this.iframeElement.onerror = () => {
+              this.handlePlaybackError(channel);
+            };
+            
+            this.iframeElement.onload = () => {
+              this.hideProgressBar();
+            };
+          }
+          else if (channel.type === 'vk') {
+            this.iframeElement.style.display = 'block';
+            const vkSrc = `https://vk.com/video_ext.php?oid=-${channel.src.split('_')[0]}&id=${channel.src.split('_')[1]}&hash=` + Math.random().toString(36).substring(7);
+            this.iframeElement.src = vkSrc;
+            
+            this.iframeElement.onerror = () => {
+              this.handlePlaybackError(channel);
+            };
+            
+            this.iframeElement.onload = () => {
+              this.hideProgressBar();
+            };
+          }
+          
+          localStorage.setItem('lastWatched', channelNum);
+          document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
+          document.getElementById(`channelBtn-${channelNum}`)?.classList.add('active');
+          this.analyzeViewingHabits(channelNum);
+          this.startAdCycle();
+          
+        } catch (error) {
+          console.error('خطأ في تحميل القناة:', error);
+          this.handlePlaybackError(channel);
+        }
+      }
+      
+      handlePlaybackError(channel) {
+        this.hideProgressBar();
+        console.error(`خطأ في تشغيل القناة: ${channel.name}`);
+        
+        const alternativeChannel = this.findAlternativeChannel(channel);
+        
+        if (alternativeChannel) {
+          const errorMessage = document.createElement('div');
+          errorMessage.className = 'stream-error-message';
+          errorMessage.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>جاري تحويلك إلى قناة بديلة بسبب مشكلة تقنية</span>
+          `;
+          this.streamContainer.prepend(errorMessage);
+          
+          setTimeout(() => {
+            errorMessage.style.opacity = '0';
+            setTimeout(() => errorMessage.remove(), 500);
+          }, 5000);
+          
+          this.loadChannel(alternativeChannel);
+        } else {
+          player.poster('https://via.placeholder.com/800x450/1e293b/ffffff?text=خطأ+في+الاتصال');
+          player.createModal(`
+            <div style="text-align:center;padding:20px;">
+              <i class="fas fa-exclamation-triangle" style="font-size:3em;color:#f59e0b;"></i>
+              <h3 style="margin-top:15px;">تعذر الاتصال بالقناة</h3>
+              <p style="margin:15px 0;">يرجى التحقق من اتصال الإنترنت أو تجربة قناة أخرى</p>
+              <button onclick="window.location.reload()" style="
+                background: #3b82f6;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+              ">إعادة المحاولة</button>
+            </div>
+          `);
+        }
+      }
+      
+      findAlternativeChannel(currentChannel) {
+        for (const [num, channel] of Object.entries(this.dataManager.channelsData)) {
+          if (channel.category === currentChannel.category && num !== currentChannel.num && channel.src !== currentChannel.src) {
+            return num;
+          }
+        }
+        return null;
+      }
+      
+      startAdCycle() {
+        if (this.adInterval) clearInterval(this.adInterval);
+        
+        const activeAds = this.dataManager.adsData.filter(ad => ad.active);
+        if (activeAds.length === 0) return;
+        
+        this.showAd(this.currentAdIndex);
+        
+        this.adInterval = setInterval(() => {
+          this.currentAdIndex = (this.currentAdIndex + 1) % activeAds.length;
+          this.showAd(this.currentAdIndex);
+        }, this.dataManager.systemSettings.adsInterval * 60 * 1000);
+      }
+      
+      showAd(index) {
+        const activeAds = this.dataManager.adsData.filter(ad => ad.active);
+        if (index >= activeAds.length) return;
+        
+        const ad = activeAds[index];
+        
+        this.adTitle.textContent = ad.title;
+        this.adDescription.textContent = ad.description;
+        
+        if (ad.image) {
+          this.adImage.src = ad.image;
+          this.adImage.style.display = 'block';
+        } else {
+          this.adImage.style.display = 'none';
+        }
+        
+        this.updateAdNav(activeAds.length, index);
+        this.adContainer.style.display = 'block';
+        this.dataManager.systemSettings.lastAdShownTime = Date.now();
+        this.dataManager.saveData();
+      }
+      
+      updateAdNav(totalAds, currentIndex) {
+        this.adNav.innerHTML = '';
+        
+        for (let i = 0; i < totalAds; i++) {
+          const dot = document.createElement('div');
+          dot.classList.add('ad-dot');
+          if (i === currentIndex) dot.classList.add('active');
+          dot.addEventListener('click', () => {
+            this.currentAdIndex = i;
+            this.showAd(this.currentAdIndex);
+          });
+          this.adNav.appendChild(dot);
+        }
+      }
+      
+      analyzeViewingHabits(channelNum) {
+        const channel = this.dataManager.channelsData[channelNum];
+        if (!channel) return;
+        
+        console.log(`تحليل المشاهدة: ${channel.name} (${channel.category})`);
+        channel.views = (channel.views || 0) + 1;
+        this.dataManager.saveData();
+      }
+      
+      showProgressBar() {
+        this.progressContainer.style.display = 'block';
+        let width = 0;
+        const interval = setInterval(() => {
+          if (width >= 90) {
+            clearInterval(interval);
+          } else {
+            width += 5;
+            this.progressBar.style.width = `${width}%`;
+          }
+        }, 100);
+      }
+      
+      hideProgressBar() {
+        this.progressBar.style.width = '100%';
+        setTimeout(() => {
+          this.progressContainer.style.display = 'none';
+          this.progressBar.style.width = '0%';
+        }, 300);
+      }
+      
+      showFeedback(message) {
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback-message';
+        feedback.textContent = message;
+        feedback.style.position = 'fixed';
+        feedback.style.bottom = '100px';
+        feedback.style.left = '50%';
+        feedback.style.transform = 'translateX(-50%)';
+        feedback.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        feedback.style.color = 'white';
+        feedback.style.padding = '10px 20px';
+        feedback.style.borderRadius = '20px';
+        feedback.style.zIndex = '10000';
+        feedback.style.animation = 'fadeInOut 2s ease-in-out';
+        
+        document.body.appendChild(feedback);
+        
+        setTimeout(() => {
+          feedback.remove();
+        }, 2000);
+      }
+    }
 
-    // إعدادات النظام
-    let systemSettings = JSON.parse(localStorage.getItem('systemSettings')) || {
-      showWelcomeNotification: true,
-      adsInterval: 30,
-      lastAdShownTime: 0,
-      faceRecognitionEnabled: true,
-      adminFaces: []
-    };
+    // =============================================
+    // إدارة واجهة المستخدم
+    // =============================================
+    class UIManager {
+      constructor(dataManager, streamManager) {
+        this.dataManager = dataManager;
+        this.streamManager = streamManager;
+        
+        this.initElements();
+        this.initEventListeners();
+        this.renderChannels();
+        this.manageWelcomeNotification();
+      }
+      
+      initElements() {
+        this.sections = {
+          home: document.getElementById('homeSection'),
+          allChannels: document.getElementById('allChannelsSection'),
+          newsChannels: document.getElementById('newsChannelsSection'),
+          sportsChannels: document.getElementById('sportsChannelsSection'),
+          childrenChannels: document.getElementById('childrenChannelsSection'),
+          admin: document.getElementById('adminSection')
+        };
+        
+        this.channelButtons = document.getElementById('channelButtons');
+        this.allChannelsGrid = document.getElementById('allChannelsGrid');
+        this.newsChannelsGrid = document.getElementById('newsChannelsGrid');
+        this.sportsChannelsGrid = document.getElementById('sportsChannelsGrid');
+        this.childrenChannelsGrid = document.getElementById('childrenChannelsGrid');
+        this.channelList = document.getElementById('channelList');
+        this.adList = document.getElementById('adList');
+        this.welcomeNotification = document.getElementById('welcomeNotification');
+        this.closeWelcomeBtn = document.getElementById('closeWelcomeBtn');
+      }
+      
+      initEventListeners() {
+        // التنقل بين الأقسام
+        ['linkHome', 'linkAllChannels', 'linkNewsChannels', 'linkSportsChannels', 'linkChildrenChannels', 'linkAdmin'].forEach(id => {
+          document.getElementById(id).addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionKey = id === 'linkAdmin' ? 'admin' : id.replace('link', '').toLowerCase();
+            this.showSection(sectionKey, id);
+          });
+        });
+        
+        // قائمة التنقل في الجوال
+        document.getElementById('toggleMenuBtn').addEventListener('click', () => {
+          document.getElementById('navList').classList.toggle('show');
+        });
+        
+        // إغلاق إشعار الترحيب
+        this.closeWelcomeBtn.addEventListener('click', () => {
+          this.welcomeNotification.classList.remove('show');
+        });
+      }
+      
+      showSection(sectionKey, linkId) {
+        Object.values(this.sections).forEach(section => section.classList.remove('active'));
+        this.sections[sectionKey].classList.add('active');
+        document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
+        if (linkId) document.getElementById(linkId).classList.add('active');
+        if (window.innerWidth <= 600) document.getElementById('navList').classList.remove('show');
+        
+        if (sectionKey === 'admin') {
+          const adminLogin = document.getElementById('adminLogin');
+          const adminControls = document.getElementById('adminControls');
+          adminLogin.style.display = localStorage.getItem('adminSession') === 'active' ? 'none' : 'block';
+          adminControls.style.display = localStorage.getItem('adminSession') === 'active' ? 'block' : 'none';
+          if (localStorage.getItem('adminSession') === 'active') {
+            this.renderAdminPanel();
+            this.renderAdsPanel();
+          }
+        }
+        
+        if (sectionKey !== 'home') {
+          this.sections[sectionKey].style.animation = 'fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        }
+      }
+      
+      renderChannels() {
+        this.channelButtons.innerHTML = '';
+        
+        const sortedChannels = Object.entries(this.dataManager.channelsData).sort((a, b) => {
+          return (b[1].views || 0) - (a[1].views || 0);
+        });
+        
+        sortedChannels.forEach(([num, channel]) => {
+          const btn = document.createElement('button');
+          btn.className = 'button channel-btn';
+          btn.id = `channelBtn-${num}`;
+          btn.innerHTML = `
+            <i class="fas fa-tv"></i> ${channel.name}
+            ${channel.views ? `<span class="view-count">${channel.views}</span>` : ''}
+          `;
+          btn.addEventListener('click', () => {
+            this.showSection('home', 'linkHome');
+            this.streamManager.loadChannel(num);
+          });
+          this.channelButtons.appendChild(btn);
+        });
+        
+        const grids = {
+          allChannelsGrid: ['general'],
+          newsChannelsGrid: ['news'],
+          sportsChannelsGrid: ['sports'],
+          childrenChannelsGrid: ['children']
+        };
+        
+        Object.entries(grids).forEach(([gridId, categories]) => {
+          const grid = document.getElementById(gridId);
+          grid.innerHTML = '';
+          
+          sortedChannels.forEach(([num, channel]) => {
+            if (categories.includes(channel.category)) {
+              const card = document.createElement('div');
+              card.className = 'channel-card';
+              card.innerHTML = `
+                <div class="channel-icon">
+                  <i class="fas fa-tv"></i>
+                </div>
+                <h3>${channel.name}</h3>
+                <span class="channel-category">${this.getCategoryName(channel.category)}</span>
+                <button class="button" onclick="uiManager.showSection('home', 'linkHome'); streamManager.loadChannel(${num});">
+                  <i class="fas fa-play"></i> مشاهدة
+                </button>
+              `;
+              grid.appendChild(card);
+            }
+          });
+        });
+      }
+      
+      getCategoryName(category) {
+        const categories = {
+          general: 'عامة',
+          news: 'إخبارية',
+          sports: 'رياضية',
+          children: 'أطفال'
+        };
+        return categories[category] || category;
+      }
+      
+      renderAdminPanel() {
+        this.channelList.innerHTML = '';
+        
+        Object.entries(this.dataManager.channelsData).forEach(([num, channel]) => {
+          const card = document.createElement('div');
+          card.className = 'channel-card';
+          card.innerHTML = `
+            <span>${channel.name} <small>(${this.getCategoryName(channel.category)})</small></span>
+            <div>
+              <button class="button" onclick="adminManager.editChannel(${num})"><i class="fas fa-edit"></i> تعديل</button>
+              <button class="button" onclick="adminManager.deleteChannel(${num})"><i class="fas fa-trash"></i> حذف</button>
+            </div>
+          `;
+          this.channelList.appendChild(card);
+        });
+      }
+      
+      renderAdsPanel() {
+        this.adList.innerHTML = '';
+        
+        this.dataManager.adsData.forEach(ad => {
+          const card = document.createElement('div');
+          card.className = 'channel-card';
+          card.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" ${ad.active ? 'checked' : ''} onchange="adminManager.toggleAdActive(${ad.id}, this.checked)">
+              <span>${ad.title} (${ad.type})</span>
+            </div>
+            <div>
+              <button class="button" onclick="adminManager.editAd(${ad.id})"><i class="fas fa-edit"></i></button>
+              <button class="button" onclick="adminManager.deleteAd(${ad.id})"><i class="fas fa-trash"></i></button>
+            </div>
+          `;
+          this.adList.appendChild(card);
+        });
+      }
+      
+      manageWelcomeNotification() {
+        if (this.dataManager.systemSettings.showWelcomeNotification) {
+          setTimeout(() => {
+            this.welcomeNotification.classList.add('show');
+          }, 3000);
+        }
+      }
+    }
 
-    // عناصر DOM
-    const sections = {
-      home: document.getElementById('homeSection'),
-      allChannels: document.getElementById('allChannelsSection'),
-      newsChannels: document.getElementById('newsChannelsSection'),
-      sportsChannels: document.getElementById('sportsChannelsSection'),
-      childrenChannels: document.getElementById('childrenChannelsSection'),
-      admin: document.getElementById('adminSection')
-    };
-    const streamContainer = document.getElementById('streamContainer');
-    const videoElement = document.getElementById('videoPlayer');
-    const iframeElement = document.getElementById('streamIframe');
-    const videoControls = document.getElementById('videoControls');
-    const channelButtons = document.getElementById('channelButtons');
-    const voiceControlBtn = document.getElementById('voiceControlBtn');
-    const progressContainer = document.getElementById('progressContainer');
-    const progressBar = document.getElementById('progressBar');
-    const particlesContainer = document.getElementById('particles');
-    const adContainer = document.getElementById('adContainer');
-    const adCloseBtn = document.getElementById('adCloseBtn');
-    const adContent = document.getElementById('adContent');
-    const adImage = document.getElementById('adImage');
-    const adTitle = document.getElementById('adTitle');
-    const adDescription = document.getElementById('adDescription');
-    const adNav = document.getElementById('adNav');
-    const welcomeNotification = document.getElementById('welcomeNotification');
-    const closeWelcomeBtn = document.getElementById('closeWelcomeBtn');
-    const qualityBtn = document.getElementById('qualityBtn');
+    // =============================================
+    // إدارة لوحة التحكم
+    // =============================================
+    class AdminManager {
+      constructor(dataManager, uiManager, streamManager) {
+        this.dataManager = dataManager;
+        this.uiManager = uiManager;
+        this.streamManager = streamManager;
+        
+        this.initEventListeners();
+      }
+      
+      initEventListeners() {
+        // تسجيل الدخول
+        document.getElementById('loginBtn').addEventListener('click', () => {
+          const password = document.getElementById('adminPassword').value;
+          const rememberMe = document.getElementById('rememberMe').checked;
+          
+          if (password === this.dataManager.systemSettings.adminPassword) {
+            if (rememberMe) localStorage.setItem('adminSession', 'active');
+            
+            Swal.fire({
+              title: 'تم تسجيل الدخول بنجاح!',
+              icon: 'success',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#10b981'
+            });
+            
+            this.uiManager.showSection('admin', 'linkAdmin');
+          } else {
+            Swal.fire({
+              title: 'خطأ في تسجيل الدخول',
+              text: 'كلمة المرور غير صحيحة!',
+              icon: 'error',
+              confirmButtonText: 'حاول مرة أخرى',
+              confirmButtonColor: '#ef4444'
+            });
+          }
+        });
+        
+        // تسجيل الخروج
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('adminSession');
+          
+          Swal.fire({
+            title: 'تم تسجيل الخروج',
+            icon: 'success',
+            confirmButtonText: 'حسنًا',
+            confirmButtonColor: '#3b82f6'
+          });
+          
+          this.uiManager.showSection('admin', 'linkAdmin');
+        });
+        
+        // إضافة قناة
+        document.getElementById('addChannelBtn').addEventListener('click', () => {
+          const name = document.getElementById('channelName').value.trim();
+          const src = document.getElementById('channelSrc').value.trim();
+          const type = document.getElementById('channelType').value;
+          const category = document.getElementById('channelCategory').value;
+          
+          if (!name || !src) {
+            Swal.fire({
+              title: 'حقول مطلوبة!',
+              text: 'يرجى ملء جميع الحقول المطلوبة.',
+              icon: 'warning',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#f59e0b'
+            });
+            return;
+          }
+          
+          if (type !== 'ahmad' && !this.isValidUrl(src) && type !== 'vk') {
+            Swal.fire({
+              title: 'رابط غير صالح!',
+              text: 'يرجى إدخال رابط صحيح للبث.',
+              icon: 'error',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#ef4444'
+            });
+            return;
+          }
+          
+          const newChannelNum = Math.max(...Object.keys(this.dataManager.channelsData).map(Number)) + 1;
+          this.dataManager.channelsData[newChannelNum] = { 
+            type, 
+            src, 
+            category, 
+            name,
+            thumb: `https://via.placeholder.com/300x170/1e3a8a/ffffff?text=${encodeURIComponent(name)}`
+          };
+          
+          this.dataManager.saveData();
+          this.uiManager.renderChannels();
+          this.uiManager.renderAdminPanel();
+          
+          document.getElementById('channelName').value = '';
+          document.getElementById('channelSrc').value = '';
+          
+          Swal.fire({
+            title: 'تمت الإضافة!',
+            text: `تمت إضافة قناة ${name} بنجاح.`,
+            icon: 'success',
+            confirmButtonText: 'حسنًا',
+            confirmButtonColor: '#10b981'
+          });
+        });
+        
+        // إضافة إعلان
+        document.getElementById('addAdBtn').addEventListener('click', () => {
+          const title = document.getElementById('adTitleInput').value.trim();
+          const description = document.getElementById('adDescriptionInput').value.trim();
+          const image = document.getElementById('adImageInput').value.trim();
+          const video = document.getElementById('adVideoInput').value.trim();
+          const link = document.getElementById('adLinkInput').value.trim();
+          const type = document.getElementById('adType').value;
+          
+          if (!title) {
+            Swal.fire({
+              title: 'عنوان مطلوب!',
+              text: 'يرجى إدخال عنوان للإعلان.',
+              icon: 'warning',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#f59e0b'
+            });
+            return;
+          }
+          
+          const newAdId = Math.max(...this.dataManager.adsData.map(ad => ad.id), 0) + 1;
+          this.dataManager.adsData.push({
+            id: newAdId,
+            title,
+            description,
+            image,
+            video,
+            link,
+            type,
+            active: true
+          });
+          
+          this.dataManager.saveData();
+          this.uiManager.renderAdsPanel();
+          
+          document.getElementById('adTitleInput').value = '';
+          document.getElementById('adDescriptionInput').value = '';
+          document.getElementById('adImageInput').value = '';
+          document.getElementById('adVideoInput').value = '';
+          document.getElementById('adLinkInput').value = '';
+          
+          Swal.fire({
+            title: 'تمت الإضافة!',
+            text: 'تمت إضافة الإعلان بنجاح.',
+            icon: 'success',
+            confirmButtonText: 'حسنًا',
+            confirmButtonColor: '#10b981'
+          });
+        });
+      }
+      
+      editChannel(num) {
+        const channel = this.dataManager.channelsData[num];
+        
+        Swal.fire({
+          title: `تعديل ${channel.name}`,
+          html: `
+            <input id="swal-name" class="swal2-input" placeholder="اسم القناة" value="${channel.name}">
+            <input id="swal-src" class="swal2-input" placeholder="رابط البث" value="${channel.src}">
+            <select id="swal-type" class="swal2-input">
+              <option value="video" ${channel.type === 'video' ? 'selected' : ''}>فيديو</option>
+              <option value="iframe" ${channel.type === 'iframe' ? 'selected' : ''}>إطار</option>
+              <option value="youtube" ${channel.type === 'youtube' ? 'selected' : ''}>يوتيوب</option>
+              <option value="m3u8" ${channel.type === 'm3u8' ? 'selected' : ''}>M3U8</option>
+              <option value="ahmad" ${channel.type === 'ahmad' ? 'selected' : ''}>سيرفر الأحمد</option>
+              <option value="vk" ${channel.type === 'vk' ? 'selected' : ''}>VK</option>
+            </select>
+            <select id="swal-category" class="swal2-input">
+              <option value="general" ${channel.category === 'general' ? 'selected' : ''}>عام</option>
+              <option value="news" ${channel.category === 'news' ? 'selected' : ''}>إخباري</option>
+              <option value="sports" ${channel.category === 'sports' ? 'selected' : ''}>رياضي</option>
+              <option value="children" ${channel.category === 'children' ? 'selected' : ''}>أطفال</option>
+            </select>
+          `,
+          focusConfirm: false,
+          preConfirm: () => {
+            return {
+              name: document.getElementById('swal-name').value,
+              src: document.getElementById('swal-src').value,
+              type: document.getElementById('swal-type').value,
+              category: document.getElementById('swal-category').value
+            };
+          },
+          confirmButtonColor: '#3b82f6',
+          background: 'var(--bg-color)',
+          color: 'var(--text-color)'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const { name, src, type, category } = result.value;
+            if (name && src && (type === 'ahmad' || type === 'vk' || this.isValidUrl(src))) {
+              this.dataManager.channelsData[num] = { ...channel, name, src, type, category };
+              this.dataManager.saveData();
+              this.uiManager.renderChannels();
+              this.uiManager.renderAdminPanel();
+              
+              Swal.fire({
+                title: 'تم التعديل!',
+                text: `تم تحديث قناة ${name} بنجاح.`,
+                icon: 'success',
+                confirmButtonText: 'حسنًا',
+                confirmButtonColor: '#10b981'
+              });
+            } else {
+              Swal.fire({
+                title: 'بيانات غير صالحة!',
+                text: 'يرجى التأكد من صحة البيانات المدخلة.',
+                icon: 'error',
+                confirmButtonText: 'حسنًا',
+                confirmButtonColor: '#ef4444'
+              });
+            }
+          }
+        });
+      }
+      
+      deleteChannel(num) {
+        const channelName = this.dataManager.channelsData[num].name;
+        
+        Swal.fire({
+          title: 'هل أنت متأكد؟',
+          text: `سيتم حذف قناة ${channelName} بشكل دائم!`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#ef4444',
+          cancelButtonColor: '#64748b',
+          confirmButtonText: 'نعم، احذف!',
+          cancelButtonText: 'إلغاء',
+          background: 'var(--bg-color)',
+          color: 'var(--text-color)'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            delete this.dataManager.channelsData[num];
+            this.dataManager.saveData();
+            this.uiManager.renderChannels();
+            this.uiManager.renderAdminPanel();
+            
+            Swal.fire({
+              title: 'تم الحذف!',
+              text: `تم حذف قناة ${channelName} بنجاح.`,
+              icon: 'success',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#10b981'
+            });
+          }
+        });
+      }
+      
+      editAd(id) {
+        const ad = this.dataManager.adsData.find(ad => ad.id === id);
+        if (!ad) return;
+        
+        Swal.fire({
+          title: `تعديل الإعلان: ${ad.title}`,
+          html: `
+            <input id="swal-ad-title" class="swal2-input" placeholder="عنوان الإعلان" value="${ad.title}">
+            <textarea id="swal-ad-desc" class="swal2-input" placeholder="وصف الإعلان" style="height: 100px;">${ad.description}</textarea>
+            <input id="swal-ad-image" class="swal2-input" placeholder="رابط الصورة" value="${ad.image || ''}">
+            <input id="swal-ad-link" class="swal2-input" placeholder="رابط الإعلان" value="${ad.link || ''}">
+            <select id="swal-ad-type" class="swal2-input">
+              <option value="image" ${ad.type === 'image' ? 'selected' : ''}>إعلان صوري</option>
+              <option value="video" ${ad.type === 'video' ? 'selected' : ''}>إعلان فيديو</option>
+              <option value="text" ${ad.type === 'text' ? 'selected' : ''}>إعلان نصي</option>
+            </select>
+            <label style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+              <input type="checkbox" id="swal-ad-active" ${ad.active ? 'checked' : ''}>
+              نشط
+            </label>
+          `,
+          focusConfirm: false,
+          preConfirm: () => {
+            return {
+              title: document.getElementById('swal-ad-title').value,
+              description: document.getElementById('swal-ad-desc').value,
+              image: document.getElementById('swal-ad-image').value,
+              link: document.getElementById('swal-ad-link').value,
+              type: document.getElementById('swal-ad-type').value,
+              active: document.getElementById('swal-ad-active').checked
+            };
+          },
+          confirmButtonText: 'حفظ التعديلات',
+          cancelButtonText: 'إلغاء',
+          showCancelButton: true,
+          confirmButtonColor: '#3b82f6',
+          background: 'var(--bg-color)',
+          color: 'var(--text-color)'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const { title, description, image, link, type, active } = result.value;
+            
+            if (!title) {
+              Swal.fire({
+                title: 'خطأ!',
+                text: 'عنوان الإعلان مطلوب',
+                icon: 'error',
+                confirmButtonText: 'حسنًا',
+                confirmButtonColor: '#ef4444'
+              });
+              return;
+            }
+            
+            ad.title = title;
+            ad.description = description;
+            ad.image = image;
+            ad.link = link;
+            ad.type = type;
+            ad.active = active;
+            
+            this.dataManager.saveData();
+            this.uiManager.renderAdsPanel();
+            
+            Swal.fire({
+              title: 'تم التعديل!',
+              text: 'تم تحديث الإعلان بنجاح.',
+              icon: 'success',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#10b981'
+            });
+          }
+        });
+      }
+      
+      deleteAd(id) {
+        Swal.fire({
+          title: 'هل أنت متأكد؟',
+          text: 'سيتم حذف هذا الإعلان بشكل دائم!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#ef4444',
+          cancelButtonColor: '#64748b',
+          confirmButtonText: 'نعم، احذف!',
+          cancelButtonText: 'إلغاء',
+          background: 'var(--bg-color)',
+          color: 'var(--text-color)'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.dataManager.adsData = this.dataManager.adsData.filter(ad => ad.id !== id);
+            this.dataManager.saveData();
+            this.uiManager.renderAdsPanel();
+            
+            Swal.fire({
+              title: 'تم الحذف!',
+              text: 'تم حذف الإعلان بنجاح.',
+              icon: 'success',
+              confirmButtonText: 'حسنًا',
+              confirmButtonColor: '#10b981'
+            });
+          }
+        });
+      }
+      
+      toggleAdActive(id, isActive) {
+        const adIndex = this.dataManager.adsData.findIndex(ad => ad.id === id);
+        if (adIndex !== -1) {
+          this.dataManager.adsData[adIndex].active = isActive;
+          this.dataManager.saveData();
+          
+          const activeAds = this.dataManager.adsData.filter(ad => ad.active);
+          if (activeAds.length === 0) {
+            this.streamManager.adContainer.style.display = 'none';
+          } else if (this.streamManager.currentAdIndex >= activeAds.length) {
+            this.streamManager.currentAdIndex = 0;
+            this.streamManager.showAd(this.streamManager.currentAdIndex);
+          }
+        }
+      }
+      
+      isValidUrl(string) {
+        try {
+          new URL(string);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+    }
 
-    // إعدادات لوحة التحكم
-    const adminPassword = '77177';
-    let isAdminLoggedIn = localStorage.getItem('adminSession') === 'active';
-    let isVoiceControlActive = false;
-    let recognition = null;
-    let currentAdIndex = 0;
-    let adInterval;
-    let faceRecognitionInterval;
-    let currentHls = null;
-    let currentDash = null;
+    // =============================================
+    // إدارة التعرف على الوجه
+    // =============================================
+    class FaceRecognitionManager {
+      constructor(dataManager, adminManager) {
+        this.dataManager = dataManager;
+        this.adminManager = adminManager;
+        this.faceRecognitionInterval = null;
+        
+        this.initFaceRecognition();
+      }
+      
+      async initFaceRecognition() {
+        try {
+          await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+          await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+          await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+          await faceapi.nets.faceExpressionNet.loadFromUri('/models');
+          
+          if (localStorage.getItem('adminFaces')) {
+            this.dataManager.systemSettings.adminFaces = JSON.parse(localStorage.getItem('adminFaces'));
+          }
+          
+          document.getElementById('faceLoginBtn').addEventListener('click', async () => {
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+              const video = document.createElement('video');
+              video.srcObject = stream;
+              await video.play();
+              
+              const { value: formValues } = await Swal.fire({
+                title: 'التعرف على الوجه',
+                html: `
+                  <div class="face-recognition-container">
+                    <video id="faceVideo" class="face-recognition-video" autoplay muted playsinline></video>
+                    <canvas id="faceCanvas" class="face-recognition-canvas"></canvas>
+                    <div class="face-recognition-message">يرجى الوقوف أمام الكاميرا...</div>
+                  </div>
+                  <div style="margin-top: 15px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                      <input type="checkbox" id="registerNewFace">
+                      تسجيل وجه جديد كمسؤول
+                    </label>
+                  </div>
+                `,
+                focusConfirm: false,
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'تم التعرف',
+                cancelButtonText: 'إلغاء',
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#ef4444',
+                background: 'var(--bg-color)',
+                color: 'var(--text-color)',
+                width: 350,
+                didOpen: () => {
+                  const faceVideo = document.getElementById('faceVideo');
+                  faceVideo.srcObject = stream;
+                  
+                  const faceCanvas = document.getElementById('faceCanvas');
+                  const displaySize = { width: 300, height: 300 };
+                  faceapi.matchDimensions(faceCanvas, displaySize);
+                  
+                  this.faceRecognitionInterval = setInterval(async () => {
+                    const detections = await faceapi.detectAllFaces(
+                      faceVideo, 
+                      new faceapi.TinyFaceDetectorOptions()
+                    )
+                    .withFaceLandmarks()
+                    .withFaceDescriptors()
+                    .withFaceExpressions();
+                    
+                    const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                    faceCanvas.getContext('2d').clearRect(0, 0, faceCanvas.width, faceCanvas.height);
+                    
+                    resizedDetections.forEach(detection => {
+                      const box = detection.detection.box;
+                      const drawBox = new faceapi.draw.DrawBox(box, {
+                        label: 'وجه مكتشف',
+                        boxColor: '#f59e0b'
+                      });
+                      drawBox.draw(faceCanvas);
+                      
+                      faceapi.draw.drawFaceLandmarks(faceCanvas, detection.landmarks);
+                      
+                      const expressions = detection.expressions;
+                      const dominantExpression = Object.entries(expressions).sort((a, b) => b[1] - a[1])[0];
+                      const expressionText = `${dominantExpression[0]} (${Math.round(dominantExpression[1] * 100)}%)`;
+                      
+                      const expressionBox = new faceapi.draw.DrawTextField(
+                        [expressionText],
+                        box.bottomLeft
+                      );
+                      expressionBox.draw(faceCanvas);
+                    });
+                  }, 500);
+                },
+                preConfirm: () => {
+                  const registerNewFace = document.getElementById('registerNewFace').checked;
+                  return { registerNewFace };
+                }
+              });
+              
+              if (formValues) {
+                const { registerNewFace } = formValues;
+                clearInterval(this.faceRecognitionInterval);
+                stream.getTracks().forEach(track => track.stop());
+                
+                if (registerNewFace) {
+                  const faceVideo = document.getElementById('faceVideo');
+                  const detections = await faceapi.detectAllFaces(
+                    faceVideo,
+                    new faceapi.TinyFaceDetectorOptions()
+                  ).withFaceLandmarks().withFaceDescriptors();
+                  
+                  if (detections.length > 0) {
+                    const faceDescriptor = detections[0].descriptor;
+                    const faceName = await Swal.fire({
+                      title: 'أدخل اسم المسؤول',
+                      input: 'text',
+                      inputPlaceholder: 'اسم المسؤول',
+                      showCancelButton: true,
+                      confirmButtonText: 'حفظ',
+                      cancelButtonText: 'إلغاء',
+                      background: 'var(--bg-color)',
+                      color: 'var(--text-color)'
+                    });
+                    
+                    if (faceName.value) {
+                      this.dataManager.systemSettings.adminFaces.push({
+                        name: faceName.value,
+                        descriptor: Array.from(faceDescriptor)
+                      });
+                      localStorage.setItem('adminFaces', JSON.stringify(this.dataManager.systemSettings.adminFaces));
+                      this.dataManager.saveData();
+                      
+                      Swal.fire({
+                        title: 'تم التسجيل!',
+                        text: `تم تسجيل وجه ${faceName.value} بنجاح كمسؤول للنظام.`,
+                        icon: 'success',
+                        confirmButtonText: 'حسنًا',
+                        confirmButtonColor: '#10b981'
+                      });
+                    }
+                  } else {
+                    Swal.fire({
+                      title: 'لم يتم اكتشاف وجه!',
+                      text: 'يرجى المحاولة مرة أخرى مع ضمان وجود إضاءة جيدة.',
+                      icon: 'error',
+                      confirmButtonText: 'حسنًا',
+                      confirmButtonColor: '#ef4444'
+                    });
+                  }
+                } else {
+                  const faceVideo = document.getElementById('faceVideo');
+                  const detections = await faceapi.detectAllFaces(
+                    faceVideo,
+                    new faceapi.TinyFaceDetectorOptions()
+                  ).withFaceLandmarks().withFaceDescriptors();
+                  
+                  if (detections.length > 0 && this.dataManager.systemSettings.adminFaces.length > 0) {
+                    const faceMatcher = new faceapi.FaceMatcher(
+                      this.dataManager.systemSettings.adminFaces.map(face => (
+                        new faceapi.LabeledFaceDescriptors(
+                          face.name,
+                          [new Float32Array(face.descriptor)]
+                        )
+                      )),
+                      0.6
+                    );
+                    
+                    const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
+                    
+                    if (bestMatch.label !== 'unknown') {
+                      localStorage.setItem('adminSession', 'active');
+                      Swal.fire({
+                        title: 'تم التعرف عليك!',
+                        html: `مرحبًا <strong>${bestMatch.label}</strong>، تم تسجيل الدخول بنجاح.`,
+                        icon: 'success',
+                        confirmButtonText: 'حسنًا',
+                        confirmButtonColor: '#10b981'
+                      });
+                      this.adminManager.uiManager.showSection('admin', 'linkAdmin');
+                    } else {
+                      Swal.fire({
+                        title: 'غير مصرح لك!',
+                        text: 'لم يتم التعرف عليك كمسؤول للنظام.',
+                        icon: 'error',
+                        confirmButtonText: 'حسنًا',
+                        confirmButtonColor: '#ef4444'
+                      });
+                    }
+                  } else if (this.dataManager.systemSettings.adminFaces.length === 0) {
+                    Swal.fire({
+                      title: 'لا توجد وجوه مسجلة!',
+                      text: 'يرجى تسجيل وجه مسؤول أولاً.',
+                      icon: 'warning',
+                      confirmButtonText: 'حسنًا',
+                      confirmButtonColor: '#f59e0b'
+                    });
+                  } else {
+                    Swal.fire({
+                      title: 'لم يتم اكتشاف وجه!',
+                      text: 'يرجى المحاولة مرة أخرى مع ضمان وجود إضاءة جيدة.',
+                      icon: 'error',
+                      confirmButtonText: 'حسنًا',
+                      confirmButtonColor: '#ef4444'
+                    });
+                  }
+                }
+              } else {
+                clearInterval(this.faceRecognitionInterval);
+                stream.getTracks().forEach(track => track.stop());
+              }
+            } catch (error) {
+              console.error('خطأ في التعرف على الوجه:', error);
+              Swal.fire({
+                title: 'خطأ في الكاميرا!',
+                text: 'تعذر الوصول إلى الكاميرا. يرجى التحقق من الأذونات.',
+                icon: 'error',
+                confirmButtonText: 'حسنًا',
+                confirmButtonColor: '#ef4444'
+              });
+            }
+          });
+        } catch (error) {
+          console.error('خطأ في تحميل نماذج التعرف على الوجه:', error);
+          document.getElementById('faceLoginBtn').style.display = 'none';
+        }
+      }
+    }
 
-    // إنشاء جسيمات الخلفية
+    // =============================================
+    // إدارة التحكم الصوتي
+    // =============================================
+    class VoiceControlManager {
+      constructor(streamManager, uiManager) {
+        this.streamManager = streamManager;
+        this.uiManager = uiManager;
+        this.recognition = null;
+        this.isVoiceControlActive = false;
+        
+        this.initVoiceControl();
+      }
+      
+      initVoiceControl() {
+        try {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          this.recognition = new SpeechRecognition();
+          this.recognition.continuous = true;
+          this.recognition.interimResults = true;
+          this.recognition.lang = 'ar-SA';
+          
+          this.recognition.onstart = () => {
+            this.isVoiceControlActive = true;
+            document.getElementById('voiceControlBtn').classList.add('listening');
+            Swal.fire({
+              position: 'top-end',
+              title: 'جاري الاستماع...',
+              icon: 'info',
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true
+            });
+          };
+          
+          this.recognition.onerror = (event) => {
+            console.error('خطأ في التعرف الصوتي:', event.error);
+            this.isVoiceControlActive = false;
+            document.getElementById('voiceControlBtn').classList.remove('listening');
+            
+            if (event.error === 'not-allowed') {
+              Swal.fire({
+                title: 'الإذن مرفوض!',
+                text: 'يجب السماح باستخدام الميكروفون للتحكم الصوتي.',
+                icon: 'error',
+                confirmButtonText: 'حسنًا',
+                confirmButtonColor: '#ef4444'
+              });
+            }
+          };
+          
+          this.recognition.onend = () => {
+            if (this.isVoiceControlActive) {
+              this.recognition.start();
+            } else {
+              document.getElementById('voiceControlBtn').classList.remove('listening');
+            }
+          };
+          
+          this.recognition.onresult = (event) => {
+            const transcript = Array.from(event.results)
+              .map(result => result[0])
+              .map(result => result.transcript)
+              .join('')
+              .toLowerCase();
+              
+            if (event.results[0].isFinal) {
+              this.processVoiceCommand(transcript);
+            }
+          };
+          
+          document.getElementById('voiceControlBtn').addEventListener('click', () => {
+            if (!this.isVoiceControlActive) {
+              this.isVoiceControlActive = true;
+              this.recognition.start();
+            } else {
+              this.isVoiceControlActive = false;
+              this.recognition.stop();
+            }
+          });
+        } catch (error) {
+          console.error('التعرف الصوتي غير مدعوم:', error);
+          document.getElementById('voiceControlBtn').style.display = 'none';
+        }
+      }
+      
+      processVoiceCommand(command) {
+        console.log('الأمر الصوتي:', command);
+        
+        if (command.includes('شغل') || command.includes('افتح') || command.includes('ابدأ')) {
+          const channelName = this.extractChannelName(command);
+          if (channelName) {
+            const channelNum = this.findChannelByName(channelName);
+            if (channelNum) {
+              this.uiManager.showSection('home', 'linkHome');
+              this.streamManager.loadChannel(channelNum);
+              this.streamManager.showFeedback(`جاري تشغيل ${this.dataManager.channelsData[channelNum].name}`);
+            } else {
+              this.streamManager.showFeedback('القناة غير موجودة');
+            }
+          }
+        }
+        
+        else if (command.includes('ايقاف') || command.includes('وقف')) {
+          if (!player.paused()) {
+            player.pause();
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i> تشغيل';
+            this.streamManager.showFeedback('تم الإيقاف');
+          }
+        }
+        
+        else if (command.includes('استمر') || command.includes('كمل')) {
+          if (player.paused()) {
+            player.play();
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> إيقاف';
+            this.streamManager.showFeedback('جاري التشغيل');
+          }
+        }
+        
+        else if (command.includes('صوت') || command.includes('الصوت')) {
+          if (player.muted()) {
+            player.muted(false);
+            document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-up"></i> كتم';
+            this.streamManager.showFeedback('إعادة الصوت');
+          } else {
+            player.muted(true);
+            document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-mute"></i> فك الكتم';
+            this.streamManager.showFeedback('كتم الصوت');
+          }
+        }
+        
+        else if (command.includes('شاشة كاملة') || command.includes('ملء الشاشة')) {
+          if (player.isFullscreen()) {
+            player.exitFullscreen();
+            this.streamManager.showFeedback('خروج من ملء الشاشة');
+          } else {
+            player.requestFullscreen();
+            this.streamManager.showFeedback('ملء الشاشة');
+          }
+        }
+        
+        else if (command.includes('الرئيسية') || command.includes('الصفحة الرئيسية')) {
+          this.uiManager.showSection('home', 'linkHome');
+          this.streamManager.showFeedback('الصفحة الرئيسية');
+        }
+        
+        else if (command.includes('الرياضية') || command.includes('قنوات رياضية')) {
+          this.uiManager.showSection('sportsChannels', 'linkSportsChannels');
+          this.streamManager.showFeedback('القنوات الرياضية');
+        }
+        
+        else if (command.includes('الأخبار') || command.includes('إخبارية')) {
+          this.uiManager.showSection('newsChannels', 'linkNewsChannels');
+          this.streamManager.showFeedback('القنوات الإخبارية');
+        }
+        
+        else if (command.includes('أطفال') || command.includes('أطفال')) {
+          this.uiManager.showSection('childrenChannels', 'linkChildrenChannels');
+          this.streamManager.showFeedback('قنوات الأطفال');
+        }
+        
+        else if (command.includes('لوحة التحكم') || command.includes('المدير')) {
+          this.uiManager.showSection('admin', 'linkAdmin');
+          this.streamManager.showFeedback('لوحة التحكم');
+        }
+        
+        else if (command.includes('إعلان') || command.includes('إعلانات')) {
+          if (this.streamManager.adContainer.style.display === 'none') {
+            this.streamManager.showAd(this.streamManager.currentAdIndex);
+            this.streamManager.showFeedback('عرض الإعلان');
+          } else {
+            this.streamManager.adContainer.style.display = 'none';
+            this.streamManager.showFeedback('إخفاء الإعلان');
+          }
+        }
+        
+        else if (command.includes('مساعدة') || command.includes('الأوامر')) {
+          Swal.fire({
+            title: 'الأوامر الصوتية المدعومة',
+            html: `
+              <div style="text-align: right;">
+                <p><strong>التشغيل:</strong> "شغل قناة إم بي سي 1"</p>
+                <p><strong>التحكم:</strong> "ايقاف"، "استمر"، "صوت"، "شاشة كاملة"</p>
+                <p><strong>التنقل:</strong> "الرئيسية"، "الرياضية"، "الأخبار"، "أطفال"، "لوحة التحكم"</p>
+                <p><strong>الإعلانات:</strong> "إعلان"، "إخفاء إعلان"</p>
+              </div>
+            `,
+            icon: 'info',
+            confirmButtonText: 'حسنًا',
+            confirmButtonColor: '#3b82f6',
+            background: 'var(--bg-color)',
+            color: 'var(--text-color)'
+          });
+        }
+      }
+      
+      extractChannelName(command) {
+        const prefixes = ['شغل', 'افتح', 'ابدأ'];
+        for (const prefix of prefixes) {
+          if (command.startsWith(prefix)) {
+            return command.replace(prefix, '').trim();
+          }
+        }
+        return null;
+      }
+      
+      findChannelByName(name) {
+        for (const [num, channel] of Object.entries(this.dataManager.channelsData)) {
+          if (channel.name.includes(name) || name.includes(channel.name)) {
+            return num;
+          }
+        }
+        return null;
+      }
+    }
+
+    // =============================================
+    // تهيئة التطبيق
+    // =============================================
     function createParticles() {
       const particleCount = window.innerWidth < 768 ? 30 : 50;
       for (let i = 0; i < particleCount; i++) {
@@ -1278,1307 +2629,44 @@
         particle.style.opacity = opacity;
         particle.style.animation = `float ${animationDuration}s ease-in-out ${delay}s infinite`;
         
-        particlesContainer.appendChild(particle);
+        document.getElementById('particles').appendChild(particle);
       }
     }
 
-    // تحميل القناة مع دعم متعدد للسيرفرات
-    function loadChannel(channelNum) {
-      showProgressBar();
-      const channel = channelsData[channelNum] || channelsData[1];
-      
-      videoElement.style.display = 'none';
-      iframeElement.style.display = 'none';
-      adContainer.style.display = 'none';
-      
-      document.querySelectorAll('.stream-error-message').forEach(el => el.remove());
-      
-      // تنظيف مشغلات HLS/DASH السابقة
-      if (currentHls) {
-        currentHls.destroy();
-        currentHls = null;
-      }
-      if (currentDash) {
-        currentDash.reset();
-        currentDash = null;
-      }
-      
-      try {
-        if (channel.type === 'video') {
-          videoElement.style.display = 'block';
-          player.src({ src: channel.src, type: 'video/mp4' });
-          player.poster(channel.thumb || '');
-          
-          player.ready(() => {
-            player.play().catch(err => {
-              console.error('خطأ في تشغيل الفيديو:', err);
-              handlePlaybackError(channel);
-            });
-          });
-          
-          player.on('error', () => {
-            handlePlaybackError(channel);
-          });
-        } 
-        else if (channel.type === 'iframe') {
-          iframeElement.style.display = 'block';
-          iframeElement.src = channel.src;
-          
-          iframeElement.onerror = () => {
-            handlePlaybackError(channel);
-          };
-          
-          iframeElement.onload = () => {
-            try {
-              if (iframeElement.contentDocument && iframeElement.contentDocument.title) {
-                hideProgressBar();
-              } else {
-                handlePlaybackError(channel);
-              }
-            } catch (e) {
-              hideProgressBar();
-            }
-          };
-        }
-        else if (channel.type === 'youtube') {
-          iframeElement.style.display = 'block';
-          const youtubeSrc = channel.src.includes('embed') ? channel.src : `https://www.youtube.com/embed/${channel.src}`;
-          iframeElement.src = youtubeSrc;
-          
-          iframeElement.onerror = () => {
-            handlePlaybackError(channel);
-          };
-          
-          iframeElement.onload = () => {
-            hideProgressBar();
-          };
-        }
-        else if (channel.type === 'm3u8') {
-          videoElement.style.display = 'block';
-          if (Hls.isSupported()) {
-            currentHls = new Hls();
-            currentHls.loadSource(channel.src);
-            currentHls.attachMedia(videoElement);
-            currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-              player.play().catch(err => {
-                console.error('خطأ في تشغيل HLS:', err);
-                handlePlaybackError(channel);
-              });
-            });
-            currentHls.on(Hls.Events.ERROR, (event, data) => {
-              if (data.fatal) {
-                handlePlaybackError(channel);
-              }
-            });
-          } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-            videoElement.src = channel.src;
-            videoElement.addEventListener('loadedmetadata', () => {
-              videoElement.play().catch(err => {
-                console.error('خطأ في تشغيل HLS:', err);
-                handlePlaybackError(channel);
-              });
-            });
-          } else {
-            handlePlaybackError(channel);
-          }
-        }
-        else if (channel.type === 'ahmad') {
-          iframeElement.style.display = 'block';
-          const ahmadSrc = `https://www.elahmad.com/tv/live/shaka.php?id=${channel.src}`;
-          iframeElement.src = ahmadSrc;
-          
-          iframeElement.onerror = () => {
-            handlePlaybackError(channel);
-          };
-          
-          iframeElement.onload = () => {
-            hideProgressBar();
-          };
-        }
-        else if (channel.type === 'vk') {
-          iframeElement.style.display = 'block';
-          const vkSrc = channel.src.includes('embed') ? channel.src : `https://vk.com/video_ext.php?${channel.src.split('?')[1] || ''}`;
-          iframeElement.src = vkSrc;
-          
-          iframeElement.onerror = () => {
-            handlePlaybackError(channel);
-          };
-          
-          iframeElement.onload = () => {
-            hideProgressBar();
-          };
-        }
-        
-        localStorage.setItem('lastWatched', channelNum);
-        document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`channelBtn-${channelNum}`)?.classList.add('active');
-        analyzeViewingHabits(channelNum);
-        startAdCycle();
-        
-      } catch (error) {
-        console.error('خطأ في تحميل القناة:', error);
-        handlePlaybackError(channel);
-      }
-    }
-
-    // معالجة أخطاء التشغيل
-    function handlePlaybackError(channel) {
-      hideProgressBar();
-      console.error(`خطأ في تشغيل القناة: ${channel.name}`);
-      
-      const alternativeChannel = findAlternativeChannel(channel);
-      
-      if (alternativeChannel) {
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'stream-error-message';
-        errorMessage.innerHTML = `
-          <i class="fas fa-exclamation-triangle"></i>
-          <span>جاري تحويلك إلى قناة بديلة بسبب مشكلة تقنية</span>
-        `;
-        streamContainer.prepend(errorMessage);
-        
-        setTimeout(() => {
-          errorMessage.style.opacity = '0';
-          setTimeout(() => errorMessage.remove(), 500);
-        }, 5000);
-        
-        loadChannel(alternativeChannel);
-      } else {
-        player.poster('https://via.placeholder.com/800x450/1e293b/ffffff?text=خطأ+في+الاتصال');
-        player.createModal(`
-          <div style="text-align:center;padding:20px;">
-            <i class="fas fa-exclamation-triangle" style="font-size:3em;color:#f59e0b;"></i>
-            <h3 style="margin-top:15px;">تعذر الاتصال بالقناة</h3>
-            <p style="margin:15px 0;">يرجى التحقق من اتصال الإنترنت أو تجربة قناة أخرى</p>
-            <button onclick="window.location.reload()" style="
-              background: #3b82f6;
-              color: white;
-              border: none;
-              padding: 10px 20px;
-              border-radius: 8px;
-              cursor: pointer;
-            ">إعادة المحاولة</button>
-          </div>
-        `);
-      }
-    }
-
-    // البحث عن قناة بديلة
-    function findAlternativeChannel(currentChannel) {
-      for (const [num, channel] of Object.entries(channelsData)) {
-        if (channel.category === currentChannel.category && num !== currentChannel.num && channel.src !== currentChannel.src) {
-          return num;
-        }
-      }
-      return null;
-    }
-
-    // بدء دورة عرض الإعلانات
-    function startAdCycle() {
-      if (adInterval) clearInterval(adInterval);
-      
-      const activeAds = adsData.filter(ad => ad.active);
-      if (activeAds.length === 0) return;
-      
-      showAd(currentAdIndex);
-      
-      adInterval = setInterval(() => {
-        currentAdIndex = (currentAdIndex + 1) % activeAds.length;
-        showAd(currentAdIndex);
-      }, systemSettings.adsInterval * 60 * 1000);
-    }
-
-    // عرض إعلان
-    function showAd(index) {
-      const activeAds = adsData.filter(ad => ad.active);
-      if (index >= activeAds.length) return;
-      
-      const ad = activeAds[index];
-      
-      adTitle.textContent = ad.title;
-      adDescription.textContent = ad.description;
-      
-      if (ad.image) {
-        adImage.src = ad.image;
-        adImage.style.display = 'block';
-      } else {
-        adImage.style.display = 'none';
-      }
-      
-      updateAdNav(activeAds.length, index);
-      adContainer.style.display = 'block';
-      systemSettings.lastAdShownTime = Date.now();
-      localStorage.setItem('systemSettings', JSON.stringify(systemSettings));
-    }
-
-    // تحديث نقاط تنقل الإعلانات
-    function updateAdNav(totalAds, currentIndex) {
-      adNav.innerHTML = '';
-      
-      for (let i = 0; i < totalAds; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('ad-dot');
-        if (i === currentIndex) dot.classList.add('active');
-        dot.addEventListener('click', () => {
-          currentAdIndex = i;
-          showAd(currentAdIndex);
-        });
-        adNav.appendChild(dot);
-      }
-    }
-
-    // إغلاق الإعلان
-    adCloseBtn.addEventListener('click', () => {
-      adContainer.style.display = 'none';
-    });
-
-    // تحليل عادات المشاهدة
-    function analyzeViewingHabits(channelNum) {
-      const channel = channelsData[channelNum];
-      if (!channel) return;
-      
-      console.log(`تحليل المشاهدة: ${channel.name} (${channel.category})`);
-      channel.views = (channel.views || 0) + 1;
-      localStorage.setItem('channelsData', JSON.stringify(channelsData));
-      renderChannels();
-    }
-
-    // عرض القنوات
-    function renderChannels() {
-      channelButtons.innerHTML = '';
-      
-      const sortedChannels = Object.entries(channelsData).sort((a, b) => {
-        return (b[1].views || 0) - (a[1].views || 0);
-      });
-      
-      sortedChannels.forEach(([num, channel]) => {
-        const btn = document.createElement('button');
-        btn.className = 'button channel-btn';
-        btn.id = `channelBtn-${num}`;
-        btn.innerHTML = `
-          <i class="fas fa-tv"></i> ${channel.name}
-          ${channel.views ? `<span class="view-count">${channel.views}</span>` : ''}
-        `;
-        btn.addEventListener('click', () => {
-          showSection('home', 'linkHome');
-          loadChannel(num);
-        });
-        channelButtons.appendChild(btn);
-      });
-
-      const grids = {
-        allChannelsGrid: ['general'],
-        newsChannelsGrid: ['news'],
-        sportsChannelsGrid: ['sports'],
-        childrenChannelsGrid: ['children']
-      };
-      
-      Object.entries(grids).forEach(([gridId, categories]) => {
-        const grid = document.getElementById(gridId);
-        grid.innerHTML = '';
-        
-        sortedChannels.forEach(([num, channel]) => {
-          if (categories.includes(channel.category)) {
-            const card = document.createElement('div');
-            card.className = 'channel-card';
-            card.innerHTML = `
-              <div class="channel-icon">
-                <i class="fas fa-tv"></i>
-              </div>
-              <h3>${channel.name}</h3>
-              <span class="channel-category">${getCategoryName(channel.category)}</span>
-              <button class="button" onclick="showSection('home', 'linkHome'); loadChannel(${num});">
-                <i class="fas fa-play"></i> مشاهدة
-              </button>
-            `;
-            grid.appendChild(card);
-          }
-        });
-      });
-    }
-
-    // الحصول على اسم الفئة
-    function getCategoryName(category) {
-      const categories = {
-        general: 'عامة',
-        news: 'إخبارية',
-        sports: 'رياضية',
-        children: 'أطفال'
-      };
-      return categories[category] || category;
-    }
-
-    // التحكم في الفيديو
-    document.getElementById('rewindBtn').addEventListener('click', () => {
-      player.currentTime(player.currentTime() - 10);
-      showFeedback('رجوع 10 ثواني');
-    });
-    
-    document.getElementById('playPauseBtn').addEventListener('click', () => {
-      if (player.paused()) {
-        player.play();
-        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> إيقاف';
-        showFeedback('تشغيل');
-      } else {
-        player.pause();
-        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i> تشغيل';
-        showFeedback('إيقاف');
-      }
-    });
-    
-    document.getElementById('forwardBtn').addEventListener('click', () => {
-      player.currentTime(player.currentTime() + 10);
-      showFeedback('تقدم 10 ثواني');
-    });
-    
-    document.getElementById('fullscreenBtn').addEventListener('click', () => {
-      if (player.isFullscreen()) {
-        player.exitFullscreen();
-        showFeedback('خروج من ملء الشاشة');
-      } else {
-        player.requestFullscreen();
-        showFeedback('ملء الشاشة');
-      }
-    });
-    
-    document.getElementById('volumeBtn').addEventListener('click', () => {
-      if (player.muted()) {
-        player.muted(false);
-        document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-up"></i> كتم';
-        showFeedback('إعادة الصوت');
-      } else {
-        player.muted(true);
-        document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-mute"></i> فك الكتم';
-        showFeedback('كتم الصوت');
-      }
-    });
-
-    // إظهار رد فعل مرئي
-    function showFeedback(message) {
-      const feedback = document.createElement('div');
-      feedback.className = 'feedback-message';
-      feedback.textContent = message;
-      feedback.style.position = 'fixed';
-      feedback.style.bottom = '100px';
-      feedback.style.left = '50%';
-      feedback.style.transform = 'translateX(-50%)';
-      feedback.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-      feedback.style.color = 'white';
-      feedback.style.padding = '10px 20px';
-      feedback.style.borderRadius = '20px';
-      feedback.style.zIndex = '10000';
-      feedback.style.animation = 'fadeInOut 2s ease-in-out';
-      
-      document.body.appendChild(feedback);
-      
-      setTimeout(() => {
-        feedback.remove();
-      }, 2000);
-    }
-
-    // إدارة الأقسام
-    function showSection(sectionKey, linkId) {
-      Object.values(sections).forEach(section => section.classList.remove('active'));
-      sections[sectionKey].classList.add('active');
-      document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
-      if (linkId) document.getElementById(linkId).classList.add('active');
-      if (window.innerWidth <= 600) document.getElementById('navList').classList.remove('show');
-
-      if (sectionKey === 'admin') {
-        const adminLogin = document.getElementById('adminLogin');
-        const adminControls = document.getElementById('adminControls');
-        adminLogin.style.display = isAdminLoggedIn ? 'none' : 'block';
-        adminControls.style.display = isAdminLoggedIn ? 'block' : 'none';
-        if (isAdminLoggedIn) {
-          renderAdminPanel();
-          renderAdsPanel();
-        }
-      }
-      
-      if (sectionKey !== 'home') {
-        sections[sectionKey].style.animation = 'fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-      }
-    }
-
-    // ربط الروابط بالأقسام
-    ['linkHome', 'linkAllChannels', 'linkNewsChannels', 'linkSportsChannels', 'linkChildrenChannels', 'linkAdmin'].forEach(id => {
-      document.getElementById(id).addEventListener('click', (e) => {
-        e.preventDefault();
-        const sectionKey = id === 'linkAdmin' ? 'admin' : id.replace('link', '').toLowerCase();
-        showSection(sectionKey, id);
-      });
-    });
-
-    // قائمة التنقل في الجوال
-    document.getElementById('toggleMenuBtn').addEventListener('click', () => {
-      document.getElementById('navList').classList.toggle('show');
-    });
-
-    // شريط التقدم
-    function showProgressBar() {
-      progressContainer.style.display = 'block';
-      let width = 0;
-      const interval = setInterval(() => {
-        if (width >= 90) {
-          clearInterval(interval);
-        } else {
-          width += 5;
-          progressBar.style.width = `${width}%`;
-        }
-      }, 100);
-    }
-
-    function hideProgressBar() {
-      progressBar.style.width = '100%';
-      setTimeout(() => {
-        progressContainer.style.display = 'none';
-        progressBar.style.width = '0%';
-      }, 300);
-    }
-
-    // إدارة إشعار الترحيب
-    function manageWelcomeNotification() {
-      if (systemSettings.showWelcomeNotification) {
-        setTimeout(() => {
-          welcomeNotification.classList.add('show');
-        }, 3000);
-      }
-    }
-
-    closeWelcomeBtn.addEventListener('click', () => {
-      welcomeNotification.classList.remove('show');
-    });
-
-    // تهيئة الصفحة
+    // تهيئة التطبيق عند تحميل الصفحة
     window.addEventListener('load', async () => {
       createParticles();
-      renderChannels();
       
+      // إنشاء مثيلات المديرين
+      const dataManager = new DataManager();
+      const streamManager = new StreamManager(dataManager);
+      const uiManager = new UIManager(dataManager, streamManager);
+      const adminManager = new AdminManager(dataManager, uiManager, streamManager);
+      const faceRecognitionManager = new FaceRecognitionManager(dataManager, adminManager);
+      const voiceControlManager = new VoiceControlManager(streamManager, uiManager);
+      
+      // جعل المديرين متاحين عالمياً للوظائف المضمنة في HTML
+      window.dataManager = dataManager;
+      window.streamManager = streamManager;
+      window.uiManager = uiManager;
+      window.adminManager = adminManager;
+      
+      // تحميل القناة الأخيرة التي تم مشاهدتها
       const lastWatched = localStorage.getItem('lastWatched') || 1;
-      loadChannel(lastWatched);
+      streamManager.loadChannel(lastWatched);
       
-      showSection('home', 'linkHome');
-      
-      await initFaceRecognition();
-      
-      if (localStorage.getItem('adminSession') === 'active') {
-        isAdminLoggedIn = true;
-        if (window.location.hash === '#admin') {
-          showSection('admin', 'linkAdmin');
-        }
-      }
-      
-      manageWelcomeNotification();
-    });
-
-    // تسجيل الدخول
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      const password = document.getElementById('adminPassword').value;
-      const rememberMe = document.getElementById('rememberMe').checked;
-      
-      if (password === adminPassword) {
-        isAdminLoggedIn = true;
-        if (rememberMe) localStorage.setItem('adminSession', 'active');
-        
-        Swal.fire({
-          title: 'تم تسجيل الدخول بنجاح!',
-          icon: 'success',
-          confirmButtonText: 'حسنًا',
-          confirmButtonColor: '#10b981'
-        });
-        
-        showSection('admin', 'linkAdmin');
-      } else {
-        Swal.fire({
-          title: 'خطأ في تسجيل الدخول',
-          text: 'كلمة المرور غير صحيحة!',
-          icon: 'error',
-          confirmButtonText: 'حاول مرة أخرى',
-          confirmButtonColor: '#ef4444'
-        });
-      }
-    });
-
-    // تسجيل الخروج
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      isAdminLoggedIn = false;
-      localStorage.removeItem('adminSession');
-      
-      Swal.fire({
-        title: 'تم تسجيل الخروج',
-        icon: 'success',
-        confirmButtonText: 'حسنًا',
-        confirmButtonColor: '#3b82f6'
-      });
-      
-      showSection('admin', 'linkAdmin');
-    });
-
-    // عرض لوحة التحكم
-    function renderAdminPanel() {
-      const channelList = document.getElementById('channelList');
-      channelList.innerHTML = '';
-      
-      Object.entries(channelsData).forEach(([num, channel]) => {
-        const card = document.createElement('div');
-        card.className = 'channel-card';
-        card.innerHTML = `
-          <span>${channel.name} <small>(${getCategoryName(channel.category)})</small></span>
-          <div>
-            <button class="button" onclick="editChannel(${num})"><i class="fas fa-edit"></i> تعديل</button>
-            <button class="button" onclick="deleteChannel(${num})"><i class="fas fa-trash"></i> حذف</button>
-          </div>
-        `;
-        channelList.appendChild(card);
-      });
-    }
-
-    // إضافة قناة
-    document.getElementById('addChannelBtn').addEventListener('click', () => {
-      const name = document.getElementById('channelName').value.trim();
-      const src = document.getElementById('channelSrc').value.trim();
-      const type = document.getElementById('channelType').value;
-      const category = document.getElementById('channelCategory').value;
-
-      if (!name || !src) {
-        Swal.fire({
-          title: 'حقول مطلوبة!',
-          text: 'يرجى ملء جميع الحقول المطلوبة.',
-          icon: 'warning',
-          confirmButtonText: 'حسنًا',
-          confirmButtonColor: '#f59e0b'
-        });
-        return;
-      }
-      
-      if (type !== 'ahmad' && !isValidUrl(src)) {
-        Swal.fire({
-          title: 'رابط غير صالح!',
-          text: 'يرجى إدخال رابط صحيح للبث.',
-          icon: 'error',
-          confirmButtonText: 'حسنًا',
-          confirmButtonColor: '#ef4444'
-        });
-        return;
-      }
-
-      const newChannelNum = Math.max(...Object.keys(channelsData).map(Number)) + 1;
-      channelsData[newChannelNum] = { 
-        type, 
-        src, 
-        category, 
-        name,
-        thumb: `https://via.placeholder.com/300x170/1e3a8a/ffffff?text=${encodeURIComponent(name)}`
-      };
-      
-      localStorage.setItem('channelsData', JSON.stringify(channelsData));
-      renderChannels();
-      renderAdminPanel();
-      
-      document.getElementById('channelName').value = '';
-      document.getElementById('channelSrc').value = '';
-      
-      Swal.fire({
-        title: 'تمت الإضافة!',
-        text: `تمت إضافة قناة ${name} بنجاح.`,
-        icon: 'success',
-        confirmButtonText: 'حسنًا',
-        confirmButtonColor: '#10b981'
-      });
-    });
-
-    // عرض الإعلانات في لوحة التحكم
-    function renderAdsPanel() {
-      const adList = document.getElementById('adList');
-      adList.innerHTML = '';
-      
-      adsData.forEach(ad => {
-        const card = document.createElement('div');
-        card.className = 'channel-card';
-        card.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <input type="checkbox" ${ad.active ? 'checked' : ''} onchange="toggleAdActive(${ad.id}, this.checked)">
-            <span>${ad.title} (${ad.type})</span>
-          </div>
-          <div>
-            <button class="button" onclick="editAd(${ad.id})"><i class="fas fa-edit"></i></button>
-            <button class="button" onclick="deleteAd(${ad.id})"><i class="fas fa-trash"></i></button>
-          </div>
-        `;
-        adList.appendChild(card);
-      });
-    }
-
-    // تبديل حالة الإعلان
-    window.toggleAdActive = function(id, isActive) {
-      const adIndex = adsData.findIndex(ad => ad.id === id);
-      if (adIndex !== -1) {
-        adsData[adIndex].active = isActive;
-        localStorage.setItem('adsData', JSON.stringify(adsData));
-        
-        const activeAds = adsData.filter(ad => ad.active);
-        if (activeAds.length === 0) {
-          adContainer.style.display = 'none';
-        } else if (currentAdIndex >= activeAds.length) {
-          currentAdIndex = 0;
-          showAd(currentAdIndex);
-        }
-      }
-    };
-
-    // تحرير إعلان
-    window.editAd = function(id) {
-      const ad = adsData.find(ad => ad.id === id);
-      if (!ad) return;
-      
-      Swal.fire({
-        title: `تعديل الإعلان: ${ad.title}`,
-        html: `
-          <input id="swal-ad-title" class="swal2-input" placeholder="عنوان الإعلان" value="${ad.title}">
-          <textarea id="swal-ad-desc" class="swal2-input" placeholder="وصف الإعلان" style="height: 100px;">${ad.description}</textarea>
-          <input id="swal-ad-image" class="swal2-input" placeholder="رابط الصورة" value="${ad.image || ''}">
-          <input id="swal-ad-link" class="swal2-input" placeholder="رابط الإعلان" value="${ad.link || ''}">
-          <select id="swal-ad-type" class="swal2-input">
-            <option value="image" ${ad.type === 'image' ? 'selected' : ''}>إعلان صوري</option>
-            <option value="video" ${ad.type === 'video' ? 'selected' : ''}>إعلان فيديو</option>
-            <option value="text" ${ad.type === 'text' ? 'selected' : ''}>إعلان نصي</option>
-          </select>
-          <label style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-            <input type="checkbox" id="swal-ad-active" ${ad.active ? 'checked' : ''}>
-            نشط
-          </label>
-        `,
-        focusConfirm: false,
-        preConfirm: () => {
-          return {
-            title: document.getElementById('swal-ad-title').value,
-            description: document.getElementById('swal-ad-desc').value,
-            image: document.getElementById('swal-ad-image').value,
-            link: document.getElementById('swal-ad-link').value,
-            type: document.getElementById('swal-ad-type').value,
-            active: document.getElementById('swal-ad-active').checked
-          };
-        },
-        confirmButtonText: 'حفظ التعديلات',
-        cancelButtonText: 'إلغاء',
-        showCancelButton: true,
-        confirmButtonColor: '#3b82f6',
-        background: 'var(--bg-color)',
-        color: 'var(--text-color)'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const { title, description, image, link, type, active } = result.value;
-          
-          if (!title) {
-            Swal.fire({
-              title: 'خطأ!',
-              text: 'عنوان الإعلان مطلوب',
-              icon: 'error',
-              confirmButtonText: 'حسنًا',
-              confirmButtonColor: '#ef4444'
-            });
-            return;
-          }
-          
-          ad.title = title;
-          ad.description = description;
-          ad.image = image;
-          ad.link = link;
-          ad.type = type;
-          ad.active = active;
-          
-          localStorage.setItem('adsData', JSON.stringify(adsData));
-          renderAdsPanel();
-          
-          Swal.fire({
-            title: 'تم التعديل!',
-            text: 'تم تحديث الإعلان بنجاح.',
-            icon: 'success',
-            confirmButtonText: 'حسنًا',
-            confirmButtonColor: '#10b981'
-          });
-        }
-      });
-    };
-
-    // حذف إعلان
-    window.deleteAd = function(id) {
-      Swal.fire({
-        title: 'هل أنت متأكد؟',
-        text: 'سيتم حذف هذا الإعلان بشكل دائم!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#64748b',
-        confirmButtonText: 'نعم، احذف!',
-        cancelButtonText: 'إلغاء',
-        background: 'var(--bg-color)',
-        color: 'var(--text-color)'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          adsData = adsData.filter(ad => ad.id !== id);
-          localStorage.setItem('adsData', JSON.stringify(adsData));
-          renderAdsPanel();
-          
-          Swal.fire({
-            title: 'تم الحذف!',
-            text: 'تم حذف الإعلان بنجاح.',
-            icon: 'success',
-            confirmButtonText: 'حسنًا',
-            confirmButtonColor: '#10b981'
-          });
-        }
-      });
-    };
-
-    // تعديل قناة
-    window.editChannel = function(num) {
-      const channel = channelsData[num];
-      
-      Swal.fire({
-        title: `تعديل ${channel.name}`,
-        html: `
-          <input id="swal-name" class="swal2-input" placeholder="اسم القناة" value="${channel.name}">
-          <input id="swal-src" class="swal2-input" placeholder="رابط البث" value="${channel.src}">
-          <select id="swal-type" class="swal2-input">
-            <option value="video" ${channel.type === 'video' ? 'selected' : ''}>فيديو</option>
-            <option value="iframe" ${channel.type === 'iframe' ? 'selected' : ''}>إطار</option>
-            <option value="youtube" ${channel.type === 'youtube' ? 'selected' : ''}>يوتيوب</option>
-            <option value="m3u8" ${channel.type === 'm3u8' ? 'selected' : ''}>M3U8</option>
-            <option value="ahmad" ${channel.type === 'ahmad' ? 'selected' : ''}>سيرفر الأحمد</option>
-            <option value="vk" ${channel.type === 'vk' ? 'selected' : ''}>VK</option>
-          </select>
-          <select id="swal-category" class="swal2-input">
-            <option value="general" ${channel.category === 'general' ? 'selected' : ''}>عام</option>
-            <option value="news" ${channel.category === 'news' ? 'selected' : ''}>إخباري</option>
-            <option value="sports" ${channel.category === 'sports' ? 'selected' : ''}>رياضي</option>
-            <option value="children" ${channel.category === 'children' ? 'selected' : ''}>أطفال</option>
-          </select>
-        `,
-        focusConfirm: false,
-        preConfirm: () => {
-          return {
-            name: document.getElementById('swal-name').value,
-            src: document.getElementById('swal-src').value,
-            type: document.getElementById('swal-type').value,
-            category: document.getElementById('swal-category').value
-          };
-        },
-        confirmButtonColor: '#3b82f6',
-        background: 'var(--bg-color)',
-        color: 'var(--text-color)'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const { name, src, type, category } = result.value;
-          if (name && src && (type === 'ahmad' || isValidUrl(src))) {
-            channelsData[num] = { ...channel, name, src, type, category };
-            localStorage.setItem('channelsData', JSON.stringify(channelsData));
-            renderChannels();
-            renderAdminPanel();
-            
-            Swal.fire({
-              title: 'تم التعديل!',
-              text: `تم تحديث قناة ${name} بنجاح.`,
-              icon: 'success',
-              confirmButtonText: 'حسنًا',
-              confirmButtonColor: '#10b981'
-            });
-          } else {
-            Swal.fire({
-              title: 'بيانات غير صالحة!',
-              text: 'يرجى التأكد من صحة البيانات المدخلة.',
-              icon: 'error',
-              confirmButtonText: 'حسنًا',
-              confirmButtonColor: '#ef4444'
-            });
-          }
-        }
-      });
-    };
-
-    // حذف قناة
-    window.deleteChannel = function(num) {
-      const channelName = channelsData[num].name;
-      
-      Swal.fire({
-        title: 'هل أنت متأكد؟',
-        text: `سيتم حذف قناة ${channelName} بشكل دائم!`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#64748b',
-        confirmButtonText: 'نعم، احذف!',
-        cancelButtonText: 'إلغاء',
-        background: 'var(--bg-color)',
-        color: 'var(--text-color)'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          delete channelsData[num];
-          localStorage.setItem('channelsData', JSON.stringify(channelsData));
-          renderChannels();
-          renderAdminPanel();
-          
-          Swal.fire({
-            title: 'تم الحذف!',
-            text: `تم حذف قناة ${channelName} بنجاح.`,
-            icon: 'success',
-            confirmButtonText: 'حسنًا',
-            confirmButtonColor: '#10b981'
-          });
-        }
-      });
-    };
-
-    // التحقق من صحة الرابط
-    function isValidUrl(string) {
-      try {
-        new URL(string);
-        return true;
-      } catch (_) {
-        return false;
-      }
-    }
-
-    // تهيئة التعرف على الوجه
-    async function initFaceRecognition() {
-      try {
-        await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-        await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
-        await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
-        await faceapi.nets.faceExpressionNet.loadFromUri('/models');
-        
-        if (localStorage.getItem('adminFaces')) {
-          systemSettings.adminFaces = JSON.parse(localStorage.getItem('adminFaces'));
-        }
-        
-        document.getElementById('faceLoginBtn').addEventListener('click', async () => {
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            await video.play();
-            
-            const { value: formValues } = await Swal.fire({
-              title: 'التعرف على الوجه',
-              html: `
-                <div class="face-recognition-container">
-                  <video id="faceVideo" class="face-recognition-video" autoplay muted playsinline></video>
-                  <canvas id="faceCanvas" class="face-recognition-canvas"></canvas>
-                  <div class="face-recognition-message">يرجى الوقوف أمام الكاميرا...</div>
-                </div>
-                <div style="margin-top: 15px;">
-                  <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input type="checkbox" id="registerNewFace">
-                    تسجيل وجه جديد كمسؤول
-                  </label>
-                </div>
-              `,
-              focusConfirm: false,
-              showConfirmButton: true,
-              showCancelButton: true,
-              confirmButtonText: 'تم التعرف',
-              cancelButtonText: 'إلغاء',
-              confirmButtonColor: '#10b981',
-              cancelButtonColor: '#ef4444',
-              background: 'var(--bg-color)',
-              color: 'var(--text-color)',
-              width: 350,
-              didOpen: () => {
-                const faceVideo = document.getElementById('faceVideo');
-                faceVideo.srcObject = stream;
-                
-                const faceCanvas = document.getElementById('faceCanvas');
-                const displaySize = { width: 300, height: 300 };
-                faceapi.matchDimensions(faceCanvas, displaySize);
-                
-                faceRecognitionInterval = setInterval(async () => {
-                  const detections = await faceapi.detectAllFaces(
-                    faceVideo, 
-                    new faceapi.TinyFaceDetectorOptions()
-                  )
-                  .withFaceLandmarks()
-                  .withFaceDescriptors()
-                  .withFaceExpressions();
-                  
-                  const resizedDetections = faceapi.resizeResults(detections, displaySize);
-                  faceCanvas.getContext('2d').clearRect(0, 0, faceCanvas.width, faceCanvas.height);
-                  
-                  resizedDetections.forEach(detection => {
-                    const box = detection.detection.box;
-                    const drawBox = new faceapi.draw.DrawBox(box, {
-                      label: 'وجه مكتشف',
-                      boxColor: '#f59e0b'
-                    });
-                    drawBox.draw(faceCanvas);
-                    
-                    faceapi.draw.drawFaceLandmarks(faceCanvas, detection.landmarks);
-                    
-                    const expressions = detection.expressions;
-                    const dominantExpression = Object.entries(expressions).sort((a, b) => b[1] - a[1])[0];
-                    const expressionText = `${dominantExpression[0]} (${Math.round(dominantExpression[1] * 100)}%)`;
-                    
-                    const expressionBox = new faceapi.draw.DrawTextField(
-                      [expressionText],
-                      box.bottomLeft
-                    );
-                    expressionBox.draw(faceCanvas);
-                  });
-                }, 500);
-              },
-              preConfirm: () => {
-                const registerNewFace = document.getElementById('registerNewFace').checked;
-                return { registerNewFace };
-              }
-            });
-            
-            if (formValues) {
-              const { registerNewFace } = formValues;
-              clearInterval(faceRecognitionInterval);
-              stream.getTracks().forEach(track => track.stop());
-              
-              if (registerNewFace) {
-                const faceVideo = document.getElementById('faceVideo');
-                const detections = await faceapi.detectAllFaces(
-                  faceVideo,
-                  new faceapi.TinyFaceDetectorOptions()
-                ).withFaceLandmarks().withFaceDescriptors();
-                
-                if (detections.length > 0) {
-                  const faceDescriptor = detections[0].descriptor;
-                  const faceName = await Swal.fire({
-                    title: 'أدخل اسم المسؤول',
-                    input: 'text',
-                    inputPlaceholder: 'اسم المسؤول',
-                    showCancelButton: true,
-                    confirmButtonText: 'حفظ',
-                    cancelButtonText: 'إلغاء',
-                    background: 'var(--bg-color)',
-                    color: 'var(--text-color)'
-                  });
-                  
-                  if (faceName.value) {
-                    systemSettings.adminFaces.push({
-                      name: faceName.value,
-                      descriptor: Array.from(faceDescriptor)
-                    });
-                    localStorage.setItem('adminFaces', JSON.stringify(systemSettings.adminFaces));
-                    
-                    Swal.fire({
-                      title: 'تم التسجيل!',
-                      text: `تم تسجيل وجه ${faceName.value} بنجاح كمسؤول للنظام.`,
-                      icon: 'success',
-                      confirmButtonText: 'حسنًا',
-                      confirmButtonColor: '#10b981'
-                    });
-                  }
-                } else {
-                  Swal.fire({
-                    title: 'لم يتم اكتشاف وجه!',
-                    text: 'يرجى المحاولة مرة أخرى مع ضمان وجود إضاءة جيدة.',
-                    icon: 'error',
-                    confirmButtonText: 'حسنًا',
-                    confirmButtonColor: '#ef4444'
-                  });
-                }
-              } else {
-                const faceVideo = document.getElementById('faceVideo');
-                const detections = await faceapi.detectAllFaces(
-                  faceVideo,
-                  new faceapi.TinyFaceDetectorOptions()
-                ).withFaceLandmarks().withFaceDescriptors();
-                
-                if (detections.length > 0 && systemSettings.adminFaces.length > 0) {
-                  const faceMatcher = new faceapi.FaceMatcher(
-                    systemSettings.adminFaces.map(face => (
-                      new faceapi.LabeledFaceDescriptors(
-                        face.name,
-                        [new Float32Array(face.descriptor)]
-                      )
-                    )),
-                    0.6
-                  );
-                  
-                  const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
-                  
-                  if (bestMatch.label !== 'unknown') {
-                    isAdminLoggedIn = true;
-                    localStorage.setItem('adminSession', 'active');
-                    Swal.fire({
-                      title: 'تم التعرف عليك!',
-                      html: `مرحبًا <strong>${bestMatch.label}</strong>، تم تسجيل الدخول بنجاح.`,
-                      icon: 'success',
-                      confirmButtonText: 'حسنًا',
-                      confirmButtonColor: '#10b981'
-                    });
-                    showSection('admin', 'linkAdmin');
-                  } else {
-                    Swal.fire({
-                      title: 'غير مصرح لك!',
-                      text: 'لم يتم التعرف عليك كمسؤول للنظام.',
-                      icon: 'error',
-                      confirmButtonText: 'حسنًا',
-                      confirmButtonColor: '#ef4444'
-                    });
-                  }
-                } else if (systemSettings.adminFaces.length === 0) {
-                  Swal.fire({
-                    title: 'لا توجد وجوه مسجلة!',
-                    text: 'يرجى تسجيل وجه مسؤول أولاً.',
-                    icon: 'warning',
-                    confirmButtonText: 'حسنًا',
-                    confirmButtonColor: '#f59e0b'
-                  });
-                } else {
-                  Swal.fire({
-                    title: 'لم يتم اكتشاف وجه!',
-                    text: 'يرجى المحاولة مرة أخرى مع ضمان وجود إضاءة جيدة.',
-                    icon: 'error',
-                    confirmButtonText: 'حسنًا',
-                    confirmButtonColor: '#ef4444'
-                  });
-                }
-              }
-            } else {
-              clearInterval(faceRecognitionInterval);
-              stream.getTracks().forEach(track => track.stop());
-            }
-          } catch (error) {
-            console.error('خطأ في التعرف على الوجه:', error);
-            Swal.fire({
-              title: 'خطأ في الكاميرا!',
-              text: 'تعذر الوصول إلى الكاميرا. يرجى التحقق من الأذونات.',
-              icon: 'error',
-              confirmButtonText: 'حسنًا',
-              confirmButtonColor: '#ef4444'
-            });
-          }
-        });
-      } catch (error) {
-        console.error('خطأ في تحميل نماذج التعرف على الوجه:', error);
-        document.getElementById('faceLoginBtn').style.display = 'none';
-      }
-    }
-
-    // التحكم الصوتي
-    function initVoiceControl() {
-      try {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = 'ar-SA';
-
-        recognition.onstart = () => {
-          isVoiceControlActive = true;
-          voiceControlBtn.classList.add('listening');
-          Swal.fire({
-            position: 'top-end',
-            title: 'جاري الاستماع...',
-            icon: 'info',
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            toast: true
-          });
-        };
-
-        recognition.onerror = (event) => {
-          console.error('خطأ في التعرف الصوتي:', event.error);
-          isVoiceControlActive = false;
-          voiceControlBtn.classList.remove('listening');
-          
-          if (event.error === 'not-allowed') {
-            Swal.fire({
-              title: 'الإذن مرفوض!',
-              text: 'يجب السماح باستخدام الميكروفون للتحكم الصوتي.',
-              icon: 'error',
-              confirmButtonText: 'حسنًا',
-              confirmButtonColor: '#ef4444'
-            });
-          }
-        };
-
-        recognition.onend = () => {
-          if (isVoiceControlActive) {
-            recognition.start();
-          } else {
-            voiceControlBtn.classList.remove('listening');
-          }
-        };
-
-        recognition.onresult = (event) => {
-          const transcript = Array.from(event.results)
-            .map(result => result[0])
-            .map(result => result.transcript)
-            .join('')
-            .toLowerCase();
-            
-          if (event.results[0].isFinal) {
-            processVoiceCommand(transcript);
-          }
-        };
-
-        voiceControlBtn.addEventListener('click', () => {
-          if (!isVoiceControlActive) {
-            isVoiceControlActive = true;
-            recognition.start();
-          } else {
-            isVoiceControlActive = false;
-            recognition.stop();
-          }
-        });
-      } catch (error) {
-        console.error('التعرف الصوتي غير مدعوم:', error);
-        voiceControlBtn.style.display = 'none';
-      }
-    }
-
-    // معالجة الأوامر الصوتية
-    function processVoiceCommand(command) {
-      console.log('الأمر الصوتي:', command);
-      
-      if (command.includes('شغل') || command.includes('افتح') || command.includes('ابدأ')) {
-        const channelName = extractChannelName(command);
-        if (channelName) {
-          const channelNum = findChannelByName(channelName);
-          if (channelNum) {
-            showSection('home', 'linkHome');
-            loadChannel(channelNum);
-            showFeedback(`جاري تشغيل ${channelsData[channelNum].name}`);
-          } else {
-            showFeedback('القناة غير موجودة');
-          }
-        }
-      }
-      
-      else if (command.includes('ايقاف') || command.includes('وقف')) {
-        if (!player.paused()) {
-          player.pause();
-          document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i> تشغيل';
-          showFeedback('تم الإيقاف');
-        }
-      }
-      
-      else if (command.includes('استمر') || command.includes('كمل')) {
-        if (player.paused()) {
-          player.play();
-          document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> إيقاف';
-          showFeedback('جاري التشغيل');
-        }
-      }
-      
-      else if (command.includes('صوت') || command.includes('الصوت')) {
-        if (player.muted()) {
-          player.muted(false);
-          document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-up"></i> كتم';
-          showFeedback('تم تشغيل الصوت');
+      // تحديث حالة الذكاء الاصطناعي
+      setInterval(() => {
+        const status = document.getElementById('aiStatus');
+        if (Math.random() > 0.1) {
+          status.innerHTML = '<i class="fas fa-circle"></i> الذكاء الاصطناعي نشط';
+          status.style.color = '#10b981';
         } else {
-          player.muted(true);
-          document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-mute"></i> فك الكتم';
-          showFeedback('تم كتم الصوت');
+          status.innerHTML = '<i class="fas fa-circle"></i> جاري التعلم...';
+          status.style.color = '#f59e0b';
         }
-      }
-      
-      else if (command.includes('شاشة كاملة') || command.includes('ملء الشاشة')) {
-        if (player.isFullscreen()) {
-          player.exitFullscreen();
-          showFeedback('خروج من ملء الشاشة');
-        } else {
-          player.requestFullscreen();
-          showFeedback('ملء الشاشة');
-        }
-      }
-      
-      else if (command.includes('الرئيسية') || command.includes('الصفحة الرئيسية')) {
-        showSection('home', 'linkHome');
-        showFeedback('الصفحة الرئيسية');
-      }
-      
-      else if (command.includes('الرياضية') || command.includes('قنوات رياضية')) {
-        showSection('sportsChannels', 'linkSportsChannels');
-        showFeedback('القنوات الرياضية');
-      }
-      
-      else if (command.includes('الأخبار') || command.includes('إخبارية')) {
-        showSection('newsChannels', 'linkNewsChannels');
-        showFeedback('القنوات الإخبارية');
-      }
-      
-      else if (command.includes('أطفال') || command.includes('أطفال')) {
-        showSection('childrenChannels', 'linkChildrenChannels');
-        showFeedback('قنوات الأطفال');
-      }
-      
-      else if (command.includes('لوحة التحكم') || command.includes('المدير')) {
-        showSection('admin', 'linkAdmin');
-        showFeedback('لوحة التحكم');
-      }
-      
-      else if (command.includes('إعلان') || command.includes('إعلانات')) {
-        if (adContainer.style.display === 'none') {
-          showAd(currentAdIndex);
-          showFeedback('عرض الإعلان');
-        } else {
-          adContainer.style.display = 'none';
-          showFeedback('إخفاء الإعلان');
-        }
-      }
-      
-      else if (command.includes('مساعدة') || command.includes('الأوامر')) {
-        Swal.fire({
-          title: 'الأوامر الصوتية المدعومة',
-          html: `
-            <div style="text-align: right;">
-              <p><strong>التشغيل:</strong> "شغل قناة إم بي سي 1"</p>
-              <p><strong>التحكم:</strong> "ايقاف"، "استمر"، "صوت"، "شاشة كاملة"</p>
-              <p><strong>التنقل:</strong> "الرئيسية"، "الرياضية"، "الأخبار"، "أطفال"، "لوحة التحكم"</p>
-              <p><strong>الإعلانات:</strong> "إعلان"، "إخفاء إعلان"</p>
-            </div>
-          `,
-          icon: 'info',
-          confirmButtonText: 'حسنًا',
-          confirmButtonColor: '#3b82f6',
-          background: 'var(--bg-color)',
-          color: 'var(--text-color)'
-        });
-      }
-    }
-
-    // استخراج اسم القناة من الأمر الصوتي
-    function extractChannelName(command) {
-      const prefixes = ['شغل', 'افتح', 'ابدأ'];
-      for (const prefix of prefixes) {
-        if (command.startsWith(prefix)) {
-          return command.replace(prefix, '').trim();
-        }
-      }
-      return null;
-    }
-
-    // البحث عن القناة بالاسم
-    function findChannelByName(name) {
-      for (const [num, channel] of Object.entries(channelsData)) {
-        if (channel.name.includes(name) || name.includes(channel.name)) {
-          return num;
-        }
-      }
-      return null;
-    }
-
-    // تهيئة التحكم الصوتي
-    initVoiceControl();
-
-    // تحديث حالة الذكاء الاصطناعي
-    setInterval(() => {
-      const status = document.getElementById('aiStatus');
-      if (Math.random() > 0.1) {
-        status.innerHTML = '<i class="fas fa-circle"></i> الذكاء الاصطناعي نشط';
-        status.style.color = '#10b981';
-      } else {
-        status.innerHTML = '<i class="fas fa-circle"></i> جاري التعلم...';
-        status.style.color = '#f59e0b';
-      }
-    }, 5000);
+      }, 5000);
+    });
   </script>
 </body>
 </html>
